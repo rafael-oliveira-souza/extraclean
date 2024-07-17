@@ -1,0 +1,10 @@
+::ng-deep mat-tab-body {
+    background-color: white;
+}
+
+::ng-deep mat-tab-header {
+    .mdc-tab__text-label {
+        color: white !important;
+    }
+
+}
