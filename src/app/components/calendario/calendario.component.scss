@@ -1,0 +1,16 @@
+@import '../../../color.scss';
+
+:host ::ng-deep .mat-datepicker-content {
+    background-color: $primary;
+    width: 100% !important;
+}
+
+.mat-mdc-card {
+    // background-color: $primary;
+    width: 100%;
+}
+
+.mat-calendar-body-disabled {
+    background: $primary !important;
+    color: $primary !important;
+}

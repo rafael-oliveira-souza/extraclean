@@ -1,12 +1,20 @@
 import { Component } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import {MatTabsModule} from '@angular/material/tabs';
-import {MatIconModule} from '@angular/material/icon';
+import { MenuComponent } from './tabs/menu/menu.component';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import * as moment from 'moment'; // Import Moment.js
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, MatTabsModule, MatIconModule],
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Set locale to Portuguese (Brazil)
+    { provide: 'moment', useValue: moment }, // Provide Moment.js
+  ],
+  imports: [
+    RouterOutlet,
+    MenuComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'
 })
