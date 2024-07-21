@@ -1,6 +1,4 @@
-<!-- <div>
-</div> -->
-<div class="d-flex justify-content-center">
+<!-- <div class="d-flex justify-content-center">
     <div class="col"> </div>
     <div class="col">
         <mat-form-field [style.width]="largura">
@@ -16,4 +14,43 @@
         </mat-card>
     </div>
     <div class="col"></div>
+</div> -->
+
+<div>
+    <!-- <div class="d-flex justify-content-between">
+        <div>test</div>
+        <div></div>
+    </div> -->
+    <mat-grid-list cols="7" rowHeight="2:1">
+        <mat-grid-tile>
+            <!-- <mat-form-field>
+                <mat-label>Month and Year</mat-label>
+                <input matInput [matDatepicker]="dp" [formControl]="formControl">
+                <mat-datepicker-toggle matIconSuffix [for]="dp"></mat-datepicker-toggle>
+                <mat-datepicker #dp startView="multi-year" (monthSelected)="setMonthAndYear($event, dp)"
+                    panelClass="example-month-picker">
+                </mat-datepicker>
+            </mat-form-field> -->
+
+            <mat-form-field [style.width]="largura">
+                <mat-label>Agende o seu atendimento</mat-label>
+                <input matInput [matDatepicker]="picker" [(ngModel)]="agendamento"
+                    (change)="atualizarAgendamento($event.returnValue)">
+                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                <mat-datepicker #picker></mat-datepicker>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile></mat-grid-tile>
+        <mat-grid-tile>
+            <mat-icon aria-hidden="false" aria-label="Voltar" fontIcon="chevron_left" (click)="anterior()"></mat-icon>
+        </mat-grid-tile>
+        <mat-grid-tile>
+            <mat-icon aria-hidden="false" aria-label="Avançar" fontIcon="chevron_right" (click)="proximo()"></mat-icon>
+        </mat-grid-tile>
+        <mat-grid-tile *ngFor="let dia of diasSemana;">{{dia}}</mat-grid-tile>
+        <mat-grid-tile *ngFor="let dia of diasCalendario;">{{dia | data : 'D'}}</mat-grid-tile>
+    </mat-grid-list>
 </div>

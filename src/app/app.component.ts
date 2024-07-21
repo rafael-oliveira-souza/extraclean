@@ -3,12 +3,14 @@ import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './tabs/menu/menu.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment'; // Import Moment.js
+import { LinguagemEnum } from './domains/enums/LinguagemEnum';
+import 'moment/locale/pt-br';
 
 @Component({
   selector: 'app-root',
   standalone: true,
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: 'pt-BR' }, // Set locale to Portuguese (Brazil)
+    { provide: MAT_DATE_LOCALE, useValue: LinguagemEnum.PT }, // Set locale to Portuguese (Brazil)
     { provide: 'moment', useValue: moment }, // Provide Moment.js
   ],
   imports: [
