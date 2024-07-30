@@ -9,6 +9,10 @@ import { MomentInput } from 'moment';
 export class DatePipe implements PipeTransform {
 
   transform(value: MomentInput, format?: string): unknown {
+    if (!value) {
+      return null;
+    }
+
     if (format) {
       return DateUtils.format(value, format);
     }

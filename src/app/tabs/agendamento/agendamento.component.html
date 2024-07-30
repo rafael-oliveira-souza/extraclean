@@ -1,3 +1,6 @@
-<div>
-    <app-calendario></app-calendario>
+<div class="container ">
+    <app-calendario (getDiasAgendados)="getDiasAgendados($event)"></app-calendario>
+    <div class="mt-3 d-flex justify-content-end">
+        <button [disabled]="desabilitarAgendamento()" (click)="agendar()" mat-flat-button>Agendar</button>
+    </div>
 </div>

@@ -1,0 +1,12 @@
+@import '../../../color.scss';
+
+::ng-deep .mdc-button {
+    color: $white !important;
+    background-color: $primary !important;
+
+}
+
+::ng-deep .mdc-button:disabled {
+    // color: $primary !important;
+    background-color: $sub !important;
+}

@@ -25,20 +25,20 @@ export class DateUtils {
         return this.toMoment(date).format(format.toString());
     }
 
-    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
-        return this.toMoment(date, format).toDate();
+    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): moment.Moment {
+        return this.toMoment(date, format);
     }
 
-    public static subtract(date: MomentInput, amount: number | string, unit: DurationInputArg2): Date {
-        return this.toMoment(date).subtract(amount, unit).toDate();
+    public static subtract(date: MomentInput, amount: number | string, unit: DurationInputArg2): moment.Moment {
+        return this.toMoment(date).subtract(amount, unit);
     }
 
-    public static add(date: MomentInput, amount: number | string, unit: DurationInputArg2): Date {
-        return this.toMoment(date).add(amount, unit).toDate();
+    public static add(date: MomentInput, amount: number | string, unit: DurationInputArg2): moment.Moment {
+        return this.toMoment(date).add(amount, unit);
     }
 
-    public static between(dateA: MomentInput, dateB: MomentInput, inclusivity?: InclusividadeEnum): boolean {
-        return this.toMoment().isBetween(dateA, dateB, null, inclusivity);
+    public static between(date: MomentInput, dateA: MomentInput, dateB: MomentInput, inclusivity?: InclusividadeEnum): boolean {
+        return this.toMoment(date).isBetween(dateA, dateB, null, inclusivity);
     }
 
     public static isBefore(dateA: MomentInput, dateB: MomentInput): boolean {

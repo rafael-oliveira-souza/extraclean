@@ -1,20 +1,43 @@
 @import '../../../color.scss';
 
-:host ::ng-deep .mat-datepicker-content {
-    background-color: $primary;
-    width: 100% !important;
+::ng-deep .mat-calendar {
+    color: $white !important;
+    background-color: $sub;
+    // width: 100% !important;
 }
 
-.mat-mdc-card {
-    // background-color: $primary;
-    width: 100%;
-}
-
-.mat-calendar-body-disabled {
-    background: $primary !important;
-    color: $primary !important;
-}
 
 .mat-icon {
     cursor: pointer;
+}
+
+:host ::ng-deep mat-grid-tile {
+    color: $primary;
+    font-weight: bolder;
+    text-align: center;
+
+    p {
+        cursor: pointer;
+        width: 30px;
+        height: 30px;
+        color: $white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        background-color: $cinza;
+    }
+
+    p[disabled="true"] {
+        cursor: auto;
+        background-color: $sub;
+    }
+
+    p[selected="true"] {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $primary;
+        color: $white;
+    }
 }

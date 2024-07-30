@@ -1,0 +1,9 @@
+<div>
+    <mat-grid-list cols="4">
+        <mat-grid-tile colspan="1" *ngFor="let plano of planos;">
+            <mat-card class="container" appearance="outlined" style="width: 100%;">
+                <mat-card-content class="p-4">{{plano.nome}}</mat-card-content>
+            </mat-card>
+        </mat-grid-tile>
+    </mat-grid-list>
+</div>
