@@ -1,18 +1,38 @@
-<div class="bg-default">
+<div class="bg-padrao">
     <div class="container-fluid d-flex justify-content-between  align-items-center">
         <div>
-            <h5>
-                <small class="text-dark">EXTRA </small><br>
-                <small class="text-white">CLEAN</small>
-            </h5>
+            <!-- <img width="250" height="70" src="../../../assets/imgs/nova_logo.svg"> -->
+            <img width="250" height="75" src="../../../assets/imgs/logo.svg">
         </div>
-        <mat-icon class="text-white" aria-hidden="false" aria-label="Perfil" fontIcon="account_circle"></mat-icon>
+        <div>
+            <mat-icon class="text-white" [matMenuTriggerFor]="menu" aria-hidden="false" aria-label="Perfil"
+                fontIcon="menu"></mat-icon>
+            <mat-menu #menu="matMenu">
+                <button mat-menu-item>
+                    <mat-icon aria-hidden="false" aria-label="Meu Perfil" fontIcon="account_circle"></mat-icon>
+                    Meu Perfil
+                </button>
+                <button mat-menu-item>
+                    <mat-icon aria-hidden="false" aria-label="Meus Agendamentos" fontIcon="event_note"></mat-icon>
+                    Meus Agendamentos
+                </button>
+                <button mat-menu-item>
+                    <mat-icon aria-hidden="false" aria-label="Sair" fontIcon="logout"></mat-icon>
+                    Sair
+                </button>
+            </mat-menu>
+        </div>
     </div>
     <div class="">
         <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="start" [selectedIndex]="1">
-            <mat-tab [disabled]="true" label=""></mat-tab>
-            <mat-tab label="Home"> Content 1 </mat-tab>
-            <mat-tab label="Serviços"> Content 2 </mat-tab>
+            <mat-tab [disabled]="false" label="">
+            </mat-tab>
+            <mat-tab label="Home">
+                <app-home></app-home>
+            </mat-tab>
+            <mat-tab label="Serviços">
+                <app-servicos></app-servicos>
+            </mat-tab>
             <mat-tab label="Agendamentos">
                 <app-agendamento></app-agendamento>
             </mat-tab>

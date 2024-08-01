@@ -6,6 +6,10 @@
     // width: 100% !important;
 }
 
+::ng-deep .mat-label {
+    word-break: break-all;
+}
+
 
 .mat-icon {
     cursor: pointer;

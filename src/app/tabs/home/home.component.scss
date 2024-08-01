@@ -1,0 +1,19 @@
+@import '../../../color.scss';
+
+.centered-background {
+    // background-size: cover;
+    background-repeat: no-repeat;
+    background-image: url('../../../assets/imgs/material-de-limpeza.gif');
+    height: 250px;
+    /* Set a specified height for the container */
+    background-position: center;
+    /* Center the image */
+}
+
+p {
+    text-align: justify;
+}
+
+strong {
+    color: $primary;
+}

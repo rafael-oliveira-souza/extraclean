@@ -1,7 +1,7 @@
-<div [style.width]="largura">
+<div [style.width]="largura" class="mt-2" >
     <mat-grid-list cols="7" rowHeight="50px">
-        <mat-grid-tile colspan="3">
-            <mat-form-field style="margin-top: 30px;">
+        <mat-grid-tile colspan="2">
+            <mat-form-field style="margin-top: 20px;">
                 <mat-label>Agende o seu atendimento</mat-label>
                 <input matInput [min]="hoje" [max]="maxDate" [matDatepicker]="picker" [formControl]="diaSelecionado">
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
@@ -9,7 +9,7 @@
                 </mat-datepicker>
             </mat-form-field>
         </mat-grid-tile>
-        <mat-grid-tile colspan="2"> </mat-grid-tile>
+        <mat-grid-tile colspan="3"> </mat-grid-tile>
         <mat-grid-tile>
             <mat-icon aria-hidden="false" aria-label="Voltar" fontIcon="chevron_left" (click)="anterior()"></mat-icon>
         </mat-grid-tile>

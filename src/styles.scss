@@ -40,6 +40,7 @@ $extraclean-theme: mat.define-theme((color: (theme-type: light,
 html {
   height: 100%;
   width: 100%;
+  // max-height: 100%;
 }
 
 body {
@@ -47,10 +48,48 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
-.bg-default {
+.whatsapp {
+  position: fixed;
+  width: 60px;
+  height: 60px;
+  bottom: 40px;
+  right: 40px;
+  background-color: $verde;
+  color: #FFF;
+  border-radius: 50px;
+  text-align: center;
+  font-size: 30px;
+  box-shadow: 1px 1px 2px #888;
+  z-index: 1000;
+}
+
+.clip-path-rectangle {
+  height: 50vh;
+  background-color: $primary;
+  clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
+}
+
+.bg-padrao {
   background: m3-theme.$primary;
 }
 
-.text-default {
+.cor-padrao {
   color: m3-theme.$primary;
+}
+
+.cor-azul {
+  color: $azul;
+}
+
+
+.cor-laranja {
+  color: $laranja;
+}
+
+.cor-roxa {
+  color: $roxo;
+}
+
+.cor-branca {
+  color: $white;
 }

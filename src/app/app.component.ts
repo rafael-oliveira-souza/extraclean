@@ -1,11 +1,16 @@
-import { Component } from '@angular/core';
+import { Component, LOCALE_ID } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MenuComponent } from './tabs/menu/menu.component';
-import { DateAdapter, MAT_DATE_LOCALE, provideNativeDateAdapter } from '@angular/material/core';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment'; // Import Moment.js
 import { LinguagemEnum } from './domains/enums/LinguagemEnum';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { registerLocaleData } from '@angular/common';
 import 'moment/locale/pt-br';
-import {provideMomentDateAdapter} from '@angular/material-moment-adapter';
+import localePt from '@angular/common/locales/pt';
+import { ImageComponent } from './components/image/image.component';
+
+registerLocaleData(localePt);
 
 export const MY_FORMATS = {
   parse: {
@@ -24,12 +29,14 @@ export const MY_FORMATS = {
   standalone: true,
   providers: [
     provideMomentDateAdapter(MY_FORMATS),
+    { provide: LOCALE_ID, useValue: LinguagemEnum.PT },
     { provide: MAT_DATE_LOCALE, useValue: LinguagemEnum.PT }, // Set locale to Portuguese (Brazil)
     { provide: 'moment', useValue: moment }, // Provide Moment.js
   ],
   imports: [
     RouterOutlet,
     MenuComponent,
+    ImageComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

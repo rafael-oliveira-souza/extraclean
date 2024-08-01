@@ -5,18 +5,10 @@ small {
     color: $white;
 }
 
+
 .clip-path-rectangle:hover {
-    cursor: pointer;
+    cursor:  default;
     border: 2px solid $primary10;
     text-align: start;
     /* Cor e largura da borda ao passar o mouse */
-}
-
-::ng-deep mat-checkbox {
-    .mdc-label {
-        color: $white !important;
-    }
-    input {
-        color: $white !important;
-    }
-}
+  }
