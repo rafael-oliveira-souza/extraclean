@@ -1,6 +1,97 @@
 <div class="container ">
-    <app-calendario (getDiasAgendados)="getDiasAgendados($event)"></app-calendario>
-    <div class="d-flex justify-content-end">
-        <button [disabled]="desabilitarAgendamento()" (click)="agendar()" mat-flat-button>Agendar</button>
+
+    <div class="mt-4">
+        <mat-progress-bar mode="determinate" [value]="valorProgresso"></mat-progress-bar>
+    </div>
+
+    <div>
+        <form *ngIf="firstFormGroup" [formGroup]="firstFormGroup">
+            <mat-stepper [linear]="isLinear" #stepper>
+                <mat-step [optional]="false" [stepControl]="firstFormGroup" label="Passo 1">
+                    <div class="mt-4 text-center">
+                        <h5>Há quanto tempo foi realizada uma limpeza na sua casa? * </h5>
+                        <div class="d-flex justify-content-center">
+                            <mat-button-toggle-group formControlName="first" required>
+                                <mat-button-toggle value="1">Menos de 7 dias</mat-button-toggle>
+                                <mat-button-toggle value="2">Menos de 15 dias</mat-button-toggle>
+                                <mat-button-toggle value="3">Menos de 30 dias</mat-button-toggle>
+                                <mat-button-toggle value="4">Mais de 30 dias</mat-button-toggle>
+                            </mat-button-toggle-group>
+                        </div>
+                    </div>
+                    <div>
+                        <button [disabled]="isDisabled('first')" mat-button matStepperNext>Próximo</button>
+                    </div>
+                </mat-step>
+
+                <mat-step [optional]="false" [stepControl]="firstFormGroup" label="Passo 2"
+                    errorMessage="Responda há quanto tempo foi realizada uma limpeza na sua casa.">
+                    <div class="mt-4 text-center">
+                        <h5>Há quanto tempo foi realizada uma limpeza na sua casa? * </h5>
+                        <!-- <div class="d-flex justify-content-center">
+                            <mat-button-toggle-group formControlName="second" required>
+                                <mat-button-toggle value="1">Menos de 7 dias</mat-button-toggle>
+                                <mat-button-toggle value="2">Menos de 15 dias</mat-button-toggle>
+                                <mat-button-toggle value="3">Menos de 30 dias</mat-button-toggle>
+                                <mat-button-toggle value="4">Mais de 30 dias</mat-button-toggle>
+                            </mat-button-toggle-group>
+                         </div> -->
+                        <mat-form-field>
+                            <mat-label>Address</mat-label>
+                            <input matInput placeholder="Ex. 1 Main St, New York, NY" formControlName="second" required>
+                        </mat-form-field>
+                    </div>
+                    <div>
+                        <button mat-button matStepperPrevious>Voltar</button>
+                        <button [disabled]="isDisabled('second')" mat-button matStepperNext>Próximo</button>
+                    </div>
+                </mat-step>
+                <mat-step>
+                    <ng-template matStepLabel>Pronto</ng-template>
+                    <p>Escolha o tipo de limpeza</p>
+                    <div>
+                        <button mat-button matStepperPrevious>Voltar</button>
+                        <button mat-button (click)="resetar(stepper)">Resetar</button>
+                    </div>
+                </mat-step>
+            </mat-stepper>
+        </form>
+
+    </div>
+
+    <!-- <div class="mt-4 text-center">
+        <h5>Há quanto tempo foi realizada uma limpeza na sua casa? * </h5>
+        <div class="d-flex justify-content-center">
+            <mat-button-toggle-group [(ngModel)]="ultimaLimpeza" (ngModelChange)="atualizarProgresso()" name="dias"
+                aria-label="Font Style">
+                <mat-button-toggle value="1">Menos de 7 dias</mat-button-toggle>
+                <mat-button-toggle value="2">Menos de 15 dias</mat-button-toggle>
+                <mat-button-toggle value="3">Menos de 30 dias</mat-button-toggle>
+                <mat-button-toggle value="4">Mais de 30 dias</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+    </div>
+
+    <div class="mt-4 text-center" *ngIf="ultimaLimpeza != 0">
+        <h5>Qual a metragem da área a ser limpa? *</h5>
+        <div class="d-flex justify-content-center">
+            <mat-button-toggle-group [(ngModel)]="metragem" (ngModelChange)="atualizarProgresso()" name="metragem"
+                aria-label="Font Style">
+                <mat-button-toggle value="1">Até 50 m²</mat-button-toggle>
+                <mat-button-toggle value="2">Até 80 m²</mat-button-toggle>
+                <mat-button-toggle value="3">Até 120 m²</mat-button-toggle>
+                <mat-button-toggle value="4">Até 150 m²</mat-button-toggle>
+                <mat-button-toggle value="5">Acima de 150 m²</mat-button-toggle>
+            </mat-button-toggle-group>
+        </div>
+    </div> -->
+
+
+
+    <div id="calendarioIdAgd390">
+        <app-calendario (getDiasAgendados)="getDiasAgendados($event)"></app-calendario>
+        <div class="d-flex justify-content-end">
+            <button [disabled]="desabilitarAgendamento()" (click)="agendar()" mat-flat-button>Agendar</button>
+        </div>
     </div>
 </div>

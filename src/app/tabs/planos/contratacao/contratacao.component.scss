@@ -1,0 +1,24 @@
+@import '../../../../color.scss';
+
+h3 {
+    text-align: center;
+    color: $primary;
+}
+
+
+ul {
+    list-style: none;
+    padding: 0;
+}
+
+li {
+    position: relative;
+    padding-left: 20px;
+}
+
+li::before {
+    content: '*';
+    position: absolute;
+    left: 0;
+    color: #333;
+}

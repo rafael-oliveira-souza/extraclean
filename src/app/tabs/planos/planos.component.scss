@@ -5,6 +5,11 @@ small {
     color: $white;
 }
 
+::ng-deep mat-icon {
+    text-align: justify;
+    color: $white;
+}
+
 .clip-path-rectangle:hover {
     cursor: pointer;
     border: 2px solid $primary10;
@@ -16,6 +21,7 @@ small {
     .mdc-label {
         color: $white !important;
     }
+
     input {
         color: $white !important;
     }

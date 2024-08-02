@@ -69,6 +69,10 @@ body {
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
 }
 
+strong {
+    color: $primary;
+}
+
 .bg-padrao {
   background: m3-theme.$primary;
 }

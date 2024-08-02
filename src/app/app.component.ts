@@ -9,6 +9,7 @@ import { registerLocaleData } from '@angular/common';
 import 'moment/locale/pt-br';
 import localePt from '@angular/common/locales/pt';
 import { ImageComponent } from './components/image/image.component';
+import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 
 registerLocaleData(localePt);
 
@@ -32,6 +33,14 @@ export const MY_FORMATS = {
     { provide: LOCALE_ID, useValue: LinguagemEnum.PT },
     { provide: MAT_DATE_LOCALE, useValue: LinguagemEnum.PT }, // Set locale to Portuguese (Brazil)
     { provide: 'moment', useValue: moment }, // Provide Moment.js
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { showError: true }
+    },
+    {
+      provide: STEPPER_GLOBAL_OPTIONS,
+      useValue: { displayDefaultIndicatorType: false }
+    }
   ],
   imports: [
     RouterOutlet,

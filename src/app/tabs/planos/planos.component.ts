@@ -1,12 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatCardModule } from '@angular/material/card';
 import { PlanoDTO } from '../../domains/dtos/PlanoDTO';
-import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
 import { PipeModule } from '../../pipes/pipe.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
+import { ContratacaoComponent } from './contratacao/contratacao.component';
+import { DialogModule } from '@angular/cdk/dialog';
 
 @Component({
   selector: 'app-planos',
@@ -15,24 +16,37 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FormsModule,
     CommonModule,
     ReactiveFormsModule,
-    MatCardModule,
     MatIconModule,
-    MatGridListModule,
     PipeModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    DialogModule
   ],
   templateUrl: './planos.component.html',
-  styleUrl: './planos.component.scss'
+  styleUrl: './planos.component.scss',
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanosComponent {
 
   public planos: Array<PlanoDTO> = [];
   public planoPlus: boolean = false;
+  readonly dialog = inject(MatDialog);
 
-  constructor(){
-    this.planos.push(new PlanoDTO("Diário", "Plano Meu lar", 99))
-    this.planos.push(new PlanoDTO("Semanal", "", 99))
-    this.planos.push(new PlanoDTO("Mensal", "", 99))
-    this.planos.push(new PlanoDTO("Anual", "", 99))
+  constructor() {
+    this.planos.push(new PlanoDTO("Diário", "Plano Meu lar", 99));
+    this.planos.push(new PlanoDTO("Semanal", "", 99));
+    this.planos.push(new PlanoDTO("Mensal", "", 99));
+    this.planos.push(new PlanoDTO("Anual", "", 99));
+  }
+
+  public abrirContratacao(plano: PlanoDTO) {
+    const documentWidth = document.documentElement.clientWidth;
+    const documentHeight = document.documentElement.clientHeight;
+    let dialogRef = this.dialog.open(ContratacaoComponent, {
+      minWidth: `${documentWidth * 0.4}px`,
+      maxWidth: `${documentWidth * 0.8}px`,
+      minHeight: `${documentHeight * 0.2}px`,
+      maxHeight: `${documentHeight * 0.8}px`,
+      data: plano
+    });
   }
 }

@@ -2,7 +2,8 @@
     <div class="mt-3 row justify-content-start">
         <div class="col-12 col-xl-4 col-lg-4 col-md-6 col-sm-6  mt-2" *ngFor="let servico of servicos;">
             <div class="p-4 clip-path-rectangle">
-                <mat-icon class="text-white" aria-hidden="false" aria-label="Planos" [fontIcon]="servico.icone"></mat-icon>
+                <mat-icon class="cor-branca" aria-hidden="false" aria-label="Servicos"
+                    [fontIcon]="servico.icone"></mat-icon>
                 <h4 class="cor-azul">{{servico.nome}}</h4>
                 <br><br>
                 <small>{{servico.descricao}}</small>

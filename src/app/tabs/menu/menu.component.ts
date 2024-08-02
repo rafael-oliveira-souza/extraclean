@@ -5,7 +5,7 @@ import { AgendamentoComponent } from "../agendamento/agendamento.component";
 import { PlanosComponent } from '../planos/planos.component';
 import { ServicosComponent } from '../servicos/servicos.component';
 import { MatButtonModule } from '@angular/material/button';
-import {MatMenuModule} from '@angular/material/menu';
+import { MatMenuModule } from '@angular/material/menu';
 import { HomeComponent } from '../home/home.component';
 
 @Component({
@@ -17,7 +17,7 @@ import { HomeComponent } from '../home/home.component';
     AgendamentoComponent,
     PlanosComponent,
     ServicosComponent,
-    MatButtonModule, 
+    MatButtonModule,
     MatMenuModule,
     HomeComponent
   ],
@@ -26,4 +26,7 @@ import { HomeComponent } from '../home/home.component';
 })
 export class MenuComponent {
 
+  public contratar() {
+
+  }
 }

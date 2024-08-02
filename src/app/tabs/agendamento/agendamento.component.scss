@@ -10,3 +10,32 @@
     // color: $primary !important;
     background-color: $sub !important;
 }
+
+::ng-deep .mdc-linear-progress__bar-inner {
+    --mdc-linear-progress-active-indicator-height: 40px !important;
+    border-top-style: solid;
+    border-color: $azul !important;
+    border-top-width: 40px !important;
+}
+
+::ng-deep .mdc-linear-progress__buffer-bar {
+    // color: $primary !important;
+    // background-color: $azul !important;
+}
+
+::ng-deep .mat-button-toggle {
+    color: $azul !important;
+    background-color: $white !important;
+}
+
+::ng-deep .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
+    color: $azul !important;
+    // background-color: $primary !important;
+}
+.mat-stepper-horizontal {
+  margin-top: 8px;
+}
+
+.mat-mdc-form-field {
+  margin-top: 16px;
+}

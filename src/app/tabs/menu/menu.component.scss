@@ -15,7 +15,7 @@
 
 ::ng-deep .mdc-tab--active,
 .mdc-tab-indicator--active {
-    border-bottom: 6px solid $white !important;
+    border-bottom: 6px solid $azul !important;
 }
 
 .mat-icon {
@@ -31,4 +31,22 @@
     .mdc-tab__text-label {
         color: $white !important;
     }
+}
+
+.btn-contrate {
+    color: $primary !important;
+    background-color: $azul !important;
+    margin-right: 50px;
+}
+
+.btn-contrate {
+    color: $primary !important;
+    background-color: $azul !important;
+    margin-right: 50px;
+}
+
+.btn-contrate:hover {
+    cursor: pointer;
+    border: 1px solid $white;
+    color: $white  !important;
 }
