@@ -1,0 +1,29 @@
+<div>
+    <label *ngIf="label">{{label}}</label>
+    <div class="d-flex justify-content-center text-center">
+        <div class="border-default" [style.border-color]="color">
+            <mat-icon [style.color]="color" (click)="calcularComodos(-1)" aria-hidden="false"
+                fontIcon="remove"></mat-icon>
+        </div>
+        <input (change)="atualizarValor(valor)" *ngIf="min != null && max != null" class="border-default"
+            [style.border-color]="color" matInput [style.width]="largura" matInput type="number" [disabled]="disabled"
+            [min]="min" [max]="max" [required]="required" [(ngModel)]="valor">
+        <input (change)="atualizarValor(valor)" *ngIf="min == null && max == null" class="border-default"
+            [style.border-color]="color" matInput [style.width]="largura" matInput type="number" [disabled]="disabled"
+            [required]="required" [(ngModel)]="valor">
+        <input (change)="atualizarValor(valor)" *ngIf="min != null && max  == null" class="border-default"
+            [style.border-color]="color" matInput [style.width]="largura" matInput type="number" [disabled]="disabled"
+            [min]="min" [required]=" required" [(ngModel)]="valor">
+        <input (change)="atualizarValor(valor)" *ngIf="min == null && max != null" class="border-default"
+            [style.border-color]="color" matInput [style.width]="largura" matInput type="number" [disabled]="disabled"
+            [max]="max" [required]="required" [(ngModel)]="valor">
+        <div class="border-default" [style.border-color]="color">
+            <mat-icon [style.color]="color" (click)="calcularComodos(1)" aria-hidden="false" fontIcon="add"></mat-icon>
+        </div>
+    </div>
+    <div>
+        <small [style.color]="color" *ngIf="min != null">Mínimo: {{min}}</small><br>
+        <small [style.color]="color" *ngIf="max != null">Máximo: {{max}}</small>
+        <!-- <small *ngIf="formController" class="cor-vermelha">{{formController.errors}}</small> -->
+    </div>
+</div>

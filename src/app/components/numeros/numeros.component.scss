@@ -1,0 +1,17 @@
+@import '../../../color.scss';
+
+.mat-icon {
+    cursor: pointer;
+    // color: $primary !important;
+    // border: 1px solid black;
+}
+
+input {
+    text-align: center;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+small {
+    font-size: 10px;
+}

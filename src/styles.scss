@@ -48,6 +48,11 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+.notificacao-alerta {
+  background-color: $laranja !important;
+  color: $white !important;
+}
+
 .whatsapp {
   position: fixed;
   width: 60px;
@@ -73,6 +78,11 @@ strong {
     color: $primary;
 }
 
+.border-default {
+  border: 1px solid $primary;
+  border-radius: 2px;
+}
+
 .bg-padrao {
   background: m3-theme.$primary;
 }
@@ -96,4 +106,8 @@ strong {
 
 .cor-branca {
   color: $white;
+}
+
+.cor-vermelha {
+  color: $vermelho;
 }

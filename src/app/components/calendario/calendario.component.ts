@@ -12,6 +12,8 @@ import { PipeModule } from '../../pipes/pipe.module';
 import { CommonModule, TitleCasePipe } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { DiaSemanaEnum } from '../../domains/enums/DiaSemanaEnum';
+import { ProfissionalService } from '../../services/profissional.service';
+import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 
 
 @Component({
@@ -51,8 +53,14 @@ export class CalendarioComponent {
   public diasCalendario: Array<MomentInput> = this.getDiasMes();
   public diasAgendados: Map<string, MomentInput> = new Map<string, Date>();
   public diasSemana: Array<string> = this.getDiasSemana();
+  public profissionais: Array<ProfissionalDTO> = [];
 
-  constructor(private _changes: ChangeDetectorRef) { }
+  constructor(private _changes: ChangeDetectorRef, private _profissionalService: ProfissionalService) {
+    this._profissionalService.get()
+      .subscribe((prof: Array<ProfissionalDTO>) => {
+        this.profissionais = prof;
+      });
+  }
 
   adicionarAgendamento(diaSelecionado: MomentInput): void {
     const diaFormatado = DateUtils.format(diaSelecionado, "yyyy_MM_DD");
@@ -80,7 +88,7 @@ export class CalendarioComponent {
       inputData.setAttribute("selected", "true");
       this.adicionarAgendamento(dia);
     }
-    
+
     const values = Array.from(this.diasAgendados.values());
     this.getDiasAgendados.emit(values);
   }

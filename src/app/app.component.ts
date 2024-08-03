@@ -25,6 +25,7 @@ export const MY_FORMATS = {
   },
 };
 
+
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -40,7 +41,7 @@ export const MY_FORMATS = {
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { displayDefaultIndicatorType: false }
-    }
+    },
   ],
   imports: [
     RouterOutlet,

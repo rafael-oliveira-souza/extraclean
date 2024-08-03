@@ -1,5 +1,6 @@
 @import '../../../color.scss';
 
+
 ::ng-deep .mdc-button {
     color: $white !important;
     background-color: $primary !important;
@@ -24,18 +25,59 @@
 }
 
 ::ng-deep .mat-button-toggle {
-    color: $azul !important;
-    background-color: $white !important;
+    color: $white !important;
+    background-color: $primary !important;
 }
 
 ::ng-deep .mat-pseudo-checkbox-minimal.mat-pseudo-checkbox-checked::after {
-    color: $azul !important;
+    color: $white !important;
     // background-color: $primary !important;
 }
+
 .mat-stepper-horizontal {
-  margin-top: 8px;
+    margin-top: 8px;
+    background-color: $white !important;
 }
 
 .mat-mdc-form-field {
-  margin-top: 16px;
+    margin-top: 16px;
+}
+
+input {
+    border: none;
+    color: $primary;
+
+    :disabled {
+        color: $primary !important;
+    }
+}
+
+::ng-deep .mdc-text-field--filled.mdc-text-field--disabled .mdc-text-field__input {
+    color: $primary !important;
+}
+
+::ng-deep .mdc-text-field[disabled] {
+    color: $primary;
+}
+
+::ng-deep .mdc-text-field {
+    background-color: white !important;
+    color: $primary !important;
+    padding: 0px !important;
+
+    :hover {
+        background-color: white !important;
+        color: $primary !important;
+        padding: auto !important;
+    }
+}
+
+.quadro {
+    color: $primary;
+    // background-color: $primary;
+    border-radius: 10px;
+}
+
+h5 {
+    margin-bottom: 30px;
 }

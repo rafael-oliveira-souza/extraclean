@@ -1,4 +1,4 @@
-<div [style.width]="largura" class="mt-2" >
+<div [style.width]="largura" class="mt-2">
     <mat-grid-list cols="7" rowHeight="50px">
         <mat-grid-tile colspan="2">
             <mat-form-field style="margin-top: 20px;">
@@ -9,7 +9,26 @@
                 </mat-datepicker>
             </mat-form-field>
         </mat-grid-tile>
-        <mat-grid-tile colspan="3"> </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+            <mat-form-field style="margin-top: 20px;">
+                <mat-label>Escolha uma profissional</mat-label>
+                <select matNativeControl>
+                    <option value="">Sem preferência</option>
+                    <option *ngFor="let prof of profissionais" [value]="prof.id">{{prof.nome}}</option>
+                </select>
+            </mat-form-field>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="1">
+            <mat-form-field style="margin-top: 20px;">
+                <mat-label>Tipo de Limpeza</mat-label>
+                <select matNativeControl>
+                    <option value="1">Normal</option>
+                    <option value="2">Detalhada</option>
+                </select>
+            </mat-form-field>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="1"> </mat-grid-tile>
         <mat-grid-tile>
             <mat-icon aria-hidden="false" aria-label="Voltar" fontIcon="chevron_left" (click)="anterior()"></mat-icon>
         </mat-grid-tile>

@@ -6,12 +6,16 @@ import { MomentInput } from 'moment';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup } from '@angular/forms';
+import { FormBuilder, Validators, FormsModule, ReactiveFormsModule, FormGroup, FormControl, FormGroupDirective, NgForm } from '@angular/forms';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button'
-import { CdkStep, StepperOptions } from '@angular/cdk/stepper';
+import { NumerosComponent } from '../../components/numeros/numeros.component';
+import { CepService } from '../../services/cep.service';
+import { CepDTO } from '../../domains/dtos/CepDTO';
+import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
+import { NotificacaoService } from '../../services/notificacao.service';
 
 @Component({
   selector: 'app-agendamento',
@@ -31,26 +35,52 @@ import { CdkStep, StepperOptions } from '@angular/cdk/stepper';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
+    NumerosComponent,
+    NgxMaskDirective,
+    NgxMaskPipe
+  ],
+  providers: [
+    provideNgxMask(),
   ],
   templateUrl: './agendamento.component.html',
   styleUrl: './agendamento.component.scss'
 })
 export class AgendamentoComponent {
-  public firstFormGroup!: FormGroup;
+  public diasAgendados: Array<MomentInput> = [];
+  public isLinear = false;
+  public formComodos!: FormGroup;
+  public formArea!: FormGroup;
+  public formUltimaLimpeza!: FormGroup;
+  public formPets!: FormGroup;
+  public formCep!: FormGroup;
+  public isEditable = true;
+  public exibeCep = false;
 
-  constructor(private _formBuilder: FormBuilder) {
+  constructor(private _formBuilder: FormBuilder, private _cepService: CepService,
+    private _notificacaoService: NotificacaoService) {
     this.buildForm();
   }
 
-  public diasAgendados: Array<MomentInput> = [];
-  public corProgresso: string = "#23C5F6";
-  public valorProgresso: number = 0;
-  public ultimaLimpeza: number = 0;
-  public metragem: number = 0;
-  public isLinear = false;
-
   public agendar() {
     console.log(this.diasAgendados)
+  }
+
+  public getCep(cep: string) {
+    this.exibeCep = false;
+    if (cep) {
+      this._cepService.getCep(cep)
+        .subscribe((cepRecuperado: CepDTO) => {
+          if (cepRecuperado['erro']) {
+            this._notificacaoService.alerta("Cep não encontrado!");
+          } else {
+            this.exibeCep = true;
+            this.formCep.controls['bairro'].setValue(cepRecuperado.bairro);
+            this.formCep.controls['localidade'].setValue(cepRecuperado.localidade);
+            this.formCep.controls['logradouro'].setValue(cepRecuperado.logradouro);
+            this.formCep.controls['uf'].setValue(cepRecuperado.uf);
+          }
+        });
+    }
   }
 
   public getDiasAgendados(diasAgendados: Array<MomentInput>) {
@@ -62,7 +92,8 @@ export class AgendamentoComponent {
   }
 
   public isDisabled(controlName: string) {
-    return !this.firstFormGroup.controls[controlName].value;
+    // return !this.firstFormGroup.controls[controlName].value;
+    return true;
   }
 
   public resetar(stepper: MatStepper) {
@@ -71,20 +102,36 @@ export class AgendamentoComponent {
   }
 
   private buildForm() {
-    this.firstFormGroup = this._formBuilder.group({
-      first: [null, Validators.required],
-      second: [null, Validators.required],
+    this.formComodos = this._formBuilder.group({
+      cozinha: [0, Validators.min(0)],
+      quarto: [0, Validators.min(1)],
+      banheiro: [0, Validators.min(1)],
+      sala: [0, Validators.min(1)],
+      areaServico: [0, Validators.min(0)],
     });
-  }
+    this.formArea = this._formBuilder.group({
+      valor: ['', Validators.required]
+    });
+    this.formUltimaLimpeza = this._formBuilder.group({
+      valor: ['', Validators.required]
+    });
+    this.formPets = this._formBuilder.group({
+      valor: ['', Validators.required]
+    });
+    this.formCep = this._formBuilder.group({
+      cep: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+      numero: ['', Validators.required],
+      logradouro: new FormControl({ value: '', disabled: true }, Validators.required),
+      complemento: new FormControl({ value: '', disabled: false }),
+      bairro: new FormControl({ value: '', disabled: true }, Validators.required),
+      localidade: new FormControl({ value: '', disabled: true }, Validators.required),
+      uf: new FormControl({ value: '', disabled: true }, Validators.required)
+    });
 
-  public atualizarProgresso() {
-    this.valorProgresso = 0;
-    if (this.metragem) {
-      this.valorProgresso += 10;
-    }
-
-    if (this.ultimaLimpeza) {
-      this.valorProgresso += 10;
-    }
+    this.formCep.valueChanges.subscribe(cep => {
+      if (this.formCep.controls['cep'].invalid) {
+        this.exibeCep = false;
+      }
+    });
   }
 }

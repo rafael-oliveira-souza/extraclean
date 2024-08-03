@@ -27,6 +27,10 @@
     background-color: $sub;
 }
 
+::ng-deep .mat-mdc-tab-body-content {
+    background-color: $white !important;
+}
+
 ::ng-deep mat-tab-header {
     .mdc-tab__text-label {
         color: $white !important;
@@ -48,5 +52,5 @@
 .btn-contrate:hover {
     cursor: pointer;
     border: 1px solid $white;
-    color: $white  !important;
+    color: $white !important;
 }
