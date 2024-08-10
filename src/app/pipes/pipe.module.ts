@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { DatePipe } from './date.pipe';
 import { MoedaPipe } from './moeda.pipe';
 import { CepPipe } from './cep.pipe';
+import { TurnoPipe } from './turno.pipe';
 
 @NgModule({
   declarations: [],
@@ -10,12 +11,14 @@ import { CepPipe } from './cep.pipe';
     CommonModule,
     MoedaPipe,
     CepPipe,
-    DatePipe
+    DatePipe,
+    TurnoPipe
   ],
   exports: [
     DatePipe,
     MoedaPipe,
     CepPipe,
+    TurnoPipe
   ]
 })
 export class PipeModule { }

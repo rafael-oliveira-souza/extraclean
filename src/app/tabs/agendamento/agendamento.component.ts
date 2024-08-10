@@ -16,6 +16,8 @@ import { CepService } from '../../services/cep.service';
 import { CepDTO } from '../../domains/dtos/CepDTO';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NotificacaoService } from '../../services/notificacao.service';
+import { ProfissionalService } from '../../services/profissional.service';
+import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 
 @Component({
   selector: 'app-agendamento',
@@ -46,6 +48,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
   styleUrl: './agendamento.component.scss'
 })
 export class AgendamentoComponent {
+  public readonly VALOR_PADRAO_METRO = 2.0;
   public diasAgendados: Array<MomentInput> = [];
   public isLinear = false;
   public formComodos!: FormGroup;
@@ -53,11 +56,17 @@ export class AgendamentoComponent {
   public formUltimaLimpeza!: FormGroup;
   public formPets!: FormGroup;
   public formCep!: FormGroup;
+  public formTipoLimpeza!: FormGroup;
   public isEditable = true;
   public exibeCep = false;
+  public isDetalhada = false;
+  public metragemMin = 25;
+  public metragemMax = 9999;
+  public valorMetro = this.VALOR_PADRAO_METRO;
+  public profissionais: Array<ProfissionalDTO> = [];
 
   constructor(private _formBuilder: FormBuilder, private _cepService: CepService,
-    private _notificacaoService: NotificacaoService) {
+    private _notificacaoService: NotificacaoService, private _profissionalService: ProfissionalService) {
     this.buildForm();
   }
 
@@ -110,7 +119,7 @@ export class AgendamentoComponent {
       areaServico: [0, Validators.min(0)],
     });
     this.formArea = this._formBuilder.group({
-      valor: ['', Validators.required]
+      valor: ['', [Validators.required, Validators.min(this.metragemMin), Validators.max(this.metragemMax)]]
     });
     this.formUltimaLimpeza = this._formBuilder.group({
       valor: ['', Validators.required]
@@ -118,6 +127,10 @@ export class AgendamentoComponent {
     this.formPets = this._formBuilder.group({
       valor: ['', Validators.required]
     });
+    this.formTipoLimpeza = this._formBuilder.group({
+      valor: ['', Validators.required]
+    });
+
     this.formCep = this._formBuilder.group({
       cep: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
       numero: ['', Validators.required],
@@ -133,5 +146,41 @@ export class AgendamentoComponent {
         this.exibeCep = false;
       }
     });
+
+    this.formTipoLimpeza.valueChanges.subscribe(value => {
+      if (this.formTipoLimpeza.controls['valor'].valid && this.profissionais.length == 0) {
+        this.recuperarProfissionais();
+      }
+    });
+
+    this.formArea.valueChanges.subscribe(value => {
+      if (this.formArea.controls['valor'].valid) {
+        this.calcularValorPorMetro(this.formArea.controls['valor'].value);
+      }
+    });
+  }
+
+  public calcularValorPorMetro(metragem: number) {
+    this.valorMetro = this.VALOR_PADRAO_METRO;
+    let metragemCalculada = metragem;
+    while (metragemCalculada > this.metragemMin && this.valorMetro >= 1.5) {
+      metragemCalculada -= this.metragemMin;
+      this.valorMetro -= 0.1;
+    }
+  }
+
+  public recuperarProfissionais() {
+    this._profissionalService.get()
+      .subscribe((prof: Array<ProfissionalDTO>) => {
+        this.profissionais = prof;
+      });
+  }
+
+  isLimpezaDetalhada() {
+    return this.formTipoLimpeza.controls['valor'].value == "2";
+  }
+
+  isLimpezaExpressa() {
+    return this.formTipoLimpeza.controls['valor'].value == "1";
   }
 }

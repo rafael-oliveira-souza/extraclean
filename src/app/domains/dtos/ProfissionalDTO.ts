@@ -6,4 +6,8 @@ export class ProfissionalDTO {
         this.id = id;
         this.nome = nome;
     }
+
+    public static empty(): ProfissionalDTO {
+        return new ProfissionalDTO(0, "");
+    }
 }

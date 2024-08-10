@@ -60,15 +60,22 @@ input {
     color: $primary;
 }
 
-::ng-deep .mdc-text-field {
-    background-color: white !important;
-    color: $primary !important;
-    padding: 0px !important;
 
-    :hover {
-        background-color: white !important;
+.custom mat-form-field {
+    background-color: white !important;
+}
+
+.custom {
+    ::ng-deep .mdc-text-field {
+        background-color: $sub !important;
         color: $primary !important;
-        padding: auto !important;
+        // padding: 0px !important;
+
+        :disabled {
+            background-color: $sub !important;
+            color: $primary !important;
+            padding: auto !important;
+        }
     }
 }
 

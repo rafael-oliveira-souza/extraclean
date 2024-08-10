@@ -8,11 +8,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class MoedaPipe implements PipeTransform {
 
   transform(value: string | number, format?: string): unknown {
+    const currencyPipe = new CurrencyPipe("pt-BR");
     if (!value) {
-      return null;
+      return currencyPipe.transform(0, "BRL");
     }
 
-    const currencyPipe = new CurrencyPipe("pt-BR");
     if (format) {
       return currencyPipe.transform(value, format);
     }
