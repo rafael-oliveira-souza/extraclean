@@ -4,6 +4,8 @@ import { DatePipe } from './date.pipe';
 import { MoedaPipe } from './moeda.pipe';
 import { CepPipe } from './cep.pipe';
 import { TurnoPipe } from './turno.pipe';
+import { MetragemPipe } from './metragem.pipe';
+import { PontoPipe } from './ponto.pipe';
 
 @NgModule({
   declarations: [],
@@ -12,13 +14,17 @@ import { TurnoPipe } from './turno.pipe';
     MoedaPipe,
     CepPipe,
     DatePipe,
-    TurnoPipe
+    TurnoPipe,
+    MetragemPipe,
+    PontoPipe,
   ],
   exports: [
     DatePipe,
     MoedaPipe,
     CepPipe,
-    TurnoPipe
+    TurnoPipe,
+    MetragemPipe,
+    PontoPipe,
   ]
 })
 export class PipeModule { }

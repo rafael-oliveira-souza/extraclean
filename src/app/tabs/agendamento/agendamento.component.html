@@ -220,7 +220,7 @@
                                             sujas.</li>
                                         <li><strong>Áreas Focadas:</strong> Geralmente inclui áreas como bancadas,
                                             pisos, e
-                                            o banheiro, mas não entra em detalhes menores como baseboards ou espaços
+                                            o banheiro, mas não entra em detalhes menores ou espaços
                                             difíceis de alcançar.</li>
                                         <li><strong>Produtos Utilizados:</strong> Produtos de limpeza genéricos e
                                             eficazes
@@ -257,7 +257,7 @@
                             <!-- <span matTextPrefix>R$&nbsp;</span> -->
                             <span matTextSuffix>m²</span>
                             @if (formArea.invalid) {
-                            <mat-error>O valor precisa estar entre {{metragemMin}} e {{metragemMax}} m².</mat-error>
+                            <mat-error>O valor precisa estar entre {{METRAGEM_MIN}} e {{METRAGEM_MAX}} m².</mat-error>
                             }
                         </mat-form-field>
                     </div>
@@ -275,14 +275,46 @@
                 <div id="calendarioIdAgd390">
                     <app-calendario [valorMetro]="valorMetro" [profissionais]="profissionais"
                         [metragem]="formArea.controls['valor'].value" [isDetalhada]="isLimpezaDetalhada()"
-                        (getDiasAgendados)="getDiasAgendados($event)"></app-calendario>
+                        (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
                     <div class="d-flex justify-content-end">
-                        <button [disabled]="desabilitarAgendamento()" (click)="agendar()"
-                            mat-flat-button>Agendar</button>
+                        <button [disabled]="desabilitarAgendamento()" (click)="agendar()" mat-flat-button
+                            matStepperNext>Agendar</button>
                     </div>
                 </div>
             </div>
             <div style="margin-top: -40px;">
+                <button mat-button matStepperPrevious>Voltar</button>
+                <!-- <button style="margin-left: 20px;" mat-button (click)="resetar(stepper)">Limpar</button> -->
+            </div>
+        </mat-step>
+        <mat-step>
+            <div class="mt-4 text-center">
+                <ng-template matStepLabel>Finalização</ng-template>
+                <div class="row justify-content-center">
+                    <div class="payment-card">
+                        <div class="payment-header">
+                            <h2>Detalhes do Pagamento</h2>
+                        </div>
+                        <div class="payment-info">
+                            <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno| turno}}
+                            </p>
+                            <p *ngIf="dadosAgendamento.profissional.nome">
+                                <strong>Profissional:</strong> {{dadosAgendamento.profissional.nome}}
+                            </p>
+                            <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
+                            <p><strong>Metragem:</strong> {{dadosAgendamento.metragem}}</p>
+                            <p><strong>Desconto:</strong> {{dadosAgendamento.desconto | moeda}}</p>
+                            <p><strong>Valor:</strong> {{dadosAgendamento.valor| moeda}}</p>
+                            <p><strong>Total:</strong> {{dadosAgendamento.total| moeda}}</p>
+                            <!-- <p><strong>Método de Pagamento:</strong> Cartão de Crédito</p> -->
+                        </div>
+                    </div>
+                    <small class="col-12 mt-3">* A escolha do profissional gera um aumento R$ 20 no valor total.</small>
+                    <small class="col-12">* São adicionados R$ 15 para o deslocamento do profissional.</small>
+                    <small class="col-12">* O período integral é calculado como 8 horas.</small>
+                </div>
+            </div>
+            <div>
                 <button mat-button matStepperPrevious>Voltar</button>
                 <!-- <button style="margin-left: 20px;" mat-button (click)="resetar(stepper)">Limpar</button> -->
             </div>

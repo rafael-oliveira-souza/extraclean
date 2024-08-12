@@ -15,7 +15,9 @@
                 <mat-label>Escolha uma profissional</mat-label>
                 <select matNativeControl [(ngModel)]="profissionalSelecionado" (change)="atualizarProfissional()">
                     <option value="0">Sem preferência</option>
-                    <option *ngFor="let prof of profissionais" [value]="prof.id">{{prof.nome}}</option>
+                    <option *ngFor="let prof of profissionais" [value]="prof.id">
+                        {{prof.nome}} {{prof.sobrenome | ponto: 20}}
+                    </option>
                 </select>
             </mat-form-field>
         </mat-grid-tile>
@@ -30,14 +32,15 @@
         </mat-grid-tile> -->
         <mat-grid-tile colspan="1">
             <mat-icon class="ml-2" *ngIf="!turno" aria-hidden="false" fontIcon="partly_cloudy_night"></mat-icon>
-            <mat-icon *ngIf="turno == '2'" aria-hidden="false" fontIcon="brightness_6"></mat-icon>
-            <mat-icon *ngIf="turno == '1'" aria-hidden="false" fontIcon="sunny"></mat-icon>
+            <mat-icon *ngIf="turno == 2" aria-hidden="false" fontIcon="brightness_6"></mat-icon>
+            <mat-icon *ngIf="turno == 1" aria-hidden="false" fontIcon="sunny"></mat-icon>
             <mat-form-field style="margin-top: 20px;">
-                <mat-label>Escolha um Turno</mat-label>
-                <select matNativeControl [(ngModel)]="turno">
-                    <option value="">Sem preferência</option>
+                <mat-label>Escolha um Período</mat-label>
+                <select matNativeControl [(ngModel)]="turno" (change)="atualizarProfissional()">
+                    <option value="0">Sem preferência</option>
                     <option value="1">Matutino</option>
                     <option value="2">Vespertino</option>
+                    <option value="3">Integral</option>
                 </select>
             </mat-form-field>
         </mat-grid-tile>
@@ -50,26 +53,28 @@
             <mat-icon aria-hidden="false" aria-label="Avançar" fontIcon="chevron_right" (click)="proximo()"></mat-icon>
         </mat-grid-tile>
         <mat-grid-tile *ngFor="let dia of diasSemana;">{{dia}}</mat-grid-tile>
-        <mat-grid-tile *ngFor="let dia of diasCalendario;" (click)="selecionarData(inputData, dia)">
-            <p #inputData> {{habilitarData(inputData, dia) | data : 'D'}} </p>
+        <mat-grid-tile *ngFor="let dia of diasCalendario;">
+            <p #inputData (click)="selecionarData(inputData, dia)"> {{habilitarData(inputData, dia) | data : 'D'}} </p>
         </mat-grid-tile>
+        <mat-grid-tile colspan="2">
+            <app-legenda style="margin-left: 10px;" [cor]="corIndisponivel" label="Indisponível"></app-legenda>
+            <app-legenda style="margin-left: 10px;" [cor]="corVerde" label="Disponível"></app-legenda>
+            <!-- <app-legenda style="margin-left: 10px;" [cor]="corCinza" label="Não Selecionado"></app-legenda> -->
+            <app-legenda style="margin-left: 10px;" [cor]="corPrincipal" label="Selecionado"></app-legenda>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="3">
+            <!-- <div class="row justify-content-end">
+                <small class="col-12">* A escolha do profissional aumenta R$ 20 ao valor total.</small>
+                <small class="col-12">* O período integral é calculado como 8 horas.</small>
+            </div> -->
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2"></mat-grid-tile>
+        <mat-grid-tile colspan="2"></mat-grid-tile>
+        <mat-grid-tile colspan="3">
+            <button class="cor-laranja" [disabled]="getQtdDias() <= 0" (click)="limparDiasSelecionados()" mat-button>
+                Limpar Dias Selecionados
+            </button>
+        </mat-grid-tile>
+        <mat-grid-tile colspan="2"></mat-grid-tile>
     </mat-grid-list>
-
-    <div class="container p-4 cor-laranja">
-        <div *ngIf="turno">
-            <small>Turno: {{turno | turno}}</small><br>
-        </div>
-        <div *ngIf="profissional.nome">
-            <small>Profissional: {{profissional.nome}}</small><br>
-        </div>
-        <div>
-            <small>Quantidade de Dias: {{getQtdDias()}}</small><br>
-        </div>
-        <div>
-            <small>Desconto: {{desconto | moeda}}</small>
-        </div>
-        <div>
-            <small>Total: {{valorTotal | moeda}}</small>
-        </div>
-    </div>
 </div>

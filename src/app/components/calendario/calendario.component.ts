@@ -14,6 +14,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { DiaSemanaEnum } from '../../domains/enums/DiaSemanaEnum';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { NumberUtils } from '../../utils/NumberUtils';
+import { LegendaComponent } from '../legenda/legenda.component';
+import { CorEnum } from '../../domains/enums/CorEnum';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { MatButtonModule } from '@angular/material/button';
+import { DiariaService } from '../../services/diaria.service';
+import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
+import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 
 
 @Component({
@@ -28,9 +35,11 @@ import { NumberUtils } from '../../utils/NumberUtils';
     MatInputModule,
     MatFormFieldModule,
     MatGridListModule,
+    MatButtonModule,
     CommonModule,
     PipeModule,
     MatIconModule,
+    LegendaComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendario.component.html',
@@ -44,7 +53,7 @@ export class CalendarioComponent {
   public largura: string = "100%";
 
   @Input('metragem')
-  public metragem: number | null = 0;
+  public metragem: number = 0;
 
   @Input('valorMetro')
   public valorMetro: number = 2;
@@ -58,8 +67,17 @@ export class CalendarioComponent {
   @Output()
   public getDiasAgendados: EventEmitter<Array<MomentInput>> = new EventEmitter();
 
+  @Output()
+  public getDadosAgendamento: EventEmitter<AgendamentoDTO> = new EventEmitter();
+
   public readonly PROFISSIONAL_SELECIONADO = 20;
   public readonly VALOR_DIARIA_DETALHADA = 1.9;
+  public readonly MAX_PERCENTUAL: number = 15;
+  public readonly ATTR_INDISPONIBLE: string = "indisponible";
+  public readonly ATTR_SELECTED: string = "selected";
+  public readonly ATTR_DISABLED: string = "disabled";
+
+
   public hoje: MomentInput = DateUtils.newDate();
   public diaSelecionado = new FormControl(DateUtils.toMoment(this.hoje));
   public maxDate: MomentInput = DateUtils.add(this.hoje, 1, 'year');
@@ -68,74 +86,128 @@ export class CalendarioComponent {
   public diasSemana: Array<string> = this.getDiasSemana();
   public profissional: ProfissionalDTO = ProfissionalDTO.empty();
   public profissionalSelecionado: number = 0;
-  public turno: string = "";
+  public diasAgendadosProfissional: AgendamentoDiariaDTO[] = [];
+  public turno: number = 0;
   public valorTotal: number = 0;
   public desconto: number = 0;
-  public readonly MAX_PERCENTUAL: number = 15;
+  public corVerde: CorEnum = CorEnum.verde;
+  public corCinza: CorEnum = CorEnum.cinza;
+  public corIndisponivel: CorEnum = CorEnum.laranja;
+  public corPrincipal: CorEnum = CorEnum.primary;
 
-  constructor(private _changes: ChangeDetectorRef) {
+  constructor(private _changes: ChangeDetectorRef, private _diariaService: DiariaService) {
     this.calcular();
   }
 
-  adicionarAgendamento(diaSelecionado: MomentInput): void {
-    const diaFormatado = DateUtils.format(diaSelecionado, "yyyy_MM_DD");
+  public adicionarAgendamento(diaSelecionado: MomentInput): void {
+    const diaFormatado = this.getDiaFormatado(diaSelecionado);
     this.diasAgendados.set(diaFormatado, diaSelecionado);
   }
 
-  removerAgendamento(diaSelecionado: MomentInput): void {
-    const diaFormatado = DateUtils.format(diaSelecionado, "yyyy_MM_DD");
+  public removerAgendamento(diaSelecionado: MomentInput): void {
+    const diaFormatado = this.getDiaFormatado(diaSelecionado);
     this.diasAgendados.delete(diaFormatado);
   }
 
-  atualizarAgendamento(): void {
+  public atualizarAgendamento(): void {
     this.diasCalendario = this.getDiasMes();
     this.diasSemana = this.getDiasSemana();
-    this.diasAgendados.clear();
+    // this.diasAgendados.clear();
     this._changes.detectChanges();
   }
 
-  selecionarData(inputData: HTMLElement, dia: MomentInput) {
-    const isDisabled = inputData.getAttribute("disabled");
-    if (isDisabled == "false") {
-      const isSelected = inputData.getAttribute("selected");
+  public atualizarDiasSelecionados() {
+    const diasMes = DateUtils.datesInMonth(this.diaSelecionado.value);
+    diasMes.forEach(dia => {
+      const diaFormatado = this.getDiaFormatado(dia);
+      const diaAgendado = this.diasAgendados.get(diaFormatado);
+      const idDia = this.gerarIdElementoCalendarioDiario(dia);
+      let inputData: HTMLElement | null = document.getElementById(idDia);
+      inputData?.removeAttribute(this.ATTR_INDISPONIBLE);
+      if (diaAgendado) {
+        inputData?.setAttribute(this.ATTR_SELECTED, "true");
+      } else {
+        inputData?.setAttribute(this.ATTR_SELECTED, "false");
+      }
+    });
+    this.atualizarProfissional();
+    this.emitirDadosAgendamento();
+  }
+
+  public atualizarDiasDisponiveisProfissional() {
+    if (this.profissional.id != 0) {
+      this.diasAgendadosProfissional.forEach(agend => {
+        const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
+        let inputData: HTMLElement | null = document.getElementById(idDia);
+        if (inputData) {
+          inputData.setAttribute(this.ATTR_INDISPONIBLE, "true");
+        }
+      });
+    }
+  }
+
+  public selecionarData(inputData: HTMLElement, dia: MomentInput) {
+    if (!dia) {
+      return;
+    }
+
+    const isDisabled = inputData.getAttribute(this.ATTR_DISABLED);
+    const isIndisponible = inputData.getAttribute(this.ATTR_INDISPONIBLE);
+    if (isDisabled == "false" && (!isIndisponible || isIndisponible == "false")) {
+      const isSelected = inputData.getAttribute(this.ATTR_SELECTED);
       if (isSelected == "true") {
-        inputData.setAttribute("selected", "false");
+        inputData.setAttribute(this.ATTR_SELECTED, "false");
         this.removerAgendamento(dia);
       } else {
-        inputData.setAttribute("selected", "true");
+        inputData.setAttribute(this.ATTR_SELECTED, "true");
         this.adicionarAgendamento(dia);
       }
 
       this.calcular();
-      const values = Array.from(this.diasAgendados.values());
-      this.getDiasAgendados.emit(values);
+      const diasSelecionados = Array.from(this.diasAgendados.values());
+      this.getDiasAgendados.emit(diasSelecionados);
     }
   }
 
+  private emitirDadosAgendamento() {
+    const diasSelecionados = Array.from(this.diasAgendados.values());
+    const agendamento = new AgendamentoDTO();
+    agendamento.desconto = NumberUtils.arredondarCasasDecimais(this.desconto, 2);
+    agendamento.total = NumberUtils.arredondarCasasDecimais(this.valorTotal, 2);
+    agendamento.valor = NumberUtils.arredondarCasasDecimais(agendamento.total + agendamento.desconto, 2);
+    agendamento.diasSelecionados = diasSelecionados;
+    agendamento.metragem = this.metragem;
+    agendamento.profissional = this.profissional;
+    agendamento.turno = this.turno;
 
-  habilitarData(inputData: HTMLElement, dia: MomentInput) {
+    this.getDadosAgendamento.emit(agendamento);
+  }
+
+  public habilitarData(inputData: HTMLElement, dia: MomentInput) {
     if (dia) {
-      inputData.setAttribute("disabled", "false");
+      inputData.id = this.gerarIdElementoCalendarioDiario(dia);
+      inputData.setAttribute(this.ATTR_DISABLED, "false");
     } else {
-      inputData.setAttribute("disabled", "true");
-      inputData.setAttribute("selected", "false");
+      inputData.id = "idBlockedDay";
+      inputData.setAttribute(this.ATTR_DISABLED, "true");
+      inputData.setAttribute(this.ATTR_SELECTED, "false");
     }
 
     return dia;
   }
 
-  getDiasMes() {
+  public getDiasMes() {
     return DateUtils.datesInMonth(this.diaSelecionado.value);
     // .map(dia => dia.getDate());
   }
 
-  getDiasSemana() {
+  public getDiasSemana() {
     this.adicionarDataVazia();
     return Object.values(DiaSemanaEnum);
     // return diasCalendario.slice(0, 7).map(dia => new TitleCasePipe().transform(DateUtils.toMoment(dia).format('dddd')));
   }
 
-  adicionarDataVazia() {
+  public adicionarDataVazia() {
     let primeiroDia: number = DateUtils.toDate(this.diasCalendario[0]).day();
     let ultimoDia: number = DateUtils.toDate(this.diasCalendario[this.diasCalendario.length - 1]).day();
     while (primeiroDia > 0) {
@@ -149,27 +221,29 @@ export class CalendarioComponent {
     }
   }
 
-  anterior() {
+  public anterior() {
     if (DateUtils.isAfter(this.diaSelecionado.value, this.hoje)) {
       const newDate = DateUtils.subtract(this.diaSelecionado.value, 1, 'month');
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
+      this.atualizarDiasSelecionados();
     }
   }
 
-  proximo() {
+  public proximo() {
     if (DateUtils.isBefore(this.diaSelecionado.value, this.maxDate)) {
       const newDate = DateUtils.add(this.diaSelecionado.value, 1, 'month');
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
+      this.atualizarDiasSelecionados();
     }
   }
 
-  getQtdDias() {
+  public getQtdDias() {
     return Array.from(this.diasAgendados.values()).length;
   }
 
-  setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+  public setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
     const ctrlValue = this.diaSelecionado.value ?? DateUtils.toMoment(this.hoje);
     ctrlValue.month(normalizedMonthAndYear.month());
     ctrlValue.year(normalizedMonthAndYear.year());
@@ -178,7 +252,7 @@ export class CalendarioComponent {
     this.atualizarAgendamento();
   }
 
-  calcular() {
+  public calcular() {
     this.valorTotal = 0;
     this.desconto = 0;
 
@@ -195,21 +269,42 @@ export class CalendarioComponent {
       this.valorTotal *= this.VALOR_DIARIA_DETALHADA;
     }
 
+    if (this.turno == TurnoEnum.INTEGRAL) {
+      this.valorTotal *= 2;
+    }
+
     if (qtdDias > 1) {
       let porcentagem = qtdDias * 2;
       this.valorTotal = this.aplicarDesconto(this.valorTotal, porcentagem);
     }
 
+    this.emitirDadosAgendamento();
     return this.valorTotal;
   }
 
   public atualizarProfissional() {
+    this.diasAgendadosProfissional = [];
     this.profissional = ProfissionalDTO.empty();
-    this.profissionais.forEach(prof => {
-      if (this.profissionalSelecionado == prof.id) {
-        this.profissional = prof;
-      }
-    })
+    const indisponibleAttrs = document.querySelectorAll("[" + this.ATTR_INDISPONIBLE + "]");
+    indisponibleAttrs.forEach(element => {
+      element.removeAttribute(this.ATTR_INDISPONIBLE);
+    });
+
+    if (this.profissionalSelecionado != 0) {
+      this.profissionais.forEach(prof => {
+        if (this.profissionalSelecionado == prof.id) {
+          this.profissional = prof;
+          const data = DateUtils.toDate(this.diaSelecionado.value).toDate();
+          this._diariaService.recuperarDiariasPorProfissional(prof.id, this.turno, data)
+            .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
+              this.diasAgendadosProfissional = agendamentos.map(agend =>
+                new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME)
+                  .toDate(), agend.turno));
+              this.atualizarDiasDisponiveisProfissional();
+            })
+        }
+      });
+    }
     this.calcular();
   }
 
@@ -233,5 +328,18 @@ export class CalendarioComponent {
     }
 
     return desconto;
+  }
+
+  public gerarIdElementoCalendarioDiario(dia: MomentInput) {
+    return "id" + DateUtils.format(dia, "YYYYMMDD");
+  }
+
+  public limparDiasSelecionados() {
+    this.diasAgendados.clear();
+    this.atualizarDiasSelecionados();
+  }
+
+  private getDiaFormatado(diaSelecionado: MomentInput) {
+    return DateUtils.format(diaSelecionado, "yyyy_MM_DD");
   }
 }

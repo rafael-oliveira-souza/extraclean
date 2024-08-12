@@ -18,6 +18,8 @@ import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { ProfissionalService } from '../../services/profissional.service';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { PipeModule } from '../../pipes/pipe.module';
 
 @Component({
   selector: 'app-agendamento',
@@ -38,6 +40,7 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
     MatFormFieldModule,
     MatInputModule,
     NumerosComponent,
+    PipeModule,
     NgxMaskDirective,
     NgxMaskPipe
   ],
@@ -49,7 +52,10 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 })
 export class AgendamentoComponent {
   public readonly VALOR_PADRAO_METRO = 2.0;
-  public diasAgendados: Array<MomentInput> = [];
+  public readonly METRAGEM_MIN = 25;
+  public readonly METRAGEM_MAX = 9999;
+
+  public dadosAgendamento: AgendamentoDTO = new AgendamentoDTO();
   public isLinear = false;
   public formComodos!: FormGroup;
   public formArea!: FormGroup;
@@ -60,8 +66,6 @@ export class AgendamentoComponent {
   public isEditable = true;
   public exibeCep = false;
   public isDetalhada = false;
-  public metragemMin = 25;
-  public metragemMax = 9999;
   public valorMetro = this.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
 
@@ -71,7 +75,11 @@ export class AgendamentoComponent {
   }
 
   public agendar() {
-    console.log(this.diasAgendados)
+    console.log(this.dadosAgendamento)
+  }
+
+  public limparDiasSelecionados() {
+
   }
 
   public getCep(cep: string) {
@@ -92,12 +100,12 @@ export class AgendamentoComponent {
     }
   }
 
-  public getDiasAgendados(diasAgendados: Array<MomentInput>) {
-    this.diasAgendados = diasAgendados;
+  public getDadosAgendamento(dadosAgendamento: AgendamentoDTO) {
+    this.dadosAgendamento = dadosAgendamento;
   }
 
   public desabilitarAgendamento() {
-    return this.diasAgendados.length <= 0;
+    return this.dadosAgendamento.isSemAgendamento();
   }
 
   public isDisabled(controlName: string) {
@@ -119,7 +127,7 @@ export class AgendamentoComponent {
       areaServico: [0, Validators.min(0)],
     });
     this.formArea = this._formBuilder.group({
-      valor: ['', [Validators.required, Validators.min(this.metragemMin), Validators.max(this.metragemMax)]]
+      valor: ['', [Validators.required, Validators.min(this.METRAGEM_MIN), Validators.max(this.METRAGEM_MAX)]]
     });
     this.formUltimaLimpeza = this._formBuilder.group({
       valor: ['', Validators.required]
@@ -148,7 +156,8 @@ export class AgendamentoComponent {
     });
 
     this.formTipoLimpeza.valueChanges.subscribe(value => {
-      if (this.formTipoLimpeza.controls['valor'].valid && this.profissionais.length == 0) {
+      const tipoLimpezaControl = this.formTipoLimpeza.controls['valor'];
+      if (tipoLimpezaControl.valid && tipoLimpezaControl.value == '1' && this.profissionais.length == 0) {
         this.recuperarProfissionais();
       }
     });
@@ -162,11 +171,11 @@ export class AgendamentoComponent {
 
   public calcularValorPorMetro(metragem: number) {
     this.valorMetro = this.VALOR_PADRAO_METRO;
-    let metragemCalculada = metragem;
-    while (metragemCalculada > this.metragemMin && this.valorMetro >= 1.5) {
-      metragemCalculada -= this.metragemMin;
-      this.valorMetro -= 0.1;
-    }
+    // let metragemCalculada = metragem;
+    // while (metragemCalculada > this.METRAGEM_MIN * 2 && this.valorMetro >= 1.5) {
+    //   metragemCalculada -= this.METRAGEM_MIN * 2;
+    //   this.valorMetro -= 0.1;
+    // }
   }
 
   public recuperarProfissionais() {

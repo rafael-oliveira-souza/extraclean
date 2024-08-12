@@ -5,15 +5,20 @@ import { LinguagemEnum } from "../domains/enums/LinguagemEnum";
 
 export class DateUtils {
     public static BR: string = "DD/MM/yyyy";
+    public static ES: string = "yyyy-MM-DD";
+    public static ES_LOCALDATETIME: string = "YYYY-MM-DDTHH:mm:ss.SSSSSS";
 
     public static toMoment(date?: MomentInput, format?: moment.MomentFormatSpecification, language = LinguagemEnum.PT): moment.Moment {
-        if (!format) {
-            format = this.BR;
-        }
-
         if (date && format && language) {
             return moment(date, format, language);
         }
+
+        if (date && !format) {
+            if (moment(date, this.BR, language).isValid()) {
+                return moment(date, this.BR);
+            }
+        }
+
 
         return moment().locale(LinguagemEnum.PT);
     }
@@ -73,6 +78,4 @@ export class DateUtils {
 
         return datesInMonth;
     }
-
-
 }
