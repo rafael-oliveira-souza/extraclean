@@ -18,9 +18,10 @@ import { LegendaComponent } from '../legenda/legenda.component';
 import { CorEnum } from '../../domains/enums/CorEnum';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { MatButtonModule } from '@angular/material/button';
-import { DiariaService } from '../../services/diaria.service';
 import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
+import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { DiaristaService } from '../../services/diarista.service';
 
 
 @Component({
@@ -69,10 +70,7 @@ export class CalendarioComponent {
 
   @Output()
   public getDadosAgendamento: EventEmitter<AgendamentoDTO> = new EventEmitter();
-
-  public readonly PROFISSIONAL_SELECIONADO = 20;
-  public readonly VALOR_DIARIA_DETALHADA = 1.9;
-  public readonly MAX_PERCENTUAL: number = 15;
+  public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public readonly ATTR_INDISPONIBLE: string = "indisponible";
   public readonly ATTR_SELECTED: string = "selected";
   public readonly ATTR_DISABLED: string = "disabled";
@@ -95,7 +93,7 @@ export class CalendarioComponent {
   public corIndisponivel: CorEnum = CorEnum.laranja;
   public corPrincipal: CorEnum = CorEnum.primary;
 
-  constructor(private _changes: ChangeDetectorRef, private _diariaService: DiariaService) {
+  constructor(private _changes: ChangeDetectorRef, private _diaristaService: DiaristaService) {
     this.calcular();
   }
 
@@ -177,8 +175,9 @@ export class CalendarioComponent {
     agendamento.valor = NumberUtils.arredondarCasasDecimais(agendamento.total + agendamento.desconto, 2);
     agendamento.diasSelecionados = diasSelecionados;
     agendamento.metragem = this.metragem;
-    agendamento.profissional = this.profissional;
+    agendamento.profissionalSelecionado = this.profissional;
     agendamento.turno = this.turno;
+    // agendamento.clienteId = =
 
     this.getDadosAgendamento.emit(agendamento);
   }
@@ -262,11 +261,15 @@ export class CalendarioComponent {
     }
 
     if (this.profissionalSelecionado != 0) {
-      this.valorTotal += this.PROFISSIONAL_SELECIONADO * qtdDias;
+      if (qtdDias > 0) {
+        this.valorTotal += this.VALOR_PROFISSIONAL_SELECIONADO * qtdDias;
+      } else {
+        this.valorTotal += this.VALOR_PROFISSIONAL_SELECIONADO;
+      }
     }
 
     if (this.isDetalhada) {
-      this.valorTotal *= this.VALOR_DIARIA_DETALHADA;
+      this.valorTotal *= AgendamentoConstantes.VALOR_DIARIA_DETALHADA;
     }
 
     if (this.turno == TurnoEnum.INTEGRAL) {
@@ -274,7 +277,8 @@ export class CalendarioComponent {
     }
 
     if (qtdDias > 1) {
-      let porcentagem = qtdDias * 2;
+      let porcentagem = qtdDias * AgendamentoConstantes.PERCENTUAL_DESCONTO;
+      this.valorTotal += AgendamentoConstantes.VALOR_DESLOCAMENTO * qtdDias;
       this.valorTotal = this.aplicarDesconto(this.valorTotal, porcentagem);
     }
 
@@ -295,7 +299,7 @@ export class CalendarioComponent {
         if (this.profissionalSelecionado == prof.id) {
           this.profissional = prof;
           const data = DateUtils.toDate(this.diaSelecionado.value).toDate();
-          this._diariaService.recuperarDiariasPorProfissional(prof.id, this.turno, data)
+          this._diaristaService.recuperarDiariasPorProfissional(prof.id, this.turno, data)
             .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
               this.diasAgendadosProfissional = agendamentos.map(agend =>
                 new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME)
@@ -319,8 +323,8 @@ export class CalendarioComponent {
 
   private calcularDesconto(valor: number, percentual: number): number {
     let desconto = 0;
-    if (percentual > this.MAX_PERCENTUAL) {
-      percentual = this.MAX_PERCENTUAL;
+    if (percentual > AgendamentoConstantes.MAX_PERCENTUAL) {
+      percentual = AgendamentoConstantes.MAX_PERCENTUAL;
     }
 
     if (valor > 0 && percentual > 0) {

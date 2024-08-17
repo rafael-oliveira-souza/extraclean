@@ -8,13 +8,13 @@ import { TurnoEnum } from '../domains/enums/TurnoEnum';
 @Injectable({
   providedIn: 'root'
 })
-export class DiariaService {
-  public readonly HOST_URL = `${environment.apiUrl}`;
+export class DiaristaService {
+  public readonly HOST_URL = `${environment.apiUrl}/profissional`;
 
   constructor(private _http: HttpClient) { }
 
   public recuperarDiariasPorProfissional(idProfissional: number, turno: TurnoEnum, data: Date): Observable<Array<AgendamentoDiariaDTO>> {
-    const url = `${this.HOST_URL}/diaria/profissional/${idProfissional}`;
+    const url = `${this.HOST_URL}/${idProfissional}/diarias`;
 
     let params = new HttpParams()
       .set('turno', turno)

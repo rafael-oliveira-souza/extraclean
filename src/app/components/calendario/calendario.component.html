@@ -31,9 +31,9 @@
             </mat-form-field>
         </mat-grid-tile> -->
         <mat-grid-tile colspan="1">
-            <mat-icon class="ml-2" *ngIf="!turno" aria-hidden="false" fontIcon="partly_cloudy_night"></mat-icon>
-            <mat-icon *ngIf="turno == 2" aria-hidden="false" fontIcon="brightness_6"></mat-icon>
-            <mat-icon *ngIf="turno == 1" aria-hidden="false" fontIcon="sunny"></mat-icon>
+            <!-- <mat-icon class="ml-2" *ngIf="!turno" aria-hidden="false" fontIcon="partly_cloudy_night"></mat-icon> -->
+            <!-- <mat-icon *ngIf="turno == 2" aria-hidden="false" fontIcon="brightness_6"></mat-icon> -->
+            <mat-icon aria-hidden="false" fontIcon="sunny"></mat-icon>
             <mat-form-field style="margin-top: 20px;">
                 <mat-label>Escolha um Período</mat-label>
                 <select matNativeControl [(ngModel)]="turno" (change)="atualizarProfissional()">
@@ -63,17 +63,18 @@
             <app-legenda style="margin-left: 10px;" [cor]="corPrincipal" label="Selecionado"></app-legenda>
         </mat-grid-tile>
         <mat-grid-tile colspan="3">
-            <!-- <div class="row justify-content-end">
-                <small class="col-12">* A escolha do profissional aumenta R$ 20 ao valor total.</small>
-                <small class="col-12">* O período integral é calculado como 8 horas.</small>
-            </div> -->
         </mat-grid-tile>
-        <mat-grid-tile colspan="2"></mat-grid-tile>
-        <mat-grid-tile colspan="2"></mat-grid-tile>
-        <mat-grid-tile colspan="3">
+        <mat-grid-tile colspan="2">
             <button class="cor-laranja" [disabled]="getQtdDias() <= 0" (click)="limparDiasSelecionados()" mat-button>
                 Limpar Dias Selecionados
             </button>
+        </mat-grid-tile>
+
+        <mat-grid-tile colspan="2"></mat-grid-tile>
+        <mat-grid-tile colspan="3">
+            <div class="row justify-content-end">
+                <div class="col-12"><strong>Valor:</strong> {{valorTotal | moeda}}</div>
+            </div>
         </mat-grid-tile>
         <mat-grid-tile colspan="2"></mat-grid-tile>
     </mat-grid-list>

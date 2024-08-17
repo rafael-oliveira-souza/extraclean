@@ -1,5 +1,27 @@
 <div class="custom">
     <mat-stepper linear #stepper>
+        <!-- <mat-step [stepControl]="formUltimaLimpeza" [editable]="isEditable">
+            <form [formGroup]="formUltimaLimpeza">
+                <ng-template matStepLabel>Área</ng-template>
+                <div class="mt-4 text-center">
+                    <h5>Qual a metragem da área a ser limpa? <small class="cor-laranja">*</small> </h5>
+                    <div class="d-flex justify-content-center">
+                        <mat-button-toggle-group formControlName="valor" required>
+                            <mat-button-toggle value="1">Até 50 m²</mat-button-toggle>
+                            <mat-button-toggle value="2">Até 80 m²</mat-button-toggle>
+                            <mat-button-toggle value="3">Até 120 m²</mat-button-toggle>
+                            <mat-button-toggle value="4">Até 150 m²</mat-button-toggle>
+                            <mat-button-toggle value="5">Mais de 150 m²</mat-button-toggle>
+                        </mat-button-toggle-group>
+                    </div>
+                </div>
+                <div class="mt-4">
+                    <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
+                    <button style="margin-left: 20px;" [disabled]="formUltimaLimpeza.invalid" mat-button
+                        (click)="avancarOuVoltar(stepper, true)">Próximo</button>
+                </div>
+            </form>
+        </mat-step> -->
         <!-- <mat-step [stepControl]="formCep" [editable]="isEditable">
             <form [formGroup]="formCep">
                 <ng-template matStepLabel>Localização</ng-template>
@@ -59,55 +81,11 @@
                 </div>
                 <div class="mt-4">
                     <button [disabled]="formCep.controls['numero'].invalid || !exibeCep" style="margin-left: 20px;"
-                        mat-button matStepperNext>Próximo</button>
+                        mat-button (click)="avancarOuVoltar(stepper, true)">Próximo</button>
                 </div>
             </form>
-        </mat-step> -->
-        <!-- 
-             <mat-step [stepControl]="formArea" [editable]="isEditable">
-            <form [formGroup]="formArea">
-                <ng-template matStepLabel>Última limpeza</ng-template>
-                <div class="mt-4 text-center">
-                    <h5>Há quanto tempo foi realizada uma limpeza na sua casa? <small class="cor-laranja">*</small>
-                    </h5>
-                    <div class="d-flex justify-content-center">
-                        <mat-button-toggle-group formControlName="valor" required>
-                            <mat-button-toggle value="1">Menos de 7 dias</mat-button-toggle>
-                            <mat-button-toggle value="2">Menos de 15 dias</mat-button-toggle>
-                            <mat-button-toggle value="3">Menos de 30 dias</mat-button-toggle>
-                            <mat-button-toggle value="4">Mais de 30 dias</mat-button-toggle>
-                        </mat-button-toggle-group>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <button style="margin-left: 20px;" [disabled]="formArea.invalid" mat-button
-                        matStepperNext>Próximo</button>
-                </div>
-            </form>
-        </mat-step> -->
-        <!-- <mat-step [stepControl]="formUltimaLimpeza" [editable]="isEditable">
-            <form [formGroup]="formUltimaLimpeza">
-                <ng-template matStepLabel>Área</ng-template>
-                <div class="mt-4 text-center">
-                    <h5>Qual a metragem da área a ser limpa? <small class="cor-laranja">*</small> </h5>
-                    <div class="d-flex justify-content-center">
-                        <mat-button-toggle-group formControlName="valor" required>
-                            <mat-button-toggle value="1">Até 50 m²</mat-button-toggle>
-                            <mat-button-toggle value="2">Até 80 m²</mat-button-toggle>
-                            <mat-button-toggle value="3">Até 120 m²</mat-button-toggle>
-                            <mat-button-toggle value="4">Até 150 m²</mat-button-toggle>
-                            <mat-button-toggle value="5">Mais de 150 m²</mat-button-toggle>
-                        </mat-button-toggle-group>
-                    </div>
-                </div>
-                <div class="mt-4">
-                    <button mat-button matStepperPrevious>Voltar</button>
-                    <button style="margin-left: 20px;" [disabled]="formUltimaLimpeza.invalid" mat-button
-                        matStepperNext>Próximo</button>
-                </div>
-            </form>
-        </mat-step> -->
-        <!-- <mat-step [stepControl]="formComodos" [editable]="isEditable">
+        </mat-step>
+        <mat-step [stepControl]="formComodos" [editable]="isEditable">
             <form [formGroup]="formComodos">
                 <ng-template matStepLabel>Cômodos</ng-template>
                 <div class="mt-4 text-center">
@@ -136,14 +114,13 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
                     <button style="margin-left: 20px;" [disabled]="formComodos.invalid" mat-button
-                        matStepperNext>Próximo</button>
+                        (click)="avancarOuVoltar(stepper, true)">Próximo</button>
                 </div>
             </form>
-        </mat-step> -->
-        <!--  -->
-        <!-- <mat-step [stepControl]="formPets" [editable]="isEditable">
+        </mat-step>
+        <mat-step [stepControl]="formPets" [editable]="isEditable">
             <form [formGroup]="formPets">
                 <ng-template matStepLabel>Pets</ng-template>
                 <div class="mt-4 text-center">
@@ -158,9 +135,9 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
                     <button style="margin-left: 20px;" [disabled]="formPets.invalid" mat-button
-                        matStepperNext>Próximo</button>
+                        (click)="avancarOuVoltar(stepper, true)">Próximo</button>
                 </div>
             </form>
         </mat-step> -->
@@ -239,9 +216,9 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
                     <button style="margin-left: 20px;" [disabled]="formTipoLimpeza.invalid" mat-button
-                        matStepperNext>Próximo</button>
+                        (click)="avancarOuVoltar(stepper, true)">Próximo</button>
                 </div>
             </form>
         </mat-step>
@@ -263,9 +240,9 @@
                     </div>
                 </div>
                 <div class="mt-4">
-                    <button mat-button matStepperPrevious>Voltar</button>
+                    <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
                     <button [disabled]="formArea.controls['valor'].invalid " style="margin-left: 20px;" mat-button
-                        matStepperNext>Próximo</button>
+                        (click)="avancarOuVoltar(stepper, true)">Próximo</button>
                 </div>
             </form>
         </mat-step>
@@ -276,14 +253,22 @@
                     <app-calendario [valorMetro]="valorMetro" [profissionais]="profissionais"
                         [metragem]="formArea.controls['valor'].value" [isDetalhada]="isLimpezaDetalhada()"
                         (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
+                    <div class="row justify-content-end">
+                        <small class="col-12">* É disponibilizado {{PERCENTUAL_DESCONTO}}% de desconto em cada dia
+                            para agendamentos acima de 2 dias. Podendo acumular até {{MAX_PERCENTUAL}}% de desconto nos
+                            seus agendamentos. </small>
+                        <small class="col-12">* A escolha do profissional aumenta R$ 20 para cada dia ao valor
+                            total.</small>
+                        <small class="col-12">* O período integral é calculado como 8 horas.</small>
+                    </div>
                     <div class="d-flex justify-content-end">
                         <button [disabled]="desabilitarAgendamento()" (click)="agendar()" mat-flat-button
-                            matStepperNext>Agendar</button>
+                            (click)="avancarOuVoltar(stepper, true)">Agendar</button>
                     </div>
                 </div>
             </div>
             <div style="margin-top: -40px;">
-                <button mat-button matStepperPrevious>Voltar</button>
+                <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
                 <!-- <button style="margin-left: 20px;" mat-button (click)="resetar(stepper)">Limpar</button> -->
             </div>
         </mat-step>
@@ -298,8 +283,12 @@
                         <div class="payment-info">
                             <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno| turno}}
                             </p>
-                            <p *ngIf="dadosAgendamento.profissional.nome">
-                                <strong>Profissional:</strong> {{dadosAgendamento.profissional.nome}}
+                            <p *ngIf="dadosAgendamento?.profissionalSelecionado?.nome">
+                                <strong>Profissional:</strong> {{dadosAgendamento.profissionalSelecionado.nome}}
+                                {{dadosAgendamento.profissionalSelecionado.sobrenome}}
+                            </p>
+                            <p *ngIf="!dadosAgendamento?.profissionalSelecionado?.nome">
+                                <strong>Profissional Selecionado:</strong> Não
                             </p>
                             <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
                             <p><strong>Metragem:</strong> {{dadosAgendamento.metragem}}</p>
@@ -309,13 +298,10 @@
                             <!-- <p><strong>Método de Pagamento:</strong> Cartão de Crédito</p> -->
                         </div>
                     </div>
-                    <small class="col-12 mt-3">* A escolha do profissional gera um aumento R$ 20 no valor total.</small>
-                    <small class="col-12">* São adicionados R$ 15 para o deslocamento do profissional.</small>
-                    <small class="col-12">* O período integral é calculado como 8 horas.</small>
                 </div>
             </div>
             <div>
-                <button mat-button matStepperPrevious>Voltar</button>
+                <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
                 <!-- <button style="margin-left: 20px;" mat-button (click)="resetar(stepper)">Limpar</button> -->
             </div>
         </mat-step>

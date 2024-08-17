@@ -20,6 +20,7 @@ import { ProfissionalService } from '../../services/profissional.service';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { PipeModule } from '../../pipes/pipe.module';
+import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 
 @Component({
   selector: 'app-agendamento',
@@ -51,10 +52,13 @@ import { PipeModule } from '../../pipes/pipe.module';
   styleUrl: './agendamento.component.scss'
 })
 export class AgendamentoComponent {
-  public readonly VALOR_PADRAO_METRO = 2.0;
-  public readonly METRAGEM_MIN = 25;
-  public readonly METRAGEM_MAX = 9999;
-
+  public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
+  public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
+  public readonly METRAGEM_MAX = AgendamentoConstantes.METRAGEM_MAX;
+  public readonly METRAGEM_MIN = AgendamentoConstantes.METRAGEM_MIN;
+  public readonly MAX_PERCENTUAL = AgendamentoConstantes.MAX_PERCENTUAL;
+  public readonly PERCENTUAL_DESCONTO = AgendamentoConstantes.PERCENTUAL_DESCONTO;
+  
   public dadosAgendamento: AgendamentoDTO = new AgendamentoDTO();
   public isLinear = false;
   public formComodos!: FormGroup;
@@ -66,7 +70,7 @@ export class AgendamentoComponent {
   public isEditable = true;
   public exibeCep = false;
   public isDetalhada = false;
-  public valorMetro = this.VALOR_PADRAO_METRO;
+  public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
 
   constructor(private _formBuilder: FormBuilder, private _cepService: CepService,
@@ -113,6 +117,18 @@ export class AgendamentoComponent {
     return true;
   }
 
+  public avancarOuVoltar(stepper: MatStepper, isProximo: boolean) {
+    if (isProximo) {
+      stepper.next();
+    } else {
+      stepper.previous();
+    }
+
+    if(!this.profissionais || this.profissionais.length <= 0) {
+      this.recuperarProfissionais();
+    }
+  }
+
   public resetar(stepper: MatStepper) {
     this.buildForm();
     stepper.reset()
@@ -127,7 +143,7 @@ export class AgendamentoComponent {
       areaServico: [0, Validators.min(0)],
     });
     this.formArea = this._formBuilder.group({
-      valor: ['', [Validators.required, Validators.min(this.METRAGEM_MIN), Validators.max(this.METRAGEM_MAX)]]
+      valor: ['', [Validators.required, Validators.min(AgendamentoConstantes.METRAGEM_MIN), Validators.max(AgendamentoConstantes.METRAGEM_MAX)]]
     });
     this.formUltimaLimpeza = this._formBuilder.group({
       valor: ['', Validators.required]
@@ -170,7 +186,7 @@ export class AgendamentoComponent {
   }
 
   public calcularValorPorMetro(metragem: number) {
-    this.valorMetro = this.VALOR_PADRAO_METRO;
+    this.valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
     // let metragemCalculada = metragem;
     // while (metragemCalculada > this.METRAGEM_MIN * 2 && this.valorMetro >= 1.5) {
     //   metragemCalculada -= this.METRAGEM_MIN * 2;

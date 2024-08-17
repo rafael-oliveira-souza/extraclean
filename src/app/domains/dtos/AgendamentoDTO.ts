@@ -8,7 +8,10 @@ export class AgendamentoDTO {
     total: number = 0;
     valor: number = 0;
     diasSelecionados: MomentInput[] = [];
-    profissional: ProfissionalDTO = ProfissionalDTO.empty();
+    profissionalSelecionado: ProfissionalDTO = ProfissionalDTO.empty();
+    profissionais: ProfissionalDTO[] = [];
+    endereco: string = "";
+    clienteId: number = 0;
 
     public getQtdDias() {
         return this.diasSelecionados.length;
