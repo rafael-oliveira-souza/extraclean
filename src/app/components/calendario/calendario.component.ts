@@ -82,7 +82,7 @@ export class CalendarioComponent {
   public diasCalendario: Array<MomentInput> = this.getDiasMes();
   public diasAgendados: Map<string, MomentInput> = new Map<string, Date>();
   public diasSemana: Array<string> = this.getDiasSemana();
-  public profissional: ProfissionalDTO = ProfissionalDTO.empty();
+  public profissional: ProfissionalDTO | null = null;
   public profissionalSelecionado: number = 0;
   public diasAgendadosProfissional: AgendamentoDiariaDTO[] = [];
   public turno: number = 0;
@@ -133,7 +133,7 @@ export class CalendarioComponent {
   }
 
   public atualizarDiasDisponiveisProfissional() {
-    if (this.profissional.id != 0) {
+    if (this.profissionalSelecionado != 0) {
       this.diasAgendadosProfissional.forEach(agend => {
         const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
         let inputData: HTMLElement | null = document.getElementById(idDia);
@@ -175,9 +175,10 @@ export class CalendarioComponent {
     agendamento.valor = NumberUtils.arredondarCasasDecimais(agendamento.total + agendamento.desconto, 2);
     agendamento.diasSelecionados = diasSelecionados;
     agendamento.metragem = this.metragem;
-    agendamento.profissionalSelecionado = this.profissional;
+    agendamento.profissionalSelecionado = this.profissionalSelecionado;
     agendamento.turno = this.turno;
-    // agendamento.clienteId = =
+    agendamento.dataHora = new Date();
+    agendamento.cliente = "extraclean@email.com";
 
     this.getDadosAgendamento.emit(agendamento);
   }
@@ -287,8 +288,8 @@ export class CalendarioComponent {
   }
 
   public atualizarProfissional() {
+    this.profissional = null;
     this.diasAgendadosProfissional = [];
-    this.profissional = ProfissionalDTO.empty();
     const indisponibleAttrs = document.querySelectorAll("[" + this.ATTR_INDISPONIBLE + "]");
     indisponibleAttrs.forEach(element => {
       element.removeAttribute(this.ATTR_INDISPONIBLE);

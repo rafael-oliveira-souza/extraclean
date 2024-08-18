@@ -8,10 +8,11 @@ export class AgendamentoDTO {
     total: number = 0;
     valor: number = 0;
     diasSelecionados: MomentInput[] = [];
-    profissionalSelecionado: ProfissionalDTO = ProfissionalDTO.empty();
-    profissionais: ProfissionalDTO[] = [];
+    profissionalSelecionado: number = 0;
+    tipoLimpeza: string = "";
     endereco: string = "";
-    clienteId: number = 0;
+    dataHora!: Date;
+    cliente: string = "";
 
     public getQtdDias() {
         return this.diasSelecionados.length;

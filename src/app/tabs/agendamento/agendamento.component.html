@@ -262,7 +262,7 @@
                         <small class="col-12">* O período integral é calculado como 8 horas.</small>
                     </div>
                     <div class="d-flex justify-content-end">
-                        <button [disabled]="desabilitarAgendamento()" (click)="agendar()" mat-flat-button
+                        <button [disabled]="desabilitarAgendamento()" mat-flat-button
                             (click)="avancarOuVoltar(stepper, true)">Agendar</button>
                     </div>
                 </div>
@@ -283,11 +283,10 @@
                         <div class="payment-info">
                             <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno| turno}}
                             </p>
-                            <p *ngIf="dadosAgendamento?.profissionalSelecionado?.nome">
-                                <strong>Profissional:</strong> {{dadosAgendamento.profissionalSelecionado.nome}}
-                                {{dadosAgendamento.profissionalSelecionado.sobrenome}}
+                            <p *ngIf="dadosAgendamento.profissionalSelecionado != 0">
+                                <strong>Profissional:</strong> {{recuperarProfissional()?.nome}}
                             </p>
-                            <p *ngIf="!dadosAgendamento?.profissionalSelecionado?.nome">
+                            <p *ngIf="dadosAgendamento.profissionalSelecionado == 0">
                                 <strong>Profissional Selecionado:</strong> Não
                             </p>
                             <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
@@ -302,6 +301,7 @@
             </div>
             <div>
                 <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
+                <button (click)="agendar()" mat-flat-button>Agendar</button>
                 <!-- <button style="margin-left: 20px;" mat-button (click)="resetar(stepper)">Limpar</button> -->
             </div>
         </mat-step>

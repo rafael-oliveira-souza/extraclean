@@ -1,4 +1,4 @@
-export class CepDTO {
+export class EnderecoDTO {
     erro: boolean = false;
     cep: string = "";
     numero: string = "";

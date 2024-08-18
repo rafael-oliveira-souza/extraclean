@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
-import { MomentInput } from 'moment';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { CommonModule } from '@angular/common';
@@ -13,7 +12,6 @@ import { MatStepper, MatStepperModule } from '@angular/material/stepper';
 import { MatButtonModule } from '@angular/material/button'
 import { NumerosComponent } from '../../components/numeros/numeros.component';
 import { CepService } from '../../services/cep.service';
-import { CepDTO } from '../../domains/dtos/CepDTO';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { ProfissionalService } from '../../services/profissional.service';
@@ -21,6 +19,9 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { PipeModule } from '../../pipes/pipe.module';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
+import { EnderecoUtils } from '../../utils/EnderecoUtils';
 
 @Component({
   selector: 'app-agendamento',
@@ -58,7 +59,7 @@ export class AgendamentoComponent {
   public readonly METRAGEM_MIN = AgendamentoConstantes.METRAGEM_MIN;
   public readonly MAX_PERCENTUAL = AgendamentoConstantes.MAX_PERCENTUAL;
   public readonly PERCENTUAL_DESCONTO = AgendamentoConstantes.PERCENTUAL_DESCONTO;
-  
+
   public dadosAgendamento: AgendamentoDTO = new AgendamentoDTO();
   public isLinear = false;
   public formComodos!: FormGroup;
@@ -72,14 +73,31 @@ export class AgendamentoComponent {
   public isDetalhada = false;
   public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
+  public profissional = null;
+
 
   constructor(private _formBuilder: FormBuilder, private _cepService: CepService,
-    private _notificacaoService: NotificacaoService, private _profissionalService: ProfissionalService) {
+    private _notificacaoService: NotificacaoService, private _profissionalService: ProfissionalService,
+    private _agendamentoService: AgendamentoService) {
     this.buildForm();
   }
 
   public agendar() {
-    console.log(this.dadosAgendamento)
+    let endereco = new EnderecoDTO();
+    endereco.bairro = this.formCep.controls['bairro'].value;
+    endereco.numero = this.formCep.controls['numero'].value;
+    endereco.logradouro = this.formCep.controls['logradouro'].value;
+    endereco.complemento = this.formCep.controls['complemento'].value;
+    endereco.localidade = this.formCep.controls['localidade'].value;
+    endereco.cep = this.formCep.controls['cep'].value;
+    endereco.uf = this.formCep.controls['uf'].value;
+    this.dadosAgendamento.endereco = EnderecoUtils.montarEndereco(endereco);
+
+    this.dadosAgendamento.tipoLimpeza = this.formTipoLimpeza.controls['valor'].value;
+    this._agendamentoService.agendar(this.dadosAgendamento)
+      .subscribe(result => {
+        console.log(result)
+      })
   }
 
   public limparDiasSelecionados() {
@@ -90,7 +108,7 @@ export class AgendamentoComponent {
     this.exibeCep = false;
     if (cep) {
       this._cepService.getCep(cep)
-        .subscribe((cepRecuperado: CepDTO) => {
+        .subscribe((cepRecuperado: EnderecoDTO) => {
           if (cepRecuperado['erro']) {
             this._notificacaoService.alerta("Cep não encontrado!");
           } else {
@@ -124,7 +142,7 @@ export class AgendamentoComponent {
       stepper.previous();
     }
 
-    if(!this.profissionais || this.profissionais.length <= 0) {
+    if (!this.profissionais || this.profissionais.length <= 0) {
       this.recuperarProfissionais();
     }
   }
@@ -207,5 +225,20 @@ export class AgendamentoComponent {
 
   isLimpezaExpressa() {
     return this.formTipoLimpeza.controls['valor'].value == "1";
+  }
+
+  public recuperarProfissional(): ProfissionalDTO {
+    let profissional = null;
+
+    if (this.dadosAgendamento.profissionalSelecionado != 0) {
+      this.profissionais.forEach(prof => {
+        if (this.dadosAgendamento.profissionalSelecionado == prof.id) {
+          profissional = prof;
+          return;
+        }
+      });
+    }
+
+    return profissional;
   }
 }
