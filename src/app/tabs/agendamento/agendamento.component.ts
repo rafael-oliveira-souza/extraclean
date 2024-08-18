@@ -227,8 +227,8 @@ export class AgendamentoComponent {
     return this.formTipoLimpeza.controls['valor'].value == "1";
   }
 
-  public recuperarProfissional(): ProfissionalDTO | null {
-    let profissional = null;
+  public recuperarProfissional(): ProfissionalDTO {
+    let profissional = ProfissionalDTO.empty();
 
     if (this.dadosAgendamento.profissionalSelecionado != 0) {
       this.profissionais.forEach(prof => {
