@@ -1,5 +1,5 @@
 import { Component, LOCALE_ID } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { RouterModule, RouterOutlet } from '@angular/router';
 import { MenuComponent } from './tabs/menu/menu.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment'; // Import Moment.js
@@ -25,7 +25,6 @@ export const MY_FORMATS = {
   },
 };
 
-
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -45,7 +44,6 @@ export const MY_FORMATS = {
   ],
   imports: [
     RouterOutlet,
-    MenuComponent,
     ImageComponent,
   ],
   templateUrl: './app.component.html',

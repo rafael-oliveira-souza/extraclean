@@ -284,7 +284,7 @@
                             <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno| turno}}
                             </p>
                             <p *ngIf="dadosAgendamento.profissionalSelecionado != 0">
-                                <strong>Profissional:</strong> {{recuperarProfissional()?.nome}}
+                                <strong>Profissional:</strong> {{recuperarProfissional().nome}}
                             </p>
                             <p *ngIf="dadosAgendamento.profissionalSelecionado == 0">
                                 <strong>Profissional Selecionado:</strong> Não

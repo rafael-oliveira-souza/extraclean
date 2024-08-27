@@ -1,0 +1,24 @@
+@import '../../../color.scss';
+
+.card-login {
+    // max-height: 60vh;
+    max-width: 100%;
+    background-color: $primary;
+    border: 5px solid;
+    border-radius: 30px;
+    text-align: center;
+}
+
+p {
+    color: $white;
+}
+
+::ng-deep .mdc-button {
+    color: $primary !important;
+    background-color: $white !important;
+}
+
+::ng-deep .mdc-button:disabled {
+    // color: $primary !important;
+    background-color: $sub !important;
+}

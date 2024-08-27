@@ -22,6 +22,36 @@
     cursor: pointer;
 }
 
+.nav_custom {
+
+    // :focus {
+    //     border-bottom: 4px solid $azul !important;
+    // }
+
+    // :hover {
+    //     border-bottom: 4px solid $azul !important;
+    // }
+
+    [selected="true"] {
+        border-bottom: 4px solid $azul !important;
+    }
+
+    [selected="false"] {
+        border-bottom: none;
+    }
+}
+
+.nav_custom .body {
+    background-color: $white;
+}
+
+.nav_custom .header {
+    text-align: center;
+    color: $white !important;
+    background-color: $primary;
+    cursor: pointer;
+}
+
 ::ng-deep .mat-mdc-menu-content {
     color: $white !important;
     background-color: $sub;
@@ -47,4 +77,11 @@
     cursor: pointer;
     border: 1px solid $white;
     color: $white !important;
+}
+
+.menu-fixed {
+    background-color: $primary;
+    overflow: hidden;
+    position: fixed;
+    width: 100%;
 }
