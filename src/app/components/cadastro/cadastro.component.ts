@@ -3,6 +3,9 @@ import { FormsModule, ReactiveFormsModule, FormGroup, FormBuilder, Validators } 
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
+import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
+import { NotificacaoService } from '../../services/notificacao.service';
 
 @Component({
   selector: 'app-cadastro',
@@ -20,7 +23,10 @@ import { MatInputModule } from '@angular/material/input';
 export class CadastroComponent implements OnInit {
   public formLogin!: FormGroup;
 
-  constructor(private _formBuilder: FormBuilder) { }
+  constructor(
+    private _formBuilder: FormBuilder,
+    private _usuarioService: UsuarioService,
+    private _notificacaoService: NotificacaoService) { }
 
   ngOnInit() {
     this.formLogin = this._formBuilder.group({
@@ -29,6 +35,21 @@ export class CadastroComponent implements OnInit {
     });
   }
 
-  public logar() { }
+  public logar() {
+    if (this.formLogin.invalid) {
+      this._notificacaoService.erro("Formulario invalido.");
+    }
+
+    const email = this.formLogin.controls['email'].value;
+    const senha = this.formLogin.controls['senha'].value;
+    this._usuarioService.login(email, senha)
+      .subscribe(
+        (usuario: UsuarioDTO) => {
+
+        },
+        (error) => {
+          this._notificacaoService.erro(error);
+        });
+  }
 
 }

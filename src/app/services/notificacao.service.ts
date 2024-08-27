@@ -19,4 +19,8 @@ export class NotificacaoService {
   public alerta(msg: string) {
     this._snackBar.open(msg, "", this.config);
   }
+
+  public erro(msg: any) {
+    this._snackBar.open(msg, "", this.config);
+  }
 }
