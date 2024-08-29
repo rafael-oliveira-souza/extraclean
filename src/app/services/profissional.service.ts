@@ -8,7 +8,7 @@ import { environment } from '../../enviromment';
   providedIn: 'root'
 })
 export class ProfissionalService {
-  public readonly HOST_URL = `${environment.apiUrl}`;
+  private readonly HOST_URL = `${environment.apiUrl}`;
 
   constructor(private _http: HttpClient) { }
 

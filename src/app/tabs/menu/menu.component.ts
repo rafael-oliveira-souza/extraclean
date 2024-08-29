@@ -42,14 +42,27 @@ export class MenuComponent {
 
   public width: number | null = null;
   public menus: MenuDTO[] = [
-    { label: "Home", id: "idMenuHome", selected: true },
-    { label: "Serviços", id: "idMenuServico", selected: false },
-    { label: "Agendamentos", id: "idMenuAgend", selected: false },
-    { label: "Planos", id: "idMenuPlano", selected: false },
+    { label: "Home", id: "idMenuHome", index: 1 },
+    { label: "Serviços", id: "idMenuServico", index: 2 },
+    { label: "Agendamentos", id: "idMenuAgend", index: 3 },
+    { label: "Planos", id: "idMenuPlano", index: 4 },
   ];
   public selectedMenu: MenuDTO = this.menus[0];
+  public selectedIndex: number = 1;
 
-  constructor(private dialog: MatDialog, private _router: Router) { }
+  constructor(private dialog: MatDialog,
+    private _router: Router,
+    private route: ActivatedRoute) { }
+
+  ngOnInit() {
+    this.route.queryParams.subscribe(params => {
+      this.selectedIndex = 1;
+      const tab = params['tab'];
+      if (tab && tab > 0 && tab <= this.menus.length) {
+        this.selectedIndex = tab;
+      }
+    });
+  }
 
   ngAfterContentChecked(): void {
     this.updateSelectedMenu();
@@ -67,25 +80,26 @@ export class MenuComponent {
   }
 
   public contratar() {
-    this._router.navigate([Rota.LOGIN])
+    if (this.isUserNaoLogado()) {
+      this._router.navigate([Rota.LOGIN]);
+    } else {
+      this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
+    }
   }
 
   public updateSelectedMenu(): void {
     this.menus.forEach(menu => {
       if (typeof document !== 'undefined') {
         const inputData: HTMLElement | null = document.getElementById(menu.id);
-        inputData?.setAttribute(this.ATTR_SELECTED, menu.selected.toString());
+        const selected: boolean = this.selectedIndex == menu.index;
+        inputData?.setAttribute(this.ATTR_SELECTED, selected.toString());
       }
     });
   }
 
-  public select(menuDto: MenuDTO) {
-    this.selectedMenu = menuDto;
-    this.menus.forEach(menu => {
-      menu.selected = menu.id == menuDto.id;
-    });
-
-    this.updateSelectedMenu();
+  public select(index: number) {
+    this.selectedIndex = index;
+    this._router.navigate([Rota.HOME], { queryParams: { tab: index } });
   }
 
   public isXs() {
@@ -95,6 +109,10 @@ export class MenuComponent {
     }
 
     return false;
+  }
+
+  public definirLabel(menu: MenuDTO) {
+    return (menu.index == 3 && this.isXs() ? 'Agende!' : menu.label);
   }
 
   public abrirPaginaMenu(componentName: string) {

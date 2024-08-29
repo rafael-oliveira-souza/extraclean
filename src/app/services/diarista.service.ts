@@ -9,7 +9,7 @@ import { TurnoEnum } from '../domains/enums/TurnoEnum';
   providedIn: 'root'
 })
 export class DiaristaService {
-  public readonly HOST_URL = `${environment.apiUrl}/profissional`;
+  private readonly HOST_URL = `${environment.apiUrl}/profissional`;
 
   constructor(private _http: HttpClient) { }
 

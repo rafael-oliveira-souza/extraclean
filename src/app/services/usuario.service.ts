@@ -9,7 +9,7 @@ import { AgendamentoDiariaDTO } from '../domains/dtos/AgendamentoDiariaDTO';
   providedIn: 'root'
 })
 export class UsuarioService {
-  public readonly HOST_URL = `${environment.apiUrl}/usuario`;
+  private readonly HOST_URL = `${environment.apiUrl}/usuario`;
 
   constructor(private _http: HttpClient) { }
 

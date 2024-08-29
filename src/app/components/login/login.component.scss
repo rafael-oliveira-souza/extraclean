@@ -18,7 +18,7 @@ p {
     background-color: $white !important;
 }
 
-::ng-deep .mdc-button:disabled {
-    // color: $primary !important;
-    background-color: $sub !important;
+::ng-deep .mat-mdc-button-disabled {
+    color: $primary !important;
+    background-color: $cinza !important;
 }

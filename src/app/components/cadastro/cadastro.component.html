@@ -7,6 +7,18 @@
     <form [formGroup]="formLogin" class=" row justify-content-center">
       <div class="col-8  mt-2">
         <mat-form-field class="col-12 ">
+          <mat-label>Nome</mat-label>
+          <input type="text" matInput formControlName="email">
+        </mat-form-field>
+      </div>
+      <div class="col-8  mt-2">
+        <mat-form-field class="col-12 ">
+          <mat-label>Email</mat-label>
+          <input type="password" matInput formControlName="email">
+        </mat-form-field>
+      </div>
+      <div class="col-8  mt-2">
+        <mat-form-field class="col-12 ">
           <mat-label>Email</mat-label>
           <input type="text" matInput formControlName="email">
         </mat-form-field>

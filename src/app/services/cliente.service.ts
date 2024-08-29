@@ -8,7 +8,7 @@ import { ClienteDTO } from '../domains/dtos/ClienteDTO';
   providedIn: 'root'
 })
 export class ClienteService {
-  public readonly HOST_URL = `${environment.apiUrl}/cliente`;
+  private readonly HOST_URL = `${environment.apiUrl}/cliente`;
 
   constructor(private _http: HttpClient) { }
 

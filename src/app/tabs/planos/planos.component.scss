@@ -3,6 +3,7 @@
 small {
     text-align: justify;
     color: $white;
+    font-size: 17px;
 }
 
 ::ng-deep mat-icon {
@@ -25,4 +26,14 @@ small {
     input {
         color: $white !important;
     }
+}
+
+::ng-deep .mdc-button {
+    color: $primary !important;
+    background-color: $white !important;
+}
+
+::ng-deep .mat-mdc-button-disabled {
+    color: $primary !important;
+    background-color: $cinza !important;
 }

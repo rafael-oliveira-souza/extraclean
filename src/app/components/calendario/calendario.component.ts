@@ -253,35 +253,14 @@ export class CalendarioComponent {
   }
 
   public calcular() {
-    this.valorTotal = 0;
-    this.desconto = 0;
-
     const qtdDias = this.getQtdDias();
-    if (qtdDias && this.valorMetro && this.metragem) {
-      this.valorTotal += qtdDias * NumberUtils.arredondarCasasDecimais(this.valorMetro, 2) * this.metragem;
-    }
-
-    if (this.profissionalSelecionado != 0) {
-      if (qtdDias > 0) {
-        this.valorTotal += this.VALOR_PROFISSIONAL_SELECIONADO * qtdDias;
-      } else {
-        this.valorTotal += this.VALOR_PROFISSIONAL_SELECIONADO;
-      }
-    }
-
-    if (this.isDetalhada) {
-      this.valorTotal *= AgendamentoConstantes.VALOR_DIARIA_DETALHADA;
-    }
-
-    if (this.turno == TurnoEnum.INTEGRAL) {
-      this.valorTotal *= 2;
-    }
-
-    if (qtdDias > 1) {
-      let porcentagem = qtdDias * AgendamentoConstantes.PERCENTUAL_DESCONTO;
-      this.valorTotal += AgendamentoConstantes.VALOR_DESLOCAMENTO * qtdDias;
-      this.valorTotal = this.aplicarDesconto(this.valorTotal, porcentagem);
-    }
+    const profSelecionado = this.profissionalSelecionado != 0;
+    const porcentagem = qtdDias * AgendamentoConstantes.PERCENTUAL_DESCONTO;
+    this.valorTotal = AgendamentoConstantes.calcularTotal(
+      this.valorMetro, this.metragem, qtdDias,
+      porcentagem, profSelecionado, this.isDetalhada,
+      this.turno
+    );
 
     this.emitirDadosAgendamento();
     return this.valorTotal;
@@ -311,28 +290,6 @@ export class CalendarioComponent {
       });
     }
     this.calcular();
-  }
-
-  private aplicarDesconto(valor: number, percentual: number) {
-    this.desconto = 0;
-    if (valor > 0 && percentual > 0) {
-      this.desconto = this.calcularDesconto(valor, percentual);
-    }
-
-    return valor - this.desconto
-  }
-
-  private calcularDesconto(valor: number, percentual: number): number {
-    let desconto = 0;
-    if (percentual > AgendamentoConstantes.MAX_PERCENTUAL) {
-      percentual = AgendamentoConstantes.MAX_PERCENTUAL;
-    }
-
-    if (valor > 0 && percentual > 0) {
-      desconto = valor * percentual / 100;
-    }
-
-    return desconto;
   }
 
   public gerarIdElementoCalendarioDiario(dia: MomentInput) {

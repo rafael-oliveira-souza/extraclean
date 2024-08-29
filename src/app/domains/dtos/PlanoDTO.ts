@@ -1,11 +1,13 @@
 export class PlanoDTO {
     nome!: string;
     descricao!: string;
-    valor!: number;
+    valorMetro!: number;
+    qtdDias!: number;
 
-    constructor(nome: string, descricao: string, valor: number) {
+    constructor(nome: string, descricao: string, valorMetro: number, qtdDias: number) {
         this.nome = nome;
         this.descricao = descricao;
-        this.valor = valor;
+        this.valorMetro = valorMetro;
+        this.qtdDias = qtdDias;
     }
 }

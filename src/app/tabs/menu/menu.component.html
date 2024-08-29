@@ -1,14 +1,13 @@
 <div class="bg-padrao">
     <div class="menu-fixed">
         <div class=" container-fluid row justify-content-between  align-items-center">
-            <div class="col-12 col-xl-8 col-lg-8 col-md-8 col-sm-12">
+            <div class="col-8">
                 <!-- <img width="250" height="70" src="../../../assets/imgs/nova_logo.svg"> -->
                 <img width="250" height="75" src="../../../assets/imgs/logo.svg">
             </div>
-            <div
-                class="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-12 p-3 container-fluid d-flex justify-content-end  align-items-center">
-                <div>
-                    <button class="btn-contrate mr-4" (click)="contratar()" mat-flat-button>CONTRATE JÁ!</button>
+            <div class="col-4 p-3 container-fluid d-flex justify-content-end align-items-center">
+                <div *ngIf="!isXs()">
+                    <button class="btn-contrate mr-4" (click)="contratar()" mat-flat-button>AGENDE JÁ!</button>
                 </div>
                 <div class="ml-4">
                     <mat-icon class="text-white" [matMenuTriggerFor]="menu" aria-hidden="false" aria-label="Perfil"
@@ -30,32 +29,38 @@
                     </mat-menu>
                 </div>
             </div>
+            <div *ngIf="isXs()" class="col-12 mb-4 d-flex justify-content-end ">
+                <div></div>
+                <button style="margin-right: -20px;" class="btn-contrate " (click)="contratar()" mat-flat-button>AGENDE JÁ!</button>
+            </div>
         </div>
-        <div *ngIf="isXs()" class="nav_custom">
-            <div class="header container-fluid row justify-content-between ">
-                <div [id]="menu.id" *ngFor="let menu of menus;" class="col " (click)="select(menu)">
-                    {{menu.label}}
+        <div class="nav_custom">
+            <div class="header container-fluid row justify-content-start ">
+                <div *ngIf="!isXs()" class="col"></div>
+                <div [id]="menu.id" *ngFor="let menu of menus;" class="col " (click)="select(menu.index)">
+                    <h6> {{definirLabel(menu)}}</h6>
                 </div>
             </div>
             <div class="body">
                 <app-scroll>
-                    <div *ngIf="selectedMenu.id == 'idMenuHome'">
+                    <div *ngIf="selectedIndex == 1">
                         <app-home></app-home>
                     </div>
-                    <div *ngIf="selectedMenu.id == 'idMenuServico'">
+                    <div *ngIf="selectedIndex == 2">
                         <app-servicos></app-servicos>
                     </div>
-                    <div *ngIf="selectedMenu.id == 'idMenuAgend'">
+                    <div *ngIf="selectedIndex == 3">
                         <app-agendamento></app-agendamento>
                     </div>
-                    <div *ngIf="selectedMenu.id == 'idMenuPlano'">
+                    <div *ngIf="selectedIndex == 4">
                         <app-planos></app-planos>
                     </div>
                 </app-scroll>
             </div>
         </div>
-        <div *ngIf="!isXs()">
-            <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="center" [dynamicHeight]="true" [selectedIndex]="1">
+        <!-- <div *ngIf="!isXs()">
+            <mat-tab-group mat-stretch-tabs="true" mat-align-tabs="center" (click)="select(selectedIndex)"
+                [dynamicHeight]="true" [(selectedIndex)]="selectedIndex">
                 <mat-tab [disabled]="true" label="">
                 </mat-tab>
                 <mat-tab label="Home">
@@ -71,6 +76,6 @@
                     <app-planos></app-planos>
                 </mat-tab>
             </mat-tab-group>
-        </div>
+        </div> -->
     </div>
 </div>
