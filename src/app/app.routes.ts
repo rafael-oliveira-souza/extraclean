@@ -8,6 +8,7 @@ export enum Rota {
     CADASTRO = 'cadastro',
     HOME = 'home',
     LOGIN = 'login',
+    PAGAMENTO = 'pagamento',
 }
 
 export const routes: Routes = [

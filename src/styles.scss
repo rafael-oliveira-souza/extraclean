@@ -70,7 +70,7 @@ body {
 }
 
 .clip-path-rectangle {
-  height: 50vh;
+  min-height: 40vh;
   background-color: $primary;
   clip-path: polygon(0 0, 100% 0, 100% calc(100% - 25px), calc(100% - 25px) 100%, 0 100%);
 }
