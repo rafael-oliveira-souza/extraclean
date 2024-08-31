@@ -1,0 +1,43 @@
+<!-- <div class="container-fluid">
+  <div class="mt-4 text-center">
+    <h3>Escolha o Tipo de Pagamento: </h3>
+    <div class="d-flex justify-content-center">
+      <mat-button-toggle-group [(ngModel)]="tipoPagamento" required>
+        <mat-button-toggle [value]="1">Cartão de Crédito</mat-button-toggle>
+        <mat-button-toggle [value]="2">Pagamento Por Pix</mat-button-toggle>
+      </mat-button-toggle-group>
+    </div>
+  </div>
+  <div class="row justify-content-center mt-3 mb-5">
+    <div class="col-11 container-cartao " *ngIf="tipoPagamento == 1">
+      <h4 class=" mt-2">Informações do Cartão de Crédito</h4>
+      <form action="/processar-pagamento" method="post">
+        <label for="cardName">Nome no Cartão</label>
+        <input type="text" id="cardName" name="cardName" placeholder="Nome Completo" required>
+
+        <label for="cardNumber">Número do Cartão</label>
+        <input maxlength="20" type="number" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000"
+          mask="0000 0000 0000 0000" type="text">
+
+        <div class="d-flex justify-content-center">
+          <div class="col-6">
+            <label for="expiryDate">Data de Validade</label>
+            <input maxlength="7" type="number" id="expiryDate" name="expiryDate" placeholder="MM/YYYY" mask="00/0000"
+              type="text">
+          </div>
+          <div class="col-6">
+            <label for="cvv">Código de Segurança (CVV)</label>
+            <input style="margin-left: 5px;" maxlength="3" type="number" id="cvv" name="cvv" placeholder="000"
+              mask="000" type="text" required>
+          </div>
+        </div>
+        <input class="mb-4" type="submit" value="Pagar">
+      </form>
+    </div>
+  </div>
+
+
+  <div class="row justify-content-center mt-3 mb-5">
+  </div>
+</div> -->
+<iframe [src]="linkPagamento"></iframe>

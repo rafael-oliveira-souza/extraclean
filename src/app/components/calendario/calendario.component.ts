@@ -178,7 +178,7 @@ export class CalendarioComponent {
     agendamento.profissionalSelecionado = this.profissionalSelecionado;
     agendamento.turno = this.turno;
     agendamento.dataHora = new Date();
-    agendamento.cliente = "extraclean@email.com";
+    agendamento.email = "extraclean@email.com";
 
     this.getDadosAgendamento.emit(agendamento);
   }

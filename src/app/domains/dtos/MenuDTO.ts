@@ -1,11 +1,11 @@
 export class MenuDTO {
     label: string;
     id: string;
-    selected: boolean;
+    index: number;
 
-    constructor(label: string, id: string, selected: boolean) {
+    constructor(label: string, id: string, index: number) {
         this.label = label;
         this.id = id;
-        this.selected = selected;
+        this.index = index;
     }
 }
