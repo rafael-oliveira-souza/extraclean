@@ -19,7 +19,7 @@ export class NumerosComponent {
   public largura: string = '100%';
 
   @Input('color')
-  public color: string = '#5555c0';
+  public color: string = '#021017';
 
   @Input('label')
   public label: string = '';

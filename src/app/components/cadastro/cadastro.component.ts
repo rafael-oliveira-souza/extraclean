@@ -25,6 +25,7 @@ import { Router } from '@angular/router';
 })
 export class CadastroComponent implements OnInit {
   public formLogin!: FormGroup;
+  public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
 
   constructor(
     private _router: Router,
@@ -35,13 +36,18 @@ export class CadastroComponent implements OnInit {
   ngOnInit() {
     this.formLogin = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required]]
+      senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]],
+      senhaVal: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]]
     });
   }
 
   public logar() {
     if (this.formLogin.invalid) {
       this._notificacaoService.erro("Formulario invalido.");
+    }
+    
+    if (this.formLogin.controls['senha'].value != this.formLogin.controls['senhaVal'].value) {
+      this._notificacaoService.erro("As Senhas informadas são diferentes.");
     }
 
     let usuario = new UsuarioDTO();

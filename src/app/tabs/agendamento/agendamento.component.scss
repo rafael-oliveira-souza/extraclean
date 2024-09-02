@@ -139,3 +139,17 @@ h5 {
 .payment-footer button:hover {
     background-color: #0056b3;
 }
+
+.disposicao-botoes {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 50vh;
+}
+
+.disposicao-botoes-sem-margem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 20px;
+}

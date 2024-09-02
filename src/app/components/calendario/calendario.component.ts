@@ -22,6 +22,7 @@ import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 import { DiaristaService } from '../../services/diarista.service';
+import { CalculoUtils } from '../../utils/CalculoUtils';
 
 
 @Component({
@@ -346,5 +347,14 @@ export class CalendarioComponent {
 
   private getDiaFormatado(diaSelecionado: MomentInput) {
     return DateUtils.format(diaSelecionado, "yyyy_MM_DD");
+  }
+
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
+    }
+
+    return false;
   }
 }

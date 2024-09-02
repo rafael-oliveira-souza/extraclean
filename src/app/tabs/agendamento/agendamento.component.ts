@@ -22,6 +22,7 @@ import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConst
 import { AgendamentoService } from '../../services/agendamento.service';
 import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
 import { EnderecoUtils } from '../../utils/EnderecoUtils';
+import { CalculoUtils } from '../../utils/CalculoUtils';
 
 @Component({
   selector: 'app-agendamento',
@@ -240,5 +241,19 @@ export class AgendamentoComponent {
     }
 
     return profissional;
+  }
+
+  public definirDisposicaoClasse() {
+    // return this.isXs() ? "disposicao-botoes-sem-margem" : "disposicao-botoes";
+    return "disposicao-botoes-sem-margem";
+  }
+
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
+    }
+
+    return false;
   }
 }
