@@ -21,8 +21,9 @@ import { MatButtonModule } from '@angular/material/button';
 import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
-import { DiaristaService } from '../../services/diarista.service';
 import { CalculoUtils } from '../../utils/CalculoUtils';
+import { ProfissionalService } from '../../services/profissional.service';
+import { environment } from '../../../enviromment';
 
 
 @Component({
@@ -94,7 +95,7 @@ export class CalendarioComponent {
   public corIndisponivel: CorEnum = CorEnum.laranja;
   public corPrincipal: CorEnum = CorEnum.primary;
 
-  constructor(private _changes: ChangeDetectorRef, private _diaristaService: DiaristaService) {
+  constructor(private _changes: ChangeDetectorRef, private _diaristaService: ProfissionalService) {
     this.calcular();
   }
 
@@ -172,14 +173,14 @@ export class CalendarioComponent {
     const diasSelecionados = Array.from(this.diasAgendados.values());
     const agendamento = new AgendamentoDTO();
     agendamento.desconto = NumberUtils.arredondarCasasDecimais(this.desconto, 2);
-    agendamento.total = NumberUtils.arredondarCasasDecimais(this.valorTotal, 2);
-    agendamento.valor = NumberUtils.arredondarCasasDecimais(agendamento.total + agendamento.desconto, 2);
+    agendamento.valor = NumberUtils.arredondarCasasDecimais(this.valorTotal, 2);
     agendamento.diasSelecionados = diasSelecionados;
     agendamento.metragem = this.metragem;
     agendamento.profissionalSelecionado = this.profissionalSelecionado;
     agendamento.turno = this.turno;
     agendamento.dataHora = new Date();
-    agendamento.email = "extraclean@email.com";
+    agendamento.email = environment.email;
+    agendamento.extraPlus = ProfissionalDTO.isEmpty(this.profissionalSelecionado);
 
     this.getDadosAgendamento.emit(agendamento);
   }
@@ -352,7 +353,7 @@ export class CalendarioComponent {
   public isXs() {
     if (typeof document !== 'undefined') {
       const documentWidth = document.documentElement.clientWidth;
-      return CalculoUtils.isXs(documentWidth);
+      return CalculoUtils.isLessThan(documentWidth, 900);
     }
 
     return false;

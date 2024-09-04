@@ -1,7 +1,7 @@
 @import '../../../color.scss';
 
 .card-login {
-    min-height: 90vh;
+    max-height: 95vh;
     max-width: 100%;
     background-color: $primary;
     // border: 5px solid;
@@ -21,4 +21,11 @@ p {
 ::ng-deep .mdc-button:disabled {
     // color: $primary !important;
     background-color: $sub !important;
+}
+
+.link {
+    color: $azul;
+    text-decoration: underline;
+    font-style: italic;
+    cursor: pointer;
 }

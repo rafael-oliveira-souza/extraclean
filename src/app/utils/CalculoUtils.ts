@@ -1,6 +1,10 @@
 
 export class CalculoUtils {
 
+    public static isLessThan(width: number | null, value: number): boolean {
+        return width != null && width < value;
+    }
+
     public static isXs(width: number | null): boolean {
         return width != null && width < 768;
     }

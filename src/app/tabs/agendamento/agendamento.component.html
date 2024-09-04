@@ -1,7 +1,7 @@
 <div class="custom">
     <div *ngIf="isXs()">
         <mat-vertical-stepper linear #stepper>
-            <mat-step [stepControl]="formCep" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[0]" [stepControl]="formCep" [editable]="isEditable">
                 <form [formGroup]="formCep">
                     <ng-template matStepLabel>Localização</ng-template>
                     <div class="row justify-content-center">
@@ -14,11 +14,15 @@
                                     <mat-error>Preencha todos os dígitos</mat-error>
                                     }
                                 </mat-form-field>
-                                <button class="col-2 col-xl-2 col-lg-2 col-md-2 col-sm-12  "
+                                <mat-checkbox #check formControlName="naoEncontrado" class="text-start">Cep não
+                                    encontrado.</mat-checkbox> <br>
+                                <button *ngIf="!formCep.controls['naoEncontrado'].value"
+                                    class="col-2 col-xl-2 col-lg-2 col-md-2 col-sm-12  "
                                     (click)="getCep(formCep.controls['cep'].value)" style="margin-left: 20px;"
                                     [disabled]="formCep.controls['cep'].invalid" mat-button>Buscar</button>
                             </div>
-                            <div *ngIf="exibeCep" class="mt-3 row justify-content-center">
+                            <div *ngIf="exibeCep || formCep.controls['naoEncontrado'].value"
+                                class="mt-3 row justify-content-center">
                                 <div class="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-6  mt-2">
                                     <mat-form-field class="col-12">
                                         <mat-label>Logradouro</mat-label>
@@ -61,13 +65,12 @@
                     </div>
                     <div [class]="definirDisposicaoClasse()">
                         <div></div>
-                        <button [disabled]="(formCep.controls['numero'].invalid || !exibeCep)"
-                            style="margin-left: 20px;" mat-button
+                        <button [disabled]="(formCep.invalid)" style="margin-left: 20px;" mat-button
                             (click)="avancarOuVoltar(stepper, true)">Próximo</button>
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formComodos" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[1]" [stepControl]="formComodos" [editable]="isEditable">
                 <form [formGroup]="formComodos">
                     <ng-template matStepLabel>Cômodos</ng-template>
                     <div class="mt-4 text-center">
@@ -102,7 +105,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formPets" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[2]" [stepControl]="formPets" [editable]="isEditable">
                 <form [formGroup]="formPets">
                     <ng-template matStepLabel>Pets</ng-template>
                     <div class="mt-4 text-center">
@@ -123,7 +126,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formTipoLimpeza" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[3]" [stepControl]="formTipoLimpeza" [editable]="isEditable">
                 <form [formGroup]="formTipoLimpeza">
                     <ng-template matStepLabel>Tipo de Limpeza</ng-template>
                     <div class="mt-4 ">
@@ -211,7 +214,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formArea" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[4]" [stepControl]="formArea" [editable]="isEditable">
                 <form [formGroup]="formArea">
                     <ng-template matStepLabel>Metragem</ng-template>
                     <div class="row justify-content-center">
@@ -235,7 +238,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step id="Agendamento">
+            <mat-step *ngIf="habilitaStep[5]" id="Agendamento">
                 <div class="mt-4 text-center">
                     <ng-template matStepLabel>Agendamento</ng-template>
                     <div id="calendarioIdAgd390">
@@ -248,6 +251,8 @@
                                 nos
                                 seus agendamentos. </small>
                             <small class="col-12">* A escolha do profissional aumenta R$ 20 para cada dia ao valor
+                                total.</small>
+                            <small class="col-12">* Uma taxa de deslocamento do profissional será aplicada ao valor
                                 total.</small>
                             <small class="col-12">* O período integral é calculado como 8 horas.</small>
                         </div>
@@ -280,22 +285,23 @@
                                 <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
                                 <p><strong>Metragem:</strong> {{dadosAgendamento.metragem}}</p>
                                 <p><strong>Desconto:</strong> {{dadosAgendamento.desconto | moeda}}</p>
-                                <p><strong>Valor:</strong> {{dadosAgendamento.valor| moeda}}</p>
-                                <p><strong>Total:</strong> {{dadosAgendamento.total| moeda}}</p>
+                                <p><strong>Valor:</strong> {{dadosAgendamento.valor+ dadosAgendamento.desconto | moeda}}
+                                </p>
+                                <p><strong>Total:</strong> {{dadosAgendamento.valor | moeda}}
                             </div>
                         </div>
                     </div>
                 </div>
                 <div [class]="definirDisposicaoClasse()">
                     <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
-                    <button (click)="agendar()" mat-flat-button>Agendar</button>
+                    <button (click)="agendar()" mat-flat-button>Pagar</button>
                 </div>
             </mat-step>
         </mat-vertical-stepper>
     </div>
     <div *ngIf="!isXs()">
         <mat-horizontal-stepper linear #stepper>
-            <mat-step [stepControl]="formCep" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[0]" [stepControl]="formCep" [editable]="isEditable">
                 <form [formGroup]="formCep">
                     <ng-template matStepLabel>Localização</ng-template>
                     <div class="row justify-content-center">
@@ -308,11 +314,15 @@
                                     <mat-error>Preencha todos os dígitos</mat-error>
                                     }
                                 </mat-form-field>
-                                <button class="col-2 col-xl-2 col-lg-2 col-md-2 col-sm-12  "
+                                <mat-checkbox #check formControlName="naoEncontrado" class="text-start">Cep não
+                                    encontrado.</mat-checkbox> <br>
+                                <button *ngIf="!formCep.controls['naoEncontrado'].value"
+                                    class="col-2 col-xl-2 col-lg-2 col-md-2 col-sm-12  "
                                     (click)="getCep(formCep.controls['cep'].value)" style="margin-left: 20px;"
                                     [disabled]="formCep.controls['cep'].invalid" mat-button>Buscar</button>
                             </div>
-                            <div *ngIf="exibeCep" class="mt-3 row justify-content-center">
+                            <div *ngIf="exibeCep || formCep.controls['naoEncontrado'].value"
+                                class="mt-3 row justify-content-center">
                                 <div class="col-12 col-xl-4 col-lg-4 col-md-4 col-sm-6  mt-2">
                                     <mat-form-field class="col-12">
                                         <mat-label>Logradouro</mat-label>
@@ -355,13 +365,12 @@
                     </div>
                     <div [class]="definirDisposicaoClasse()">
                         <div></div>
-                        <button [disabled]="(formCep.controls['numero'].invalid || !exibeCep)"
-                            style="margin-left: 20px;" mat-button
+                        <button [disabled]="(formCep.invalid)" style="margin-left: 20px;" mat-button
                             (click)="avancarOuVoltar(stepper, true)">Próximo</button>
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formComodos" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[1]" [stepControl]="formComodos" [editable]="isEditable">
                 <form [formGroup]="formComodos">
                     <ng-template matStepLabel>Cômodos</ng-template>
                     <div class="mt-4 text-center">
@@ -396,7 +405,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formPets" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[2]" [stepControl]="formPets" [editable]="isEditable">
                 <form [formGroup]="formPets">
                     <ng-template matStepLabel>Pets</ng-template>
                     <div class="mt-4 text-center">
@@ -417,7 +426,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formTipoLimpeza" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[3]" [stepControl]="formTipoLimpeza" [editable]="isEditable">
                 <form [formGroup]="formTipoLimpeza">
                     <ng-template matStepLabel>Tipo de Limpeza</ng-template>
                     <div class="mt-4 ">
@@ -505,7 +514,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step [stepControl]="formArea" [editable]="isEditable">
+            <mat-step *ngIf="habilitaStep[4]" [stepControl]="formArea" [editable]="isEditable">
                 <form [formGroup]="formArea">
                     <ng-template matStepLabel>Metragem</ng-template>
                     <div class="row justify-content-center">
@@ -529,7 +538,7 @@
                     </div>
                 </form>
             </mat-step>
-            <mat-step id="Agendamento">
+            <mat-step *ngIf="habilitaStep[5]" id="Agendamento">
                 <div class="mt-4 text-center">
                     <ng-template matStepLabel>Agendamento</ng-template>
                     <div id="calendarioIdAgd390">
@@ -542,6 +551,8 @@
                                 nos
                                 seus agendamentos. </small>
                             <small class="col-12">* A escolha do profissional aumenta R$ 20 para cada dia ao valor
+                                total.</small>
+                            <small class="col-12">* Uma taxa de deslocamento do profissional será aplicada ao valor
                                 total.</small>
                             <small class="col-12">* O período integral é calculado como 8 horas.</small>
                         </div>
@@ -574,15 +585,17 @@
                                 <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
                                 <p><strong>Metragem:</strong> {{dadosAgendamento.metragem}}</p>
                                 <p><strong>Desconto:</strong> {{dadosAgendamento.desconto | moeda}}</p>
-                                <p><strong>Valor:</strong> {{dadosAgendamento.valor| moeda}}</p>
-                                <p><strong>Total:</strong> {{dadosAgendamento.total| moeda}}</p>
+                                <p><strong>Valor:</strong> {{dadosAgendamento.valor + dadosAgendamento.desconto |
+                                    moeda}}</p>
+                                <p><strong>Total:</strong> {{dadosAgendamento.valor | moeda}}
+                                </p>
                             </div>
                         </div>
                     </div>
                 </div>
                 <div [class]="definirDisposicaoClasse()">
                     <button mat-button (click)="avancarOuVoltar(stepper, false)">Voltar</button>
-                    <button (click)="agendar()" mat-flat-button>Agendar</button>
+                    <button (click)="agendar()" mat-flat-button>Pagar</button>
                 </div>
             </mat-step>
         </mat-horizontal-stepper>

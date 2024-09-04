@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectorRef, Component } from '@angular/core';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -23,6 +23,10 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
 import { EnderecoUtils } from '../../utils/EnderecoUtils';
 import { CalculoUtils } from '../../utils/CalculoUtils';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { MatDialog } from '@angular/material/dialog';
+import { PagamentoComponent } from '../../components/pagamento/pagamento.component';
+import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 
 @Component({
   selector: 'app-agendamento',
@@ -45,6 +49,7 @@ import { CalculoUtils } from '../../utils/CalculoUtils';
     NumerosComponent,
     PipeModule,
     NgxMaskDirective,
+    MatCheckboxModule,
     NgxMaskPipe
   ],
   providers: [
@@ -75,11 +80,15 @@ export class AgendamentoComponent {
   public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
   public profissional = null;
+  public habilitaStep: boolean[] = [false, false, false, false, true, true];
 
 
-  constructor(private _formBuilder: FormBuilder, private _cepService: CepService,
+  constructor(private _changes: ChangeDetectorRef, private _formBuilder: FormBuilder, private _cepService: CepService,
     private _notificacaoService: NotificacaoService, private _profissionalService: ProfissionalService,
-    private _agendamentoService: AgendamentoService) {
+    private _agendamentoService: AgendamentoService, private dialog: MatDialog) {
+  }
+
+  ngOnInit(): void {
     this.buildForm();
   }
 
@@ -96,9 +105,18 @@ export class AgendamentoComponent {
 
     this.dadosAgendamento.tipoLimpeza = this.formTipoLimpeza.controls['valor'].value;
     this._agendamentoService.agendar(this.dadosAgendamento)
-      .subscribe(result => {
-        console.log(result)
-      })
+      .subscribe((result: PagamentoMpDTO) => {
+        const documentWidth = document.documentElement.clientWidth;
+        const documentHeight = document.documentElement.clientHeight;
+        let dialogRef = this.dialog.open(PagamentoComponent, {
+          minWidth: `${documentWidth * 0.8}px`,
+          maxWidth: `${documentWidth * 0.9}px`,
+          minHeight: `80vh`,
+          maxHeight: `90vh`,
+          data: { pagamento: null, url: 'https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=1964770493-4055c0fa-308d-46bc-aa7d-1ba3e0ed9e1e&router-request-id=b33d4034-ec77-4bca-b165-ef17c067c50f' }
+        });
+      },
+        (error) => this._notificacaoService.erro(error.error));
   }
 
   public limparDiasSelecionados() {
@@ -113,14 +131,18 @@ export class AgendamentoComponent {
           if (cepRecuperado['erro']) {
             this._notificacaoService.alerta("Cep não encontrado!");
           } else {
-            this.exibeCep = true;
-            this.formCep.controls['bairro'].setValue(cepRecuperado.bairro);
-            this.formCep.controls['localidade'].setValue(cepRecuperado.localidade);
-            this.formCep.controls['logradouro'].setValue(cepRecuperado.logradouro);
-            this.formCep.controls['uf'].setValue(cepRecuperado.uf);
+            this.exibirCep(cepRecuperado);
           }
         });
     }
+  }
+
+  public exibirCep(cepRecuperado: EnderecoDTO) {
+    this.exibeCep = true;
+    this.formCep.controls['bairro'].setValue(cepRecuperado?.bairro);
+    this.formCep.controls['localidade'].setValue(cepRecuperado?.localidade);
+    this.formCep.controls['logradouro'].setValue(cepRecuperado?.logradouro);
+    this.formCep.controls['uf'].setValue(cepRecuperado?.uf);
   }
 
   public getDadosAgendamento(dadosAgendamento: AgendamentoDTO) {
@@ -174,21 +196,7 @@ export class AgendamentoComponent {
       valor: ['', Validators.required]
     });
 
-    this.formCep = this._formBuilder.group({
-      cep: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
-      numero: ['', Validators.required],
-      logradouro: new FormControl({ value: '', disabled: true }, Validators.required),
-      complemento: new FormControl({ value: '', disabled: false }),
-      bairro: new FormControl({ value: '', disabled: true }, Validators.required),
-      localidade: new FormControl({ value: '', disabled: true }, Validators.required),
-      uf: new FormControl({ value: '', disabled: true }, Validators.required)
-    });
-
-    this.formCep.valueChanges.subscribe(cep => {
-      if (this.formCep.controls['cep'].invalid) {
-        this.exibeCep = false;
-      }
-    });
+    this.montarFormCep(true);
 
     this.formTipoLimpeza.valueChanges.subscribe(value => {
       const tipoLimpezaControl = this.formTipoLimpeza.controls['valor'];
@@ -202,6 +210,46 @@ export class AgendamentoComponent {
         this.calcularValorPorMetro(this.formArea.controls['valor'].value);
       }
     });
+  }
+
+  public montarFormCep(habilitaInput: boolean) {
+    this.formCep = this._formBuilder.group({
+      cep: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+      numero: ['', Validators.required],
+      logradouro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
+      complemento: new FormControl({ value: '', disabled: false }),
+      bairro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
+      localidade: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
+      uf: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
+      naoEncontrado: false
+    });
+
+    this.formCep.valueChanges.subscribe(cep => {
+      if (this.formCep.controls['cep'].invalid) {
+        this.exibeCep = false;
+      }
+    });
+
+
+    this.formCep.controls['naoEncontrado'].valueChanges.subscribe(val => {
+      if (val) {
+        this.formCep.controls['logradouro'].setValue("");
+        this.formCep.controls['localidade'].setValue("");
+        this.formCep.controls['bairro'].setValue("");
+        this.formCep.controls['uf'].setValue("");
+        this.formCep.controls['numero'].setValue("");
+        this.formCep.controls['logradouro'].enable();
+        this.formCep.controls['localidade'].enable();
+        this.formCep.controls['bairro'].enable();
+        this.formCep.controls['uf'].enable();
+      } else {
+        this.formCep.controls['logradouro'].disable();
+        this.formCep.controls['localidade'].disable();
+        this.formCep.controls['bairro'].disable();
+        this.formCep.controls['uf'].disable();
+      }
+    });
+    // this._changes.detectChanges()
   }
 
   public calcularValorPorMetro(metragem: number) {

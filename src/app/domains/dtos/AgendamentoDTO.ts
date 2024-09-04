@@ -3,7 +3,6 @@ import { PagamentoDTO } from "./PagamentoDTO";
 
 export class AgendamentoDTO extends PagamentoDTO {
     turno: number = 0;
-    total: number = 0;
     diasSelecionados: MomentInput[] = [];
     profissionalSelecionado: number = 0;
     endereco!: string;

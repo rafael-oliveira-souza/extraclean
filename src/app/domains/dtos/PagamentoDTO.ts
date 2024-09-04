@@ -8,7 +8,7 @@ export class PagamentoDTO {
     titulo!: string;
     qtdParcelas!: number;
     codigoPagamento!: string;
-    metragem: number = 0;
+    metragem!: number;
     desconto: number = 0;
     valor: number = 0;
     dataHora!: Date;

@@ -25,13 +25,13 @@
                 </mat-form-field>
                 <section class="example-section">
                     <mat-checkbox [(ngModel)]="pagamento.extraPlus">EXTRA PLUS</mat-checkbox> <br>
-                    <small style="margin-left: 20px;" class=" font-italic text-secondary">
+                    <small style="margin-left: 20px;" class="text-white font-italic text-secondary">
                         Ao adicionar o EXTRA PLUS é possível selecionar o profissional que irá realizar as diárias.
                     </small>
                 </section>
                 <br><br>
                 <div>
-                    <small class="cor-branca">Valor por Metro : {{plano.valorMetro | moeda}}</small><br>
+                    <!-- <small class="cor-branca">Valor por Metro : {{plano.valorMetro | moeda}}</small><br> -->
                     <small class="cor-branca">Valor de Deslocamento : {{VALOR_DESLOCAMENTO | moeda}}</small><br>
                     <small *ngIf="pagamento.extraPlus" class="cor-branca">Valor Extra Plus :
                         {{VALOR_PROFISSIONAL_SELECIONADO | moeda}}</small><br>
@@ -41,8 +41,8 @@
                     <small class="cor-branca">Valor Total : {{calcularTotal(plano) | moeda}}</small><br>
                     <small class="cor-branca">Valor Desconto : {{calcularDesconto(plano) | moeda}}</small><br>
                     <small class="cor-branca">Valor por Diária : {{calcularDiaria(plano) | moeda}}</small><br>
-                    <small class="cor-branca">Valor Total de Deslocamento : {{VALOR_DESLOCAMENTO * plano.qtdDias|
-                        moeda}}</small><br>
+                    <!-- <small class="cor-branca">Valor Total de Deslocamento : {{VALOR_DESLOCAMENTO * plano.qtdDias|
+                        moeda}}</small><br> -->
                     <small *ngIf="pagamento.extraPlus" class="cor-branca">Valor Total Extra Plus :
                         {{VALOR_PROFISSIONAL_SELECIONADO * plano.qtdDias|
                         moeda}}</small><br>

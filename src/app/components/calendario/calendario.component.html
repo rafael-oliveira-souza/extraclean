@@ -1,50 +1,54 @@
 <div [style.width]="largura" class="mt-2 custom-calendar">
-    <div *ngIf="!isDetalhada" class="row justify-content-start">
+    <div class="row justify-content-start">
         <mat-grid-list cols="7" rowHeight="50px">
             <div *ngIf="isXs()">
-                <div id="profissionalCalendario">
-                    <mat-grid-tile colspan="7" rowspan="1">
-                        <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
-                            style="margin-top: 20px;">
-                            <mat-label>Escolha uma profissional</mat-label>
-                            <select matNativeControl [(ngModel)]="profissionalSelecionado"
-                                (change)="atualizarProfissional()">
-                                <option value="0">Sem preferência</option>
-                                <option *ngFor="let prof of profissionais" [value]="prof.id">
-                                    {{prof.nome}} {{prof.sobrenome | ponto: 20}}
-                                </option>
-                            </select>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile colspan="7"></mat-grid-tile>
+                <div>
+                    <div *ngIf="!isDetalhada" id="profissionalCalendario">
+                        <mat-grid-tile colspan="7" rowspan="1">
+                            <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
+                                style="margin-top: 20px;">
+                                <mat-label>Escolha uma profissional</mat-label>
+                                <select matNativeControl [(ngModel)]="profissionalSelecionado"
+                                    (change)="atualizarProfissional()">
+                                    <option value="0">Sem preferência</option>
+                                    <option *ngFor="let prof of profissionais" [value]="prof.id">
+                                        {{prof.nome}} {{prof.sobrenome | ponto: 20}}
+                                    </option>
+                                </select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile colspan="7"></mat-grid-tile>
+                    </div>
+                    <div id="periodoCalendario">
+                        <mat-grid-tile colspan="7" rowspan="1">
+                            <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
+                                style="margin-top: 20px;">
+                                <mat-label>Escolha um Período</mat-label>
+                                <select matNativeControl [(ngModel)]="turno" (change)="atualizarProfissional()">
+                                    <option value="0">Sem preferência</option>
+                                    <option value="1">Matutino</option>
+                                    <option value="2">Vespertino</option>
+                                    <option value="3">Integral</option>
+                                </select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile colspan="7"></mat-grid-tile>
+                    </div>
+                    <div id="agendamentoCalendario">
+                        <mat-grid-tile [colspan]="5" rowspan="1">
+                            <mat-form-field class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="margin-top: 20px;">
+                                <mat-label>Agende o seu atendimento</mat-label>
+                                <input matInput [min]="hoje" [max]="maxDate" [matDatepicker]="picker"
+                                    [formControl]="diaSelecionado">
+                                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                                <mat-datepicker #picker startView="multi-year"
+                                    (monthSelected)="setMonthAndYear($event, picker)">
+                                </mat-datepicker>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                    </div>
                 </div>
-                <div id="periodoCalendario">
-                    <mat-grid-tile colspan="7" rowspan="1">
-                        <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
-                            style="margin-top: 20px;">
-                            <mat-label>Escolha um Período</mat-label>
-                            <select matNativeControl [(ngModel)]="turno" (change)="atualizarProfissional()">
-                                <option value="0">Sem preferência</option>
-                                <option value="1">Matutino</option>
-                                <option value="2">Vespertino</option>
-                                <option value="3">Integral</option>
-                            </select>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile colspan="7"></mat-grid-tile>
-                </div>
-                <div id="agendamentoCalendario">
-                    <mat-grid-tile [colspan]="5" rowspan="1">
-                        <mat-form-field class=" col-xl-10 col-lg-11 col-md-12 col-sm-12 " style="margin-top: 20px;">
-                            <mat-label>Agende o seu atendimento</mat-label>
-                            <input matInput [min]="hoje" [max]="maxDate" [matDatepicker]="picker"
-                                [formControl]="diaSelecionado">
-                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker startView="multi-year"
-                                (monthSelected)="setMonthAndYear($event, picker)">
-                            </mat-datepicker>
-                        </mat-form-field>
-                    </mat-grid-tile>
+                <div id="botoes">
                     <mat-grid-tile colspan="1">
                         <mat-icon aria-hidden="false" aria-label="Voltar" fontIcon="chevron_left"
                             (click)="anterior()"></mat-icon>
@@ -69,31 +73,49 @@
                             </mat-datepicker>
                         </mat-form-field>
                     </mat-grid-tile>
-                    <mat-grid-tile colspan="2" rowspan="1">
-                        <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
-                            style="margin-top: 20px;">
-                            <mat-label>Escolha uma profissional</mat-label>
-                            <select matNativeControl [(ngModel)]="profissionalSelecionado"
-                                (change)="atualizarProfissional()">
-                                <option value="0">Sem preferência</option>
-                                <option *ngFor="let prof of profissionais" [value]="prof.id">
-                                    {{prof.nome}} {{prof.sobrenome | ponto: 20}}
-                                </option>
-                            </select>
-                        </mat-form-field>
-                    </mat-grid-tile>
-                    <mat-grid-tile colspan="1" rowspan="1">
-                        <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
-                            style="margin-top: 20px;">
-                            <mat-label>Escolha um Período</mat-label>
-                            <select matNativeControl [(ngModel)]="turno" (change)="atualizarProfissional()">
-                                <option value="0">Sem preferência</option>
-                                <option value="1">Matutino</option>
-                                <option value="2">Vespertino</option>
-                                <option value="3">Integral</option>
-                            </select>
-                        </mat-form-field>
-                    </mat-grid-tile>
+                    <div *ngIf="!isDetalhada">
+                        <mat-grid-tile colspan="2" rowspan="1">
+                            <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
+                                style="margin-top: 20px;">
+                                <mat-label>Escolha uma profissional</mat-label>
+                                <select matNativeControl [(ngModel)]="profissionalSelecionado"
+                                    (change)="atualizarProfissional()">
+                                    <option value="0">Sem preferência</option>
+                                    <option *ngFor="let prof of profissionais" [value]="prof.id">
+                                        {{prof.nome}} {{prof.sobrenome | ponto: 20}}
+                                    </option>
+                                </select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile colspan="1" rowspan="1">
+                            <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
+                                style="margin-top: 20px;">
+                                <mat-label>Escolha um Período</mat-label>
+                                <select matNativeControl [(ngModel)]="turno" (change)="atualizarProfissional()">
+                                    <option value="0">Sem preferência</option>
+                                    <option value="1">Matutino</option>
+                                    <option value="2">Vespertino</option>
+                                    <option value="3">Integral</option>
+                                </select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+
+                    </div>
+                    <div *ngIf="isDetalhada">
+                        <mat-grid-tile colspan="2" rowspan="1">
+                            <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
+                                style="margin-top: 20px;">
+                                <mat-label>Escolha um Período</mat-label>
+                                <select matNativeControl [(ngModel)]="turno" (change)="atualizarProfissional()">
+                                    <option value="0">Sem preferência</option>
+                                    <option value="1">Matutino</option>
+                                    <option value="2">Vespertino</option>
+                                    <option value="3">Integral</option>
+                                </select>
+                            </mat-form-field>
+                        </mat-grid-tile>
+                        <mat-grid-tile colspan="1"></mat-grid-tile>
+                    </div>
                     <mat-grid-tile colspan="1">
                         <mat-icon aria-hidden="false" aria-label="Voltar" fontIcon="chevron_left"
                             (click)="anterior()"></mat-icon>
@@ -130,10 +152,10 @@
             <app-legenda class=" col-xl-2 col-lg-2 col-md-2 col-sm-6 col-xs-12 mb-3" [cor]="corPrincipal"
                 label="Selecionado"></app-legenda>
             <div class=" col-xl-3 col-lg-3 col-md-3 col-sm-12 col-xs-12">
-                <button class="cor-laranja" [disabled]="getQtdDias() <= 0" (click)="limparDiasSelecionados()"
+                <!-- <button class="cor-laranja" [disabled]="getQtdDias() <= 0" (click)="limparDiasSelecionados()"
                     mat-button>
                     Limpar Dias Selecionados
-                </button>
+                </button> -->
             </div>
         </div>
     </div>

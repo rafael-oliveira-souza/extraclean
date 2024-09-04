@@ -20,6 +20,9 @@ import { PagamentoComponent } from '../../components/pagamento/pagamento.compone
 import { PagamentoDTO } from '../../domains/dtos/PagamentoDTO';
 import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
 import { TipoPlanoEnum } from '../../domains/enums/TipoPlanoEnum';
+import { NotificacaoService } from '../../services/notificacao.service';
+import { PlanoService } from '../../services/plano.service';
+import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 // import { PagamentoComponent } from '../../components/pagamento/pagamento.component';
 
 @Component({
@@ -47,7 +50,7 @@ export class PlanosComponent {
   public planos: Array<PlanoDTO> = [];
   public pagamento: PagamentoDTO = new PagamentoDTO();
 
-  constructor(private _router: Router, private dialog: MatDialog) {
+  constructor(private planoService: PlanoService, private notification: NotificacaoService, private _router: Router, private dialog: MatDialog) {
     // this.planos.push(new PlanoDTO("Diário", "Plano Meu lar", 99));
     this.planos.push(new PlanoDTO(1, "Semanal", "Consiste em 2 diárias expressas em datas que o cliente definir.", 1.9, 2));
     this.planos.push(new PlanoDTO(2, "Mensal", "Consiste em 4 diárias expressas em datas que o cliente definir", 1.8, 4));
@@ -103,19 +106,26 @@ export class PlanosComponent {
       this.pagamento.qtdParcelas = 1;
       this.pagamento.tipoLimpeza = TipoLimpezaEnum.EXPRESSA;
       this.pagamento.email = email ? email : "";
+      // this._router.navigate([Rota.PAGAMENTO]);
 
-      const documentWidth = document.documentElement.clientWidth;
-      const documentHeight = document.documentElement.clientHeight;
-      let dialogRef = this.dialog.open(PagamentoComponent, {
-        minWidth: `${documentWidth * 0.6}px`,
-        maxWidth: `${documentWidth * 0.8}px`,
-        minHeight: `70vh`,
-        maxHeight: `90vh`,
-        data: this.pagamento
+      this.planos.forEach(plano => {
+        if (this.pagamento.tipoPlano = plano.id) {
+          this.planoService.criar(plano)
+            .subscribe((pag: PagamentoMpDTO) => {
+              const documentWidth = document.documentElement.clientWidth;
+              const documentHeight = document.documentElement.clientHeight;
+              let dialogRef = this.dialog.open(PagamentoComponent, {
+                minWidth: `${documentWidth * 0.6}px`,
+                maxWidth: `${documentWidth * 0.8}px`,
+                minHeight: `70vh`,
+                maxHeight: `90vh`,
+                data: { pagamento: this.pagamento, url: pag.url }
+              });
+            }, (error) => {
+              this.notification.erro(error);
+            });
+        }
       });
-
-      dialogRef.afterClosed().subscribe(logout => {
-      })
     }
   }
 

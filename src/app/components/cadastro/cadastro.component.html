@@ -3,9 +3,9 @@
     <div class="col-12 col-xl-8 col-lg-8 col-md-12 col-sm-12">
       <img width="50%" src="../../../assets/imgs/logo.svg">
     </div>
-    <h3>Cadastro</h3>
-    <form [formGroup]="formLogin" class=" row justify-content-center">
-      <div class="col-8  mt-2">
+    <form  style="margin-top: -50px;" [formGroup]="formLogin" class=" row justify-content-center">
+      <h3>Cadastro</h3>
+      <div class="col-8  ">
         <mat-form-field class="col-12 ">
           <mat-label>Email</mat-label>
           <input type="text" matInput formControlName="email">
@@ -14,13 +14,13 @@
       <div class="col-8 mt-2">
         <mat-form-field class="col-12 ">
           <mat-label>Senha</mat-label>
-          <input type="text" matInput formControlName="senha">
+          <input autocomplete="false" type="password" matInput formControlName="senha">
         </mat-form-field>
       </div>
       <div class="col-8 mt-2">
         <mat-form-field class="col-12 ">
           <mat-label>Confime a Senha</mat-label>
-          <input type="text" matInput formControlName="senhaVal">
+          <input autocomplete="false" type="password" matInput formControlName="senhaVal">
         </mat-form-field>
       </div>
       

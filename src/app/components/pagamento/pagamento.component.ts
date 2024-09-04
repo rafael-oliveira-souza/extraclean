@@ -8,6 +8,7 @@ import { PlanoDTO } from '../../domains/dtos/PlanoDTO';
 import { PlanoService } from '../../services/plano.service';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
+import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 
 @Component({
   selector: 'app-pagamento',
@@ -25,17 +26,13 @@ import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 })
 export class PagamentoComponent {
   readonly dialogRef = inject(MatDialogRef<PagamentoComponent>);
-  readonly data = inject<PlanoDTO>(MAT_DIALOG_DATA);
+  readonly data: any = inject<any>(MAT_DIALOG_DATA);
 
-  public linkPagamento!: string;
+  public linkPagamento: SafeResourceUrl;
 
-  constructor(private planoService: PlanoService, private notification: NotificacaoService) {
-    this.planoService.criar(this.data)
-      .subscribe((pag: PagamentoMpDTO) => {
-        this.linkPagamento = pag.url;
-      }, (error) => {
-        this.notification.erro(error);
-      });
+  constructor(private sanitizer: DomSanitizer) {
+    console.log(this.data['url']);
+    debugger
+    this.linkPagamento = this.sanitizer.bypassSecurityTrustResourceUrl(this.data['url']);
   }
-
 }

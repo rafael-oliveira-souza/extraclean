@@ -3,8 +3,8 @@
     <div class="col-12 col-xl-8 col-lg-8 col-md-12 col-sm-12">
       <img width="50%" src="../../../assets/imgs/logo.svg">
     </div>
-    <form [formGroup]="formLogin" class=" row justify-content-center">
-      <div class="col-8  mt-2">
+    <form style="margin-top: -50px;" [formGroup]="formLogin" class=" row justify-content-center">
+      <div class="col-8 ">
         <mat-form-field class="col-12 ">
           <mat-label>Email</mat-label>
           <input type="text" matInput formControlName="email">
@@ -28,7 +28,7 @@
       </div>
     </form>
     <br>
-    <p>Não tem uma conta? <a href="/cadastro">Registre-se</a></p>
+    <p>Não tem uma conta? <b class="link" (click)="cadastrar()">Registre-se</b></p>
     <button [disabled]="formLogin.invalid" mat-button class="mt-3 p-4 mb-3" (click)="logar()">Entrar</button>
   </div>
 

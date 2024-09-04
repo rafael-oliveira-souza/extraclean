@@ -28,6 +28,10 @@ small {
     }
 }
 
+::ng-deep .mdc-checkbox__background{
+    border: 1px solid $white !important;
+}
+
 ::ng-deep .mdc-button {
     color: $primary !important;
     background-color: $white !important;

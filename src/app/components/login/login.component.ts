@@ -61,4 +61,8 @@ export class LoginComponent implements OnInit {
         });
   }
 
+  public cadastrar() {
+    this._router.navigate([Rota.CADASTRO]);
+  }
+
 }
