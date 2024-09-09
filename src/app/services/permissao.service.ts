@@ -1,17 +1,16 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, MaybeAsync, GuardResult, Router } from "@angular/router";
 import { Rota } from "../app.routes";
-import { UsuarioService } from "./usuario.service";
+import { AutenticacaoService } from "./autenticacao.service";
 
 @Injectable({
     providedIn: 'root'
 })
 export class AuthGuard implements CanActivate {
-    constructor(private usuarioService: UsuarioService, private router: Router) { }
+    constructor(private authService: AutenticacaoService, private router: Router) { }
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): MaybeAsync<GuardResult> {
-        debugger
-        if (this.usuarioService.isLoggedIn()) {
+        if (this.authService.isLoggedIn()) {
             return true;
         }
 

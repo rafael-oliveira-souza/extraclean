@@ -11,6 +11,7 @@ import { UsuarioService } from '../../services/usuario.service';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
+import { AutenticacaoService } from '../../services/autenticacao.service';
 
 @Component({
   selector: 'app-login',
@@ -34,6 +35,7 @@ export class LoginComponent implements OnInit {
   constructor(private _formBuilder: FormBuilder,
     private _router: Router,
     private _usuarioService: UsuarioService,
+    private _authService: AutenticacaoService,
     private _notificacaoService: NotificacaoService) { }
 
   ngOnInit() {
@@ -50,10 +52,9 @@ export class LoginComponent implements OnInit {
 
     const email = this.formLogin.controls['email'].value;
     const senha = this.formLogin.controls['senha'].value;
-    this._usuarioService.login(email, senha)
+    this._authService.login(email, senha)
       .subscribe(
         (usuario: UsuarioDTO) => {
-          LocalStorageUtils.setUsuario(email);
           this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
         },
         (error) => {

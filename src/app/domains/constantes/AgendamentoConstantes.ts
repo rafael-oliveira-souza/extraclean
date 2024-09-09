@@ -3,13 +3,13 @@ import { TurnoEnum } from "../enums/TurnoEnum";
 
 export class AgendamentoConstantes {
     public static VALOR_PROFISSIONAL_SELECIONADO = 20;
-    public static VALOR_DESLOCAMENTO = 15;
-    public static VALOR_DIARIA_DETALHADA = 1.9;
+    public static VALOR_DESLOCAMENTO = 25;
+    public static VALOR_DIARIA_DETALHADA = 1.5;
     public static VALOR_PADRAO_METRO = 2.0;
     public static MAX_PERCENTUAL = 15;
     public static PERCENTUAL_DESCONTO = 2;
     public static METRAGEM_MIN = 15;
-    public static METRAGEM_MAX = 9999;
+    public static METRAGEM_MAX = 1000;
 
     public static calcularTotal(valorMetro: number, metragem: number, qtdDias: number, porcentagem: number,
         profissionalSelecionado: boolean, isDetalhada: boolean, turno: TurnoEnum): number {

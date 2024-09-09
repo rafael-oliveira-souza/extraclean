@@ -28,11 +28,10 @@ export class PagamentoComponent {
   readonly dialogRef = inject(MatDialogRef<PagamentoComponent>);
   readonly data: any = inject<any>(MAT_DIALOG_DATA);
 
-  public linkPagamento: SafeResourceUrl;
+  public linkPagamento  : SafeResourceUrl;
 
   constructor(private sanitizer: DomSanitizer) {
     console.log(this.data['url']);
-    debugger
     this.linkPagamento = this.sanitizer.bypassSecurityTrustResourceUrl(this.data['url']);
   }
 }

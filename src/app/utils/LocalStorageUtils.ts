@@ -1,14 +1,24 @@
+import { AutenticacaoDTO } from "../domains/dtos/AutenticacaoDTO";
+
 export class LocalStorageUtils {
     // Padrao TTL de 30 minutos (1800000 ms)
     public static readonly TTL: number = 1800000;
     public static readonly USUARIO_CACHE_EMAIL: string = "XXXX_USUARIO_CACHE_EMAIL_XXXX";
+    public static readonly USUARIO_CACHE_AUTH: string = "XXXX_USUARIO_CACHE_AUTH_XXXX";
+    public static readonly USUARIO_CACHE_CLIENTE: string = "XXXX_USUARIO_CACHE_CLIENTE_XXXX";
 
-    static setUsuario(email: string, ttl: number = this.TTL): void {
-        this.setItem(this.USUARIO_CACHE_EMAIL, email, ttl);
+    static removeCacheAutenticacao(): void {
+        this.removeItem(this.USUARIO_CACHE_AUTH);
+        this.removeItem(this.USUARIO_CACHE_EMAIL);
+        this.removeItem(this.USUARIO_CACHE_CLIENTE);
     }
 
-    static getUsuario(): string | null {
-        return this.getItem(this.USUARIO_CACHE_EMAIL);
+    static setAuth(auth: AutenticacaoDTO, ttl: number = this.TTL): void {
+        this.setItem(this.USUARIO_CACHE_AUTH, auth, ttl);
+    }
+
+    static getAuth(): AutenticacaoDTO | null {
+        return this.getItem(this.USUARIO_CACHE_AUTH);
     }
 
     // Método para salvar um item no localStorage com TTL

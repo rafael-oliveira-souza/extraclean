@@ -17,6 +17,9 @@ import { ComponentType } from '@angular/cdk/overlay';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Rota } from '../../app.routes';
+import { AutenticacaoService } from '../../services/autenticacao.service';
+import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
+import { ClienteService } from '../../services/cliente.service';
 
 @Component({
   selector: 'app-menu',
@@ -50,7 +53,11 @@ export class MenuComponent {
   public selectedMenu: MenuDTO = this.menus[0];
   public selectedIndex: number = 1;
 
+  public cliente: ClienteDTO | null = null;
+
   constructor(private dialog: MatDialog,
+    private _authService: AutenticacaoService,
+    private _clienteService: ClienteService,
     private _router: Router,
     private route: ActivatedRoute) { }
 
@@ -69,18 +76,13 @@ export class MenuComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.isUserNaoLogado()) {
+    if (this._authService.isLoggedIn()) {
       this.logout();
     }
   }
 
-  private isUserNaoLogado(): boolean {
-    const userMail: string | null = LocalStorageUtils.getUsuario();
-    return !userMail;
-  }
-
   public contratar() {
-    if (this.isUserNaoLogado()) {
+    if (this._authService.isLoggedIn()) {
       this._router.navigate([Rota.LOGIN]);
     } else {
       this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
@@ -116,6 +118,26 @@ export class MenuComponent {
   }
 
   public abrirPaginaMenu(componentName: string) {
+    const email: string | null = this._authService.getUsuarioAutenticado();
+    if (email == null) {
+      this._router.navigate([Rota.LOGIN]);
+      return;
+    }
+
+    this.cliente = LocalStorageUtils.getItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE);
+    if (!this.cliente) {
+      this._clienteService.recuperarCliente(email)
+        .subscribe((cliente: ClienteDTO) => {
+          LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, cliente);
+          this.cliente = cliente;
+          this.abrirPerfil(componentName, this.cliente);
+        });
+    } else {
+      this.abrirPerfil(componentName, this.cliente);
+    }
+  }
+
+  public abrirPerfil(componentName: string, cliente: ClienteDTO) {
     let component: ComponentType<any> = PerfilComponent;
     if (typeof document !== 'undefined') {
       if (componentName == 'perfil') {
@@ -129,17 +151,18 @@ export class MenuComponent {
         maxWidth: `${documentWidth * 0.9}px`,
         minHeight: `${documentHeight * 0.8}px`,
         maxHeight: `${documentHeight * 0.8}px`,
+        data: { cliente: cliente }
       });
 
       dialogRef.afterClosed().subscribe(logout => {
         if (logout) {
           this.logout();
         }
-      })
+      });
     }
   }
 
   public logout() {
-    LocalStorageUtils.clear();
+    this._authService.logout();
   }
 }

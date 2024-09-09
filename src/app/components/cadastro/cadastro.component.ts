@@ -9,6 +9,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { Rota } from '../../app.routes';
 import { Router } from '@angular/router';
+import { AutenticacaoService } from '../../services/autenticacao.service';
 
 @Component({
   selector: 'app-cadastro',
@@ -30,6 +31,7 @@ export class CadastroComponent implements OnInit {
   constructor(
     private _router: Router,
     private _formBuilder: FormBuilder,
+    private _authService: AutenticacaoService,
     private _usuarioService: UsuarioService,
     private _notificacaoService: NotificacaoService) { }
 
@@ -41,11 +43,11 @@ export class CadastroComponent implements OnInit {
     });
   }
 
-  public logar() {
+  public cadastrar() {
     if (this.formLogin.invalid) {
       this._notificacaoService.erro("Formulario invalido.");
     }
-    
+
     if (this.formLogin.controls['senha'].value != this.formLogin.controls['senhaVal'].value) {
       this._notificacaoService.erro("As Senhas informadas são diferentes.");
     }
@@ -56,10 +58,11 @@ export class CadastroComponent implements OnInit {
     this._usuarioService.cadastrar(usuario)
       .subscribe(
         (usuario: UsuarioDTO) => {
-          LocalStorageUtils.setUsuario(usuario.email);
+          this._authService.autenticar(usuario.email);
           this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
         },
         (error) => {
+          LocalStorageUtils.removeCacheAutenticacao();
           this._notificacaoService.erro(error);
         });
   }

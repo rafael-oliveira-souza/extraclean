@@ -1,42 +1,49 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ClienteService } from '../../services/cliente.service';
-import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
-import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
+import { Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
+  MAT_DIALOG_DATA,
   MatDialogRef,
 } from '@angular/material/dialog';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
+import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
+import { MatInputModule } from '@angular/material/input';
 
 @Component({
   selector: 'app-perfil',
   standalone: true,
-  imports: [FormsModule, ReactiveFormsModule, CommonModule],
+  imports: [
+    FormsModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    CommonModule, MatIconModule,
+    MatInputModule,
+    MatButtonModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss'
 })
 export class PerfilComponent {
-  public readonly USUARIO_CACHE_CLIENTE: string = "XXXX_USUARIO_CACHE_CLIENTE_XXXX";
-
+  public formLogin!: FormGroup;
   public cliente: ClienteDTO | null = null;
+  public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
+  readonly data: any = inject<any>(MAT_DIALOG_DATA);
 
-  constructor(private _clienteService: ClienteService,
-    private _dialogRef: MatDialogRef<PerfilComponent>) { }
-
-  ngOnInit(): void {
-    const userMail: string | null = LocalStorageUtils.getUsuario();
-    if (!userMail) {
-      // this.dialogRef.close(true);
-    }
-
-    this.cliente = LocalStorageUtils.getItem(this.USUARIO_CACHE_CLIENTE);
-    if (!this.cliente) {
-      this._clienteService.recuperarCliente(userMail)
-        .subscribe((cliente: ClienteDTO) => {
-          LocalStorageUtils.setItem(this.USUARIO_CACHE_CLIENTE, cliente);
-          this.cliente = cliente;
-        });
-    }
+  constructor(private _formBuilder: FormBuilder,
+    private _dialogRef: MatDialogRef<PerfilComponent>) {
+    this.cliente = this.data['cliente'];
+    this.formLogin = this._formBuilder.group({
+      email: ['', [Validators.required, Validators.email]],
+      senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]],
+      senhaVal: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]]
+    });
   }
 
+  ngOnInit(): void {
+  }
+
+  public alterarSenha() {
+
+  }
 }

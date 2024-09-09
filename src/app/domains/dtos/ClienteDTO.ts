@@ -7,4 +7,7 @@ export class ClienteDTO {
     cpfCnpj!: string;
     endereco!: string;
     dataNascimento!: Date;
+    numero!: string;
+    localizacao!: string;
+    cep!: string;
 }
