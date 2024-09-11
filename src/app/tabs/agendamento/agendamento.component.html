@@ -276,10 +276,10 @@
                                 <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno|
                                     turno}}
                                 </p>
-                                <p *ngIf="dadosAgendamento.profissionalSelecionado != 0">
+                                <p *ngIf="dadosAgendamento.profissionais.length > 0">
                                     <strong>Profissional:</strong> {{recuperarProfissional().nome}}
                                 </p>
-                                <p *ngIf="dadosAgendamento.profissionalSelecionado == 0">
+                                <p *ngIf="dadosAgendamento.profissionais.length == 0">
                                     <strong>Profissional Selecionado:</strong> Não
                                 </p>
                                 <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
@@ -576,10 +576,10 @@
                                 <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno|
                                     turno}}
                                 </p>
-                                <p *ngIf="dadosAgendamento.profissionalSelecionado != 0">
+                                <p *ngIf="dadosAgendamento.profissionais.length > 0">
                                     <strong>Profissional:</strong> {{recuperarProfissional().nome}}
                                 </p>
-                                <p *ngIf="dadosAgendamento.profissionalSelecionado == 0">
+                                <p *ngIf="dadosAgendamento.profissionais.length  == 0">
                                     <strong>Profissional Selecionado:</strong> Não
                                 </p>
                                 <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>

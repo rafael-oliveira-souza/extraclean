@@ -46,10 +46,12 @@ export class CadastroComponent implements OnInit {
   public cadastrar() {
     if (this.formLogin.invalid) {
       this._notificacaoService.erro("Formulario invalido.");
+      return;
     }
 
     if (this.formLogin.controls['senha'].value != this.formLogin.controls['senhaVal'].value) {
       this._notificacaoService.erro("As Senhas informadas são diferentes.");
+      return;
     }
 
     let usuario = new UsuarioDTO();

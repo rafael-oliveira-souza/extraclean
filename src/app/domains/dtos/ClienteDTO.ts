@@ -4,9 +4,7 @@ export class ClienteDTO {
     sobrenome!: string;
     email!: string;
     telefone!: string;
-    cpfCnpj!: string;
     endereco!: string;
-    dataNascimento!: Date;
     numero!: string;
     localizacao!: string;
     cep!: string;

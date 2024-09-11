@@ -10,6 +10,8 @@ import 'moment/locale/pt-br';
 import localePt from '@angular/common/locales/pt';
 import { ImageComponent } from './components/image/image.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/AuthInterceptor';
 
 registerLocaleData(localePt);
 
@@ -36,6 +38,11 @@ export const MY_FORMATS = {
     {
       provide: STEPPER_GLOBAL_OPTIONS,
       useValue: { showError: true }
+    },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: AuthInterceptor,
+      multi: true
     },
     {
       provide: STEPPER_GLOBAL_OPTIONS,

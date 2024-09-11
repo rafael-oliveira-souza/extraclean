@@ -30,6 +30,10 @@ export class LocalStorageUtils {
         };
 
         try {
+            if (!localStorage) {
+                return;
+            }
+
             const serializedValue = JSON.stringify(item);
             localStorage.setItem(key, serializedValue);
         } catch (error) {
@@ -40,6 +44,10 @@ export class LocalStorageUtils {
     // Método para obter um item do localStorage, validando o TTL
     static getItem<T>(key: string): T | null {
         try {
+            if (!localStorage) {
+                return null;
+            }
+
             const item = localStorage.getItem(key);
             if (!item) return null;
 
@@ -62,6 +70,10 @@ export class LocalStorageUtils {
     // Método para remover um item do localStorage
     static removeItem(key: string): void {
         try {
+            if (!localStorage) {
+                return;
+            }
+
             localStorage.removeItem(key);
         } catch (error) {
             console.error(`Erro ao remover o item do localStorage: ${error}`);
@@ -71,6 +83,10 @@ export class LocalStorageUtils {
     // Método para limpar todos os itens do localStorage
     static clear(): void {
         try {
+            if (!localStorage) {
+                return;
+            }
+
             localStorage.clear();
         } catch (error) {
             console.error(`Erro ao limpar o localStorage: ${error}`);

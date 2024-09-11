@@ -48,6 +48,7 @@ export class LoginComponent implements OnInit {
   public logar() {
     if (this.formLogin.invalid) {
       this._notificacaoService.erro("Formulario invalido.");
+      return;
     }
 
     const email = this.formLogin.controls['email'].value;

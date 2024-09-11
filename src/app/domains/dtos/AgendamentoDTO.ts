@@ -4,8 +4,9 @@ import { PagamentoDTO } from "./PagamentoDTO";
 export class AgendamentoDTO extends PagamentoDTO {
     turno: number = 0;
     diasSelecionados: MomentInput[] = [];
-    profissionalSelecionado: number = 0;
+    profissionais: number[] = [];
     endereco!: string;
+    ignoreQtdProfissionais: boolean = false;
 
     public getQtdDias() {
         return this.diasSelecionados.length;

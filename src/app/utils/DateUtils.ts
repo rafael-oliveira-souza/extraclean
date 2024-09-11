@@ -78,4 +78,12 @@ export class DateUtils {
 
         return datesInMonth;
     }
+
+    public static startOfDay(dateA: MomentInput): MomentInput {
+        return this.toMoment(dateA).startOf('day');
+    }
+
+    public static endOfDay(dateA: MomentInput): MomentInput {
+        return this.toMoment(dateA).endOf('day');
+    }
 }

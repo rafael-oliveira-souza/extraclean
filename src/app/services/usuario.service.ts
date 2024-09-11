@@ -16,4 +16,10 @@ export class UsuarioService {
     const url = `${this.HOST_URL}/cadastro`;
     return this._http.post<UsuarioDTO>(url, usuario);
   }
+
+  public atualizarSenha(usuario: UsuarioDTO): Observable<UsuarioDTO> {
+    const url = `${this.HOST_URL}/atualizar-senha`;
+    return this._http.post<UsuarioDTO>(url, usuario);
+  }
+
 }

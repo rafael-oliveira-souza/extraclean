@@ -1,31 +1,81 @@
 <div class="text-center mt-2">
     <img class="imgPerfil" src="../../../assets/imgs/usuario.png">
-    <div class="mt-3 p-4">
-        <h3>{{cliente?.nome}} {{cliente?.sobrenome}}</h3>
-        <p><strong>Endereço:</strong> {{cliente?.endereco}} - Número: {{cliente?.numero}} - Cep: {{cliente?.cep}}
-        </p>
-        <p><strong>Email:</strong> {{cliente?.email}}</p>
-        <p><strong>Telefone:</strong> {{cliente?.telefone}}</p>
-        <p *ngIf="cliente?.localizacao"><strong></strong>
-            <a [href]="cliente?.localizacao" target="_blank">Localização da Diária</a>
-        </p>
+    <div *ngIf="exibePerfil" class="mt-3 p-4">
+        <!-- <h3>{{cliente?.nome}} {{cliente?.sobrenome}}</h3> -->
+        <form [formGroup]="formCliente" class="mt-2 row justify-content-center">
+            <div class=" col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12 mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Nome</mat-label>
+                    <input autocomplete="false" type="text" matInput formControlName="nome">
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Sobrenome</mat-label>
+                    <input autocomplete="false" type="text" matInput formControlName="sobrenome">
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Endereço</mat-label>
+                    <input autocomplete="false" type="text" matInput formControlName="endereco">
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Número</mat-label>
+                    <input autocomplete="false" type="text" matInput formControlName="numero">
+                </mat-form-field>
+            </div>
+            <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Cep</mat-label>
+                    <input autocomplete="false" type="text" matInput formControlName="cep">
+                </mat-form-field>
+            </div>
+            <!-- <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Localização</mat-label>
+                    <input autocomplete="false" type="text" matInput formControlName="localizacao">
+                </mat-form-field>
+            </div> -->
+            <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Telefone</mat-label>
+                    <input autocomplete="false" type="text" matInput formControlName="telefone">
+                </mat-form-field>
+            </div>
+            <p *ngIf="cliente?.localizacao"><strong></strong>
+                <a [href]="cliente.localizacao" target="_blank">Localização da Diária</a>
+            </p>
+        </form>
+        <button mat-button class="mt-3 p-4 mb-3" [disabled]="!formCliente.touched || formCliente.invalid"
+            (click)="atualizar()">Atualizar</button>
+        <button style="margin-left: 10px;" mat-button class=" mt-3 p-4 mb-3" (click)="alterarSenha()">Alterar
+            Senha</button>
     </div>
-    <form [formGroup]="formLogin" class="mt-2 row justify-content-center">
-        <div class="col-8 mt-2">
-            <mat-form-field class="col-12 ">
-                <mat-label>Senha</mat-label>
-                <input autocomplete="false" type="password" matInput formControlName="senha">
-            </mat-form-field>
-        </div>
-        <div class="col-8 mt-2">
-            <mat-form-field class="col-12 ">
-                <mat-label>Confime a Senha</mat-label>
-                <input autocomplete="false" type="password" matInput formControlName="senhaVal">
-            </mat-form-field>
-        </div>
+    <div *ngIf="!exibePerfil" class="mt-3 p-4">
+        <form [formGroup]="formLogin" class="mt-2 row justify-content-center">
 
-    </form>
-    <div>
-        <button mat-button class="mt-3 p-4 mb-3" (click)="alterarSenha()">Alterar Senha</button>
+            <div class="col-12 mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Antiga Senha</mat-label>
+                    <input autocomplete="false" type="password" matInput formControlName="senhaAntiga">
+                </mat-form-field>
+            </div>
+            <div class="col-12 mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Nova Senha</mat-label>
+                    <input autocomplete="false" type="password" matInput formControlName="senha">
+                </mat-form-field>
+            </div>
+            <div class="col-12  mt-2">
+                <mat-form-field class="col-12 ">
+                    <mat-label>Confime a Nova Senha</mat-label>
+                    <input autocomplete="false" type="password" matInput formControlName="senhaVal">
+                </mat-form-field>
+            </div>
+        </form>
+        <button [disabled]=" formLogin.invalid" mat-button class="mt-3 p-4 mb-3" (click)="salvarSenha()">Salvar</button>
     </div>
 </div>

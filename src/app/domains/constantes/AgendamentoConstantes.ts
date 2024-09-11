@@ -3,7 +3,7 @@ import { TurnoEnum } from "../enums/TurnoEnum";
 
 export class AgendamentoConstantes {
     public static VALOR_PROFISSIONAL_SELECIONADO = 20;
-    public static VALOR_DESLOCAMENTO = 25;
+    public static VALOR_DESLOCAMENTO = 30;
     public static VALOR_DIARIA_DETALHADA = 1.5;
     public static VALOR_PADRAO_METRO = 2.0;
     public static MAX_PERCENTUAL = 15;

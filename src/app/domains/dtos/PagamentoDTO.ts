@@ -12,7 +12,7 @@ export class PagamentoDTO {
     desconto: number = 0;
     valor: number = 0;
     dataHora!: Date;
-    email: string = "";
+    email: string | null | undefined = "";
     quantidadeItens!: number;
     formaPagamento!: FormaPagamentoEnum;
     tipoLimpeza!: TipoLimpezaEnum;

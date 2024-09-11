@@ -27,6 +27,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
 import { PagamentoComponent } from '../../components/pagamento/pagamento.component';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
+import { AutenticacaoService } from '../../services/autenticacao.service';
+import { Router } from '@angular/router';
+import { Rota } from '../../app.routes';
 
 @Component({
   selector: 'app-agendamento',
@@ -80,10 +83,11 @@ export class AgendamentoComponent {
   public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
   public profissional = null;
-  public habilitaStep: boolean[] = [false, false, false, false, true, true];
+  public habilitaStep: boolean[] = [true, true, true, true, true, true];
 
 
-  constructor(private _changes: ChangeDetectorRef, private _formBuilder: FormBuilder, private _cepService: CepService,
+  constructor(private _authService: AutenticacaoService, private _router: Router,
+    private _formBuilder: FormBuilder, private _cepService: CepService,
     private _notificacaoService: NotificacaoService, private _profissionalService: ProfissionalService,
     private _agendamentoService: AgendamentoService, private dialog: MatDialog) {
   }
@@ -93,6 +97,12 @@ export class AgendamentoComponent {
   }
 
   public agendar() {
+    const email: string | null = this._authService.getUsuarioAutenticado();
+    if (email == null) {
+      this._router.navigate([Rota.LOGIN]);
+      return;
+    }
+
     let endereco = new EnderecoDTO();
     endereco.bairro = this.formCep.controls['bairro'].value;
     endereco.numero = this.formCep.controls['numero'].value;
@@ -111,9 +121,9 @@ export class AgendamentoComponent {
         let dialogRef = this.dialog.open(PagamentoComponent, {
           minWidth: `${documentWidth * 0.8}px`,
           maxWidth: `${documentWidth * 0.9}px`,
-          minHeight: `80vh`,
-          maxHeight: `90vh`,
-          data: { pagamento: null, url: 'https://www.mercadopago.com.br/checkout/v1/payment/redirect/?preference-id=1964770493-4055c0fa-308d-46bc-aa7d-1ba3e0ed9e1e&router-request-id=b33d4034-ec77-4bca-b165-ef17c067c50f' }
+          minHeight: `90vh`,
+          maxHeight: `95vh`,
+          data: { pagamento: null, url: result.url }
         });
       },
         (error) => this._notificacaoService.erro(error.error));
@@ -279,12 +289,14 @@ export class AgendamentoComponent {
   public recuperarProfissional(): ProfissionalDTO {
     let profissional = ProfissionalDTO.empty();
 
-    if (this.dadosAgendamento.profissionalSelecionado != 0) {
+    if (this.dadosAgendamento.profissionais.length > 0) {
       this.profissionais.forEach(prof => {
-        if (this.dadosAgendamento.profissionalSelecionado == prof.id) {
-          profissional = prof;
-          return;
-        }
+        this.dadosAgendamento.profissionais.forEach(profissionalSelecionado => {
+          if (profissionalSelecionado == prof.id) {
+            profissional = prof;
+            return;
+          }
+        });
       });
     }
 
