@@ -224,8 +224,8 @@ export class CalendarioComponent {
   }
 
   public adicionarDataVazia() {
-    let primeiroDia: number = DateUtils.toDate(this.diasCalendario[0]).day();
-    let ultimoDia: number = DateUtils.toDate(this.diasCalendario[this.diasCalendario.length - 1]).day();
+    let primeiroDia: number = DateUtils.toMoment(this.diasCalendario[0]).day();
+    let ultimoDia: number = DateUtils.toMoment(this.diasCalendario[this.diasCalendario.length - 1]).day();
     while (primeiroDia > 0) {
       this.diasCalendario.unshift(null);
       primeiroDia--;
@@ -318,12 +318,11 @@ export class CalendarioComponent {
       this.profissionais.forEach(prof => {
         if (this.profissionalSelecionado == prof.id) {
           this.profissional = prof;
-          const data = DateUtils.toDate(this.diaSelecionado.value).toDate();
+          const data = DateUtils.toMoment(this.diaSelecionado.value).toDate();
           this._diaristaService.recuperarDiariasPorProfissional(prof.id, this.turno, data)
             .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
               this.diasAgendadosProfissional = agendamentos.map(agend =>
-                new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME)
-                  .toDate(), agend.turno));
+                new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME), agend.turno));
               this.atualizarDiasDisponiveisProfissional();
             })
         }

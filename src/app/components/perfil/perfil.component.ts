@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectorRef, Component, inject, OnInit } from '@angular/core';
+import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
   MAT_DIALOG_DATA,
   MatDialogRef,
@@ -16,6 +16,8 @@ import { ClienteService } from '../../services/cliente.service';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
 import { AutenticacaoService } from '../../services/autenticacao.service';
+import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-perfil',
@@ -26,6 +28,9 @@ import { AutenticacaoService } from '../../services/autenticacao.service';
     MatFormFieldModule,
     CommonModule, MatIconModule,
     MatInputModule,
+    NgxMaskDirective,
+    NgxMaskPipe,
+    MatButtonToggleModule,
     MatButtonModule],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss'
@@ -35,6 +40,7 @@ export class PerfilComponent {
   public formCliente!: FormGroup;
   public cliente: ClienteDTO = new ClienteDTO();
   public exibePerfil: boolean = true;
+  public editaPerfil: boolean = false;
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
   readonly data: any = inject<any>(MAT_DIALOG_DATA);
 
@@ -43,17 +49,10 @@ export class PerfilComponent {
     private _usuarioService: UsuarioService,
     private _clienteService: ClienteService,
     private _authService: AutenticacaoService,
+    private _changesDetc: ChangeDetectorRef,
     private _dialogRef: MatDialogRef<PerfilComponent>) {
     this.cliente = this.data['cliente'];
-    this.formCliente = this._formBuilder.group({
-      nome: [this.cliente.nome, [Validators.required]],
-      sobrenome: [this.cliente.sobrenome, [Validators.required]],
-      telefone: [this.cliente.telefone, [Validators.required]],
-      endereco: [this.cliente.endereco, [Validators.required]],
-      numero: [this.cliente.numero, [Validators.required]],
-      cep: [this.cliente.cep, [Validators.required]],
-      localizacao: [this.cliente.localizacao, []],
-    });
+    this.buildPerfilForm();
     this.formLogin = this._formBuilder.group({
       senhaAntiga: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]],
       senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]],
@@ -64,17 +63,41 @@ export class PerfilComponent {
   ngOnInit(): void {
   }
 
+  private buildPerfilForm() {
+    this.formCliente = this._formBuilder.group({
+      nome: new FormControl({ value: this.cliente.nome, disabled: false }, [Validators.required]),
+      sobrenome: new FormControl({ value: this.cliente.sobrenome, disabled: false }, [Validators.required]),
+      telefone: new FormControl({ value: this.cliente.telefone, disabled: false }, [Validators.required]),
+      endereco: new FormControl({ value: this.cliente.endereco, disabled: false }, [Validators.required]),
+      numero: new FormControl({ value: this.cliente.numero, disabled: false }, [Validators.required]),
+      cep: new FormControl({ value: this.cliente.cep, disabled: false }, [Validators.required]),
+      localizacao: new FormControl({ value: this.cliente.localizacao, disabled: false }, []),
+    });
+  }
+
+  public editarSenha() {
+    this.editaPerfil = true;
+    this.formCliente.disable();
+  }
+
   public alterarSenha() {
     this.exibePerfil = false;
   }
 
   public atualizar() {
-    this.cliente.nome = this.formCliente.controls['nome'].value;
-    this.cliente.sobrenome = this.formCliente.controls['sobrenome'].value;
-    this.cliente.endereco = this.formCliente.controls['endereco'].value;
-    this.cliente.numero = this.formCliente.controls['numero'].value;
-    this.cliente.cep = this.formCliente.controls['cep'].value;
-    this.cliente.localizacao = this.formCliente.controls['localizacao'].value;
+    this.cliente.nome = this.formCliente.get('nome')?.value;
+    this.cliente.sobrenome = this.formCliente.get('sobrenome')?.value;
+    this.cliente.endereco = this.formCliente.get('endereco')?.value;
+    this.cliente.telefone = this.formCliente.get('telefone')?.value;
+    this.cliente.numero = this.formCliente.get('numero')?.value;
+    this.cliente.cep = this.formCliente.get('cep')?.value;
+    this.cliente.localizacao = this.formCliente.get('localizacao')?.value;
+    if (this.formCliente.untouched) {
+      this.editaPerfil = false;
+      this.formCliente.enable();
+      return;
+    }
+
     this._clienteService.salvar(this.cliente)
       .subscribe(
         (cliente: ClienteDTO) => {
@@ -82,6 +105,8 @@ export class PerfilComponent {
           this.cliente = cliente;
           this.exibePerfil = true;
           this._notificacaoService.alerta("Cliente atualizado com sucesso.");
+          this.editaPerfil = false;
+          this.formCliente.enable();
         },
         (error: any) => {
           this.exibePerfil = false;
@@ -106,7 +131,7 @@ export class PerfilComponent {
     usuario.senhaAntiga = this.formLogin.controls['senhaAntiga'].value;
     this._usuarioService.atualizarSenha(usuario)
       .subscribe(
-        (usuario: UsuarioDTO) => { 
+        (usuario: UsuarioDTO) => {
           this.exibePerfil = true;
           this._notificacaoService.alerta("Senha atualizada com sucesso.");
           this.formLogin.reset();

@@ -30,8 +30,8 @@ export class DateUtils {
         return this.toMoment(date).format(format.toString());
     }
 
-    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): moment.Moment {
-        return this.toMoment(date, format);
+    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
+        return this.toMoment(date, format).toDate();
     }
 
     public static subtract(date: MomentInput, amount: number | string, unit: DurationInputArg2): moment.Moment {
@@ -86,4 +86,9 @@ export class DateUtils {
     public static endOfDay(dateA: MomentInput): MomentInput {
         return this.toMoment(dateA).endOf('day');
     }
+    public static diffMinutes(dateA: MomentInput, dateB: MomentInput): number {
+        const diffInMs = this.toDate(dateA).getTime() - this.toDate(dateB).getTime(); // Diferença em milissegundos
+        return Math.floor(diffInMs / (1000 * 60))
+    }
+
 }

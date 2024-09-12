@@ -83,9 +83,9 @@ export class MenuComponent {
 
   public contratar() {
     if (this._authService.isLoggedIn()) {
-      this._router.navigate([Rota.LOGIN]);
-    } else {
       this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
+    } else {
+      this._router.navigate([Rota.LOGIN]);
     }
   }
 
