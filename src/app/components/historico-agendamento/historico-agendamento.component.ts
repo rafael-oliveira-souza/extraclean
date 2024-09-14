@@ -1,6 +1,8 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 
 export interface PeriodicElement {
   name: string;
@@ -26,12 +28,14 @@ const ELEMENT_DATA: PeriodicElement[] = [
   styleUrls: ['./historico-agendamento.component.scss']
 })
 export class HistoricoAgendamentoComponent implements OnInit {
+  public agendamento: AgendamentoDTO[] = inject<AgendamentoDTO[]>(MAT_DIALOG_DATA);
 
   // Ligando o paginador à tabela
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-  
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = new MatTableDataSource<PeriodicElement>(ELEMENT_DATA);
+
+  displayedColumns: string[] = ['Título', 'Turno', 'Endereço', 'Metragem', 'Desconto', 
+    'Valor', 'Data/Hora', 'Tipo de Limpeza', 'Extra Plus'];
+  public dataSource = new MatTableDataSource<AgendamentoDTO>(this.agendamento);
 
   constructor() { }
 

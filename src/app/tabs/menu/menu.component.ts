@@ -129,8 +129,8 @@ export class MenuComponent {
     }
 
     this._agendamentoService.recuperarHistorico(email)
-      .subscribe((cliente: AgendamentoDTO[]) => {
-        // this.abrirPerfil(componentName, this.cliente);
+      .subscribe((agendamentos: AgendamentoDTO[]) => {
+        this.abrirPagina(componentName, agendamentos);
       });
   }
 
@@ -147,14 +147,14 @@ export class MenuComponent {
         .subscribe((cliente: ClienteDTO) => {
           LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, cliente);
           this.cliente = cliente;
-          this.abrirPerfil(componentName, this.cliente);
+          this.abrirPagina(componentName, this.cliente);
         });
     } else {
-      this.abrirPerfil(componentName, this.cliente);
+      this.abrirPagina(componentName, this.cliente);
     }
   }
 
-  public abrirPerfil(componentName: string, data: any) {
+  public abrirPagina(componentName: string, data: any) {
     let component: ComponentType<any> = PerfilComponent;
     if (typeof document !== 'undefined') {
       if (componentName == 'perfil') {
