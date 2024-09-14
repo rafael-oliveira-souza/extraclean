@@ -38,11 +38,10 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 export class PerfilComponent {
   public formLogin!: FormGroup;
   public formCliente!: FormGroup;
-  public cliente: ClienteDTO = new ClienteDTO();
   public exibePerfil: boolean = true;
   public editaPerfil: boolean = false;
+  public cliente: ClienteDTO = inject<ClienteDTO>(MAT_DIALOG_DATA);
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
-  readonly data: any = inject<any>(MAT_DIALOG_DATA);
 
   constructor(private _formBuilder: FormBuilder,
     private _notificacaoService: NotificacaoService,
@@ -51,7 +50,6 @@ export class PerfilComponent {
     private _authService: AutenticacaoService,
     private _changesDetc: ChangeDetectorRef,
     private _dialogRef: MatDialogRef<PerfilComponent>) {
-    this.cliente = this.data['cliente'];
     this.buildPerfilForm();
     this.formLogin = this._formBuilder.group({
       senhaAntiga: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]],

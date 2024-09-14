@@ -20,6 +20,9 @@ import { Rota } from '../../app.routes';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
 import { ClienteService } from '../../services/cliente.service';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { HistoricoAgendamentoComponent } from '../../components/historico-agendamento/historico-agendamento.component';
 
 @Component({
   selector: 'app-menu',
@@ -57,6 +60,7 @@ export class MenuComponent {
 
   constructor(private dialog: MatDialog,
     private _authService: AutenticacaoService,
+    private _agendamentoService: AgendamentoService,
     private _clienteService: ClienteService,
     private _router: Router,
     private route: ActivatedRoute) { }
@@ -117,6 +121,19 @@ export class MenuComponent {
     return (menu.index == 3 && this.isXs() ? 'Agende!' : menu.label);
   }
 
+  public abrirHistoricoAgendamento(componentName: string) {
+    const email: string | null = this._authService.getUsuarioAutenticado();
+    if (email == null) {
+      this._router.navigate([Rota.LOGIN]);
+      return;
+    }
+
+    this._agendamentoService.recuperarHistorico(email)
+      .subscribe((cliente: AgendamentoDTO[]) => {
+        // this.abrirPerfil(componentName, this.cliente);
+      });
+  }
+
   public abrirPaginaMenu(componentName: string) {
     const email: string | null = this._authService.getUsuarioAutenticado();
     if (email == null) {
@@ -137,21 +154,22 @@ export class MenuComponent {
     }
   }
 
-  public abrirPerfil(componentName: string, cliente: ClienteDTO) {
+  public abrirPerfil(componentName: string, data: any) {
     let component: ComponentType<any> = PerfilComponent;
     if (typeof document !== 'undefined') {
       if (componentName == 'perfil') {
         component = PerfilComponent;
+      } else if (componentName == 'agendamento') {
+        component = HistoricoAgendamentoComponent;
       }
 
       const documentWidth = document.documentElement.clientWidth;
-      const documentHeight = document.documentElement.clientHeight;
       let dialogRef = this.dialog.open(component, {
         minWidth: `${documentWidth * 0.8}px`,
         maxWidth: `${documentWidth * 0.9}px`,
-        minHeight: `${documentHeight * 0.8}px`,
-        maxHeight: `${documentHeight * 0.8}px`,
-        data: { cliente: cliente }
+        minHeight: '90%',
+        maxHeight: '100%',
+        data: data
       });
 
       dialogRef.afterClosed().subscribe(logout => {
