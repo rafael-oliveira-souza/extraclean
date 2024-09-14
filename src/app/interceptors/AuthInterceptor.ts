@@ -21,13 +21,33 @@ export class AuthInterceptor implements HttpInterceptor {
         headers: req.headers.set('Authorization', `Bearer ${authToken.token}`)
       });
 
-      if (DateUtils.isBefore(DateUtils.toMoment(authToken.expirationDate), DateUtils.toMoment(new Date()).subtract(20, 'minutes')), 'yyyy-MM-dd') {
-        debugger
-        this._authService.autenticar(authToken.username);
-      }
+      this.scheduleTokenExpiryCheck(authToken.expirationDate, () => { this._authService.autenticar(authToken.username); });
       return next.handle(authReq);
     }
 
     return next.handle(req);
   }
+
+  private scheduleTokenExpiryCheck(tokenExpiryTime: Date, callback: Function) {
+    const currentTime = new Date().getTime(); // Pega o tempo atual em milissegundos
+    const expiryTime = new Date(tokenExpiryTime).getTime(); // Converte o tempo de expiração do token para milissegundos
+
+    // Calcula o tempo restante até a expiração do token
+    const timeRemaining = expiryTime - currentTime;
+
+    // Se restarem menos de 20 minutos, chama o callback imediatamente
+    const twentyMinutesInMilliseconds = 20 * 60 * 1000;
+
+    if (timeRemaining <= twentyMinutesInMilliseconds) {
+      callback();
+    } else {
+      // Agende a execução do callback quando faltarem exatamente 20 minutos para expirar
+      const scheduleTime = timeRemaining - twentyMinutesInMilliseconds;
+
+      setTimeout(() => {
+        callback();
+      }, scheduleTime);
+    }
+  }
+
 }
