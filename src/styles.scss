@@ -78,6 +78,13 @@ strong {
     color: $primary;
 }
 
+.link {
+  color: $azul;
+  text-decoration: underline;
+  font-style: italic;
+  cursor: pointer;
+}
+
 .border-default {
   border: 1px solid $primary;
   border-radius: 2px;

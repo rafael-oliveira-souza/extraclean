@@ -101,9 +101,8 @@ export class PlanosComponent {
   }
 
   public comprar(plano: PlanoDTO) {
-    const email: string | null = this.authService.getUsuarioAutenticado();
-    if (email == null) {
-      this._router.navigate([Rota.LOGIN]);
+    const email: string | undefined = this.authService.validarUsuario();
+    if (!email) {
       return;
     }
 

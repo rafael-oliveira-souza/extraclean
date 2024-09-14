@@ -30,12 +30,10 @@ export class LocalStorageUtils {
         };
 
         try {
-            if (!localStorage) {
-                return;
+            if (this.existLocalStorage()) {
+                const serializedValue = JSON.stringify(item);
+                localStorage.setItem(key, serializedValue);
             }
-
-            const serializedValue = JSON.stringify(item);
-            localStorage.setItem(key, serializedValue);
         } catch (error) {
             console.error(`Erro ao salvar o item no localStorage: ${error}`);
         }
@@ -44,23 +42,25 @@ export class LocalStorageUtils {
     // Método para obter um item do localStorage, validando o TTL
     static getItem<T>(key: string): T | null {
         try {
-            if (!localStorage) {
-                return null;
+            if (this.existLocalStorage()) {
+                const item = localStorage.getItem(key);
+                if (!item) {
+                    return null;
+                }
+
+                const parsedItem: CachedItem<T> = JSON.parse(item);
+                const now = new Date().getTime();
+
+                if (now > parsedItem.expiry) {
+                    // Item expirou, remover do localStorage
+                    localStorage.removeItem(key);
+                    return null;
+                }
+
+                return parsedItem.value;
             }
 
-            const item = localStorage.getItem(key);
-            if (!item) return null;
-
-            const parsedItem: CachedItem<T> = JSON.parse(item);
-            const now = new Date().getTime();
-
-            if (now > parsedItem.expiry) {
-                // Item expirou, remover do localStorage
-                localStorage.removeItem(key);
-                return null;
-            }
-
-            return parsedItem.value;
+            return null;
         } catch (error) {
             console.error(`Erro ao obter o item do localStorage: ${error}`);
             return null;
@@ -70,11 +70,9 @@ export class LocalStorageUtils {
     // Método para remover um item do localStorage
     static removeItem(key: string): void {
         try {
-            if (!localStorage) {
-                return;
+            if (this.existLocalStorage()) {
+                localStorage.removeItem(key);
             }
-
-            localStorage.removeItem(key);
         } catch (error) {
             console.error(`Erro ao remover o item do localStorage: ${error}`);
         }
@@ -83,14 +81,16 @@ export class LocalStorageUtils {
     // Método para limpar todos os itens do localStorage
     static clear(): void {
         try {
-            if (!localStorage) {
-                return;
+            if (this.existLocalStorage()) {
+                localStorage.clear();
             }
-
-            localStorage.clear();
         } catch (error) {
             console.error(`Erro ao limpar o localStorage: ${error}`);
         }
+    }
+
+    private static existLocalStorage() {
+        return typeof window !== "undefined";
     }
 }
 

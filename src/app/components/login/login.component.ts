@@ -12,6 +12,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { AutenticacaoService } from '../../services/autenticacao.service';
+import { CalculoUtils } from '../../utils/CalculoUtils';
 
 @Component({
   selector: 'app-login',
@@ -31,6 +32,7 @@ import { AutenticacaoService } from '../../services/autenticacao.service';
 export class LoginComponent implements OnInit {
   public formLogin!: FormGroup;
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
+  public bg: string = "fullbg";
 
   constructor(private _formBuilder: FormBuilder,
     private _router: Router,
@@ -43,6 +45,15 @@ export class LoginComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]]
     });
+  }
+  
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
+    }
+
+    return false;
   }
 
   public logar() {

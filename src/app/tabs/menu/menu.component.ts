@@ -21,8 +21,9 @@ import { AutenticacaoService } from '../../services/autenticacao.service';
 import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
 import { ClienteService } from '../../services/cliente.service';
 import { AgendamentoService } from '../../services/agendamento.service';
-import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { HistoricoAgendamentoComponent } from '../../components/historico-agendamento/historico-agendamento.component';
+import { HistoricoAgendamentoDTO } from '../../domains/dtos/HistoricoAgendamentoDTO';
+import { NotificacaoService } from '../../services/notificacao.service';
 
 @Component({
   selector: 'app-menu',
@@ -59,8 +60,9 @@ export class MenuComponent {
   public cliente: ClienteDTO | null = null;
 
   constructor(private dialog: MatDialog,
-    private _authService: AutenticacaoService,
+    public authService: AutenticacaoService,
     private _agendamentoService: AgendamentoService,
+    private _notificacaoService: NotificacaoService,
     private _clienteService: ClienteService,
     private _router: Router,
     private route: ActivatedRoute) { }
@@ -80,17 +82,23 @@ export class MenuComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this._authService.isLoggedIn()) {
+    if (this.authService.isLoggedIn()) {
       this.logout();
     }
   }
 
+  login(): void {
+    this._router.navigate([Rota.LOGIN]);
+  }
+
   public contratar() {
-    if (this._authService.isLoggedIn()) {
-      this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
-    } else {
-      this._router.navigate([Rota.LOGIN]);
+    const email: string | undefined = this.authService.validarUsuario(false);
+    if (!email) {
+      return;
     }
+
+    this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
+    return;
   }
 
   public updateSelectedMenu(): void {
@@ -121,66 +129,62 @@ export class MenuComponent {
     return (menu.index == 3 && this.isXs() ? 'Agende!' : menu.label);
   }
 
-  public abrirHistoricoAgendamento(componentName: string) {
-    const email: string | null = this._authService.getUsuarioAutenticado();
+  public abrirHistoricoAgendamento() {
+    const email: string | null = this.authService.getUsuarioAutenticado();
     if (email == null) {
       this._router.navigate([Rota.LOGIN]);
       return;
     }
 
     this._agendamentoService.recuperarHistorico(email)
-      .subscribe((agendamentos: AgendamentoDTO[]) => {
-        this.abrirPagina(componentName, agendamentos);
+      .subscribe((agendamentos: HistoricoAgendamentoDTO[]) => {
+        this.abrirPagina(HistoricoAgendamentoComponent, agendamentos, email);
+      }, (error: any) => {
+        this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
       });
   }
 
-  public abrirPaginaMenu(componentName: string) {
-    const email: string | null = this._authService.getUsuarioAutenticado();
-    if (email == null) {
-      this._router.navigate([Rota.LOGIN]);
-      return;
-    }
-
-    this.cliente = LocalStorageUtils.getItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE);
-    if (!this.cliente) {
-      this._clienteService.recuperarCliente(email)
-        .subscribe((cliente: ClienteDTO) => {
-          LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, cliente);
-          this.cliente = cliente;
-          this.abrirPagina(componentName, this.cliente);
-        });
-    } else {
-      this.abrirPagina(componentName, this.cliente);
-    }
+  public abrirPerfil() {
+    this.authService.validarUsuario(true);
   }
 
-  public abrirPagina(componentName: string, data: any) {
-    let component: ComponentType<any> = PerfilComponent;
+  public abrirPagina(component: ComponentType<any>, data: any, email: string) {
+    let dialogRef;
     if (typeof document !== 'undefined') {
-      if (componentName == 'perfil') {
-        component = PerfilComponent;
-      } else if (componentName == 'agendamento') {
-        component = HistoricoAgendamentoComponent;
-      }
-
       const documentWidth = document.documentElement.clientWidth;
-      let dialogRef = this.dialog.open(component, {
+      const documentHeigth = document.documentElement.clientHeight;
+      dialogRef = this.dialog.open(component, {
         minWidth: `${documentWidth * 0.8}px`,
         maxWidth: `${documentWidth * 0.9}px`,
-        minHeight: '90%',
-        maxHeight: '100%',
-        data: data
-      });
-
-      dialogRef.afterClosed().subscribe(logout => {
-        if (logout) {
-          this.logout();
+        minHeight: `${documentHeigth * 0.9}px`,
+        maxHeight: `${documentHeigth * 0.95}px`,
+        data: {
+          email: email,
+          data: data
         }
       });
+    } else {
+      dialogRef = this.dialog.open(component, {
+        minWidth: `90%`,
+        maxWidth: `100%`,
+        minHeight: '90%',
+        maxHeight: '100%',
+        data: {
+          email: email,
+          data: data
+        }
+      });
+
     }
+
+    dialogRef.afterClosed().subscribe(logout => {
+      if (logout) {
+        this.logout();
+      }
+    });
   }
 
   public logout() {
-    this._authService.logout();
+    this.authService.logout();
   }
 }

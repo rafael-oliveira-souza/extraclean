@@ -10,6 +10,7 @@ import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { Rota } from '../../app.routes';
 import { Router } from '@angular/router';
 import { AutenticacaoService } from '../../services/autenticacao.service';
+import { CalculoUtils } from '../../utils/CalculoUtils';
 
 @Component({
   selector: 'app-cadastro',
@@ -27,6 +28,7 @@ import { AutenticacaoService } from '../../services/autenticacao.service';
 export class CadastroComponent implements OnInit {
   public formLogin!: FormGroup;
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
+  public bg: string = "fullbg";
 
   constructor(
     private _router: Router,
@@ -41,6 +43,10 @@ export class CadastroComponent implements OnInit {
       senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]],
       senhaVal: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]]
     });
+  }
+
+  public logar() {
+    this._router.navigate([Rota.LOGIN]);
   }
 
   public cadastrar() {
@@ -69,4 +75,12 @@ export class CadastroComponent implements OnInit {
         });
   }
 
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
+    }
+
+    return false;
+  }
 }

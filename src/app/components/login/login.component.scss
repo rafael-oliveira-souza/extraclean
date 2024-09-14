@@ -2,11 +2,16 @@
 
 .card-login {
     max-height: 95vh;
-    max-width: 100%;
     background-color: $primary;
     // border: 5px solid;
     border-radius: 30px;
     text-align: center;
+}
+
+.fullbg {
+    height: 100vh;
+    width: 100%;
+    background-color: $primary;
 }
 
 p {
@@ -21,11 +26,4 @@ p {
 ::ng-deep .mdc-button:disabled {
     // color: $primary !important;
     background-color: $sub !important;
-}
-
-.link {
-    color: $azul;
-    text-decoration: underline;
-    font-style: italic;
-    cursor: pointer;
 }

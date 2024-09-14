@@ -4,6 +4,8 @@ import { Observable, of, Subject } from 'rxjs';
 import { environment } from '../../enviromment';
 import { AgendamentoDTO } from '../domains/dtos/AgendamentoDTO';
 import { PagamentoMpDTO } from '../domains/dtos/PagamentoMpDto';
+import { HistoricoAgendamentoDTO } from '../domains/dtos/HistoricoAgendamentoDTO';
+import { RegistroAgendamentoDTO } from '../domains/dtos/RegistroAgendamentoDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -18,11 +20,17 @@ export class AgendamentoService {
     return this._http.post<PagamentoMpDTO>(url, agendamento);
   }
 
-  public recuperarHistorico(email: string): Observable<Array<AgendamentoDTO>> {
+  public recuperarHistorico(email: string): Observable<Array<HistoricoAgendamentoDTO>> {
     const url = `${this.HOST_URL}/historico`;
     let params = new HttpParams()
       .set('email', email);
 
-    return this._http.get<Array<AgendamentoDTO>>(url, { params });
+    return this._http.get<Array<HistoricoAgendamentoDTO>>(url, { params });
   }
+
+  public registrarHorarioAtendimento(registro: RegistroAgendamentoDTO): Observable<any> {
+    const url = `${this.HOST_URL}/registrar-horario`;
+    return this._http.patch<any>(url, registro);
+  }
+
 }

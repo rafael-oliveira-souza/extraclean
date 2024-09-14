@@ -6,6 +6,11 @@ import { CepPipe } from './cep.pipe';
 import { TurnoPipe } from './turno.pipe';
 import { MetragemPipe } from './metragem.pipe';
 import { PontoPipe } from './ponto.pipe';
+import { MetroPipe } from './metro.pipe';
+import { SimNaoPipe } from './simNao.pipe';
+import { TipoLimpezaPipe } from './tipoLimpeza.pipe';
+import { TipoClientePipe } from './tipoCliente.pipe';
+import { SituacaoAgendamentoPipe } from './situacaoAgendamento.pipe';
 
 @NgModule({
   declarations: [],
@@ -17,6 +22,11 @@ import { PontoPipe } from './ponto.pipe';
     TurnoPipe,
     MetragemPipe,
     PontoPipe,
+    MetroPipe,
+    SimNaoPipe,
+    TipoLimpezaPipe,
+    TipoClientePipe,
+    SituacaoAgendamentoPipe,
   ],
   exports: [
     DatePipe,
@@ -25,6 +35,11 @@ import { PontoPipe } from './ponto.pipe';
     TurnoPipe,
     MetragemPipe,
     PontoPipe,
+    MetroPipe,
+    SimNaoPipe,
+    TipoLimpezaPipe,
+    TipoClientePipe,
+    SituacaoAgendamentoPipe,
   ]
 })
 export class PipeModule { }

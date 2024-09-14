@@ -9,7 +9,7 @@
             </select>
         </mat-form-field>
     </div>
-    <div *ngIf="pagamento.tipoPlano" class="mt-3 container-fluid row justify-content-start">
+    <div *ngIf="pagamento.tipoPlano" class="mt-3 row justify-content-start">
         <div class="col-12  mt-2" *ngFor="let plano of planos;">
             <div *ngIf="pagamento.tipoPlano == plano.id" class="p-4 clip-path-rectangle">
                 <h4 class="cor-azul">

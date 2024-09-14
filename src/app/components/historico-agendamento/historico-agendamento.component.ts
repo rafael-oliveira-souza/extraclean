@@ -1,46 +1,132 @@
-import { Component, inject, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
-
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
-}
-
-const ELEMENT_DATA: PeriodicElement[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+import { CommonModule } from '@angular/common';
+import { PipeModule } from '../../pipes/pipe.module';
+import { CalculoUtils } from '../../utils/CalculoUtils';
+import { MatIconModule } from '@angular/material/icon';
+import { HistoricoAgendamentoDTO } from '../../domains/dtos/HistoricoAgendamentoDTO';
+import { MatButtonModule } from '@angular/material/button';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { NotificacaoService } from '../../services/notificacao.service';
+import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
+import { DateUtils } from '../../utils/DateUtils';
 
 @Component({
   selector: 'app-historico-agendamento',
   standalone: true,
-  imports: [MatTableModule, MatPaginatorModule],
+  imports: [
+    MatTableModule,
+    MatPaginatorModule,
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    PipeModule
+  ],
   templateUrl: './historico-agendamento.component.html',
   styleUrls: ['./historico-agendamento.component.scss']
 })
-export class HistoricoAgendamentoComponent implements OnInit {
-  public agendamento: AgendamentoDTO[] = inject<AgendamentoDTO[]>(MAT_DIALOG_DATA);
+export class HistoricoAgendamentoComponent implements AfterViewInit {
 
-  // Ligando o paginador à tabela
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  displayedColumns: string[] = ['Título', 'Turno', 'Endereço', 'Metragem', 'Desconto', 
-    'Valor', 'Data/Hora', 'Tipo de Limpeza', 'Extra Plus'];
-  public dataSource = new MatTableDataSource<AgendamentoDTO>(this.agendamento);
+  readonly data: any = inject<HistoricoAgendamentoDTO[]>(MAT_DIALOG_DATA);
+  public agendamentos: HistoricoAgendamentoDTO[] = this.data['data'];
+  public email: string = this.data['email'];
 
-  constructor() { }
+  public indice: number = 0;
+  public dataSource = new MatTableDataSource<HistoricoAgendamentoDTO>(this.agendamentos);
+  public agendamentoSelecionado: HistoricoAgendamentoDTO | null = this.getAgendamentoSelecionado();
 
-  ngOnInit() {
+  public displayedColumns: string[] = ['endereco', 'tipoLimpeza', 'turno', 'metragem',
+    'valor', 'desconto', 'dataHora'];
+
+  constructor(private _agendamentoService: AgendamentoService, private _notificacaoService: NotificacaoService) { }
+
+  ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
   }
 
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
+    }
+
+    return false;
+  }
+
+  public anterior() {
+    this.indice--;
+    this.agendamentoSelecionado = this.getAgendamentoSelecionado(this.indice);
+  }
+
+  public proximo() {
+    this.indice++;
+    this.agendamentoSelecionado = this.getAgendamentoSelecionado(this.indice);
+  }
+
+  private getAgendamentoSelecionado(indice: number = this.indice) {
+    if (this.indice < 0) {
+      indice = 0;
+    } else if (indice > this.agendamentos.length - 1) {
+      indice = this.agendamentos.length - 1;
+    }
+
+    this.indice = indice;
+    return this.agendamentos.length > 0 ? this.agendamentos[indice] : new HistoricoAgendamentoDTO();
+  }
+
+  public mostrarBotaoSaida(): boolean {
+    let agora = new Date();
+    if (DateUtils.isBefore(agora, this.agendamentoSelecionado?.dataHora, 'yyyy-MM-dd') && !this.agendamentoSelecionado?.horaSaida && this.agendamentoSelecionado?.situacao == 1) {
+      if (this.agendamentoSelecionado.turno == 1 && agora.getHours() > 10) {
+        return true;
+      } else if (this.agendamentoSelecionado.turno == 2 && agora.getHours() > 16) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public mostrarBotaoChegada(): boolean {
+    let agora = new Date();
+    if (DateUtils.isBefore(agora, this.agendamentoSelecionado?.dataHora, 'yyyy-MM-dd') && !this.agendamentoSelecionado?.horaEntrada && this.agendamentoSelecionado?.situacao == 1) {
+      if (this.agendamentoSelecionado.turno == 1 && agora.getHours() >= 8 && agora.getHours() <= 10) {
+        return true;
+      } else if (this.agendamentoSelecionado.turno == 2 && agora.getHours() >= 13 && agora.getHours() <= 16) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  public isCliente() {
+    return this.agendamentoSelecionado?.tipo == 1;
+  }
+
+  public isDiarista() {
+    return this.agendamentoSelecionado?.tipo == 2;
+  }
+
+  public isAdmin() {
+    return !this.isDiarista() && !this.isCliente();
+  }
+
+  public marcarHorarioAtendimento(entrada: boolean) {
+    if (this.agendamentoSelecionado) {
+      let registro = new RegistroAgendamentoDTO();
+      registro.horario = new Date();
+      registro.idCliente = this.agendamentoSelecionado.idCliente;
+      registro.dataDiaria = this.agendamentoSelecionado.dataHora;
+
+      this._agendamentoService.registrarHorarioAtendimento(registro)
+        .subscribe((result: any) => {
+          this._notificacaoService.alerta(entrada ? "Entrada Registrada!" : "Saída Registrada!");
+        }, (error: any) => {
+          this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
+        });
+    }
+  }
 }

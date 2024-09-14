@@ -97,11 +97,7 @@ export class AgendamentoComponent {
   }
 
   public agendar() {
-    const email: string | null = this._authService.getUsuarioAutenticado();
-    if (email == null) {
-      this._router.navigate([Rota.LOGIN]);
-      return;
-    }
+    this._authService.validarUsuario();
 
     let endereco = new EnderecoDTO();
     endereco.bairro = this.formCep.controls['bairro'].value;

@@ -40,7 +40,7 @@ export class PerfilComponent {
   public formCliente!: FormGroup;
   public exibePerfil: boolean = true;
   public editaPerfil: boolean = false;
-  public cliente: ClienteDTO = inject<ClienteDTO>(MAT_DIALOG_DATA);
+  public cliente: ClienteDTO = inject<any>(MAT_DIALOG_DATA)['data'];
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
 
   constructor(private _formBuilder: FormBuilder,

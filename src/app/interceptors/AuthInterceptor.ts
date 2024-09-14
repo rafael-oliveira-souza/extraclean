@@ -21,7 +21,8 @@ export class AuthInterceptor implements HttpInterceptor {
         headers: req.headers.set('Authorization', `Bearer ${authToken.token}`)
       });
 
-      if (DateUtils.isBefore(authToken.expirationDate, DateUtils.toMoment(new Date()).subtract(20, 'minutes'))) {
+      if (DateUtils.isBefore(DateUtils.toMoment(authToken.expirationDate), DateUtils.toMoment(new Date()).subtract(20, 'minutes')), 'yyyy-MM-dd') {
+        debugger
         this._authService.autenticar(authToken.username);
       }
       return next.handle(authReq);

@@ -42,27 +42,47 @@ export class DateUtils {
         return this.toMoment(date).add(amount, unit);
     }
 
-    public static between(date: MomentInput, dateA: MomentInput, dateB: MomentInput, inclusivity?: InclusividadeEnum): boolean {
+    public static between(date: MomentInput, dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification, inclusivity?: InclusividadeEnum): boolean {
+        if (format) {
+            return this.toMoment(date, format).isBetween(this.toMoment(dateA, format), this.toMoment(dateB, format));
+        }
         return this.toMoment(date).isBetween(dateA, dateB, null, inclusivity);
     }
 
-    public static isBefore(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isBefore(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isBefore(this.toMoment(dateB, format));
+        }
+
         return this.toMoment(dateA).isBefore(dateB);
     }
 
-    public static isSame(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isSame(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isSame(this.toMoment(dateB, format));
+        }
+
         return this.toMoment(dateA).isSame(dateB);
     }
 
-    public static isAfter(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isAfter(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isAfter(this.toMoment(dateB, format));
+        }
         return this.toMoment(dateA).isAfter(dateB);
     }
 
-    public static isSameOrAfter(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isSameOrAfter(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isSameOrAfter(this.toMoment(dateB, format));
+        }
         return this.toMoment(dateA).isSameOrAfter(dateB);
     }
 
-    public static isSameOrBefore(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isSameOrBefore(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isSameOrBefore(this.toMoment(dateB, format));
+        }
         return this.toMoment(dateA).isSameOrBefore(dateB);
     }
 
