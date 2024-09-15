@@ -31,7 +31,6 @@ export class PagamentoComponent {
   public linkPagamento  : SafeResourceUrl;
 
   constructor(private sanitizer: DomSanitizer) {
-    console.log(this.data['url']);
     this.linkPagamento = this.sanitizer.bypassSecurityTrustResourceUrl(this.data['url']);
   }
 }

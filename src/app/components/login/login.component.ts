@@ -10,7 +10,6 @@ import { Rota } from '../../app.routes';
 import { UsuarioService } from '../../services/usuario.service';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
-import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { CalculoUtils } from '../../utils/CalculoUtils';
 

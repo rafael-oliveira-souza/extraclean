@@ -8,4 +8,5 @@ export class ClienteDTO {
     numero!: string;
     localizacao!: string;
     cep!: string;
+    tipo!: number;
 }

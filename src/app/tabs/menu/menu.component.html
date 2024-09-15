@@ -22,6 +22,10 @@
                                 fontIcon="event_note"></mat-icon>
                             Meus Agendamentos
                         </button>
+                        <button *ngIf="authService.isAdminLoggedIn()" mat-menu-item (click)="abrirAdministrador()">
+                            <mat-icon aria-hidden="false" aria-label="Administração" fontIcon="admin_panel_settings"></mat-icon>
+                            Administração
+                        </button>
                         <button mat-menu-item (click)="logout()">
                             <mat-icon aria-hidden="false" aria-label="Sair" fontIcon="logout"></mat-icon>
                             Sair

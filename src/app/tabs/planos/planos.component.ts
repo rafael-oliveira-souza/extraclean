@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlanoDTO } from '../../domains/dtos/PlanoDTO';
 import { MatIconModule } from '@angular/material/icon';
@@ -24,7 +24,12 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { PlanoService } from '../../services/plano.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { AutenticacaoService } from '../../services/autenticacao.service';
-// import { PagamentoComponent } from '../../components/pagamento/pagamento.component';
+import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
+import { EnderecoUtils } from '../../utils/EnderecoUtils';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
+import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
 
 @Component({
   selector: 'app-planos',
@@ -46,58 +51,100 @@ import { AutenticacaoService } from '../../services/autenticacao.service';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanosComponent {
+
+  @Input("isAdmin")
+  public isAdmin: boolean = false;
+
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public planos: Array<PlanoDTO> = [];
   public pagamento: PagamentoDTO = new PagamentoDTO();
+  public agendamento: AgendamentoInfoDTO = new AgendamentoInfoDTO();
+  public planoSelecionado: PlanoDTO | null = null;
+  public urlPagamento: string | null = null;
 
   constructor(private planoService: PlanoService,
     private authService: AutenticacaoService,
     private notification: NotificacaoService,
-    private _router: Router,
+    private _agendamentoService: AgendamentoService,
     private dialog: MatDialog) {
-    // this.planos.push(new PlanoDTO("Diário", "Plano Meu lar", 99));
-    this.planos.push(new PlanoDTO(1, "Semanal", "Consiste em 2 diárias expressas em datas que o cliente definir.", 1.9, 2));
-    this.planos.push(new PlanoDTO(2, "Mensal", "Consiste em 4 diárias expressas em datas que o cliente definir", 1.8, 4));
-    this.planos.push(new PlanoDTO(3, "Trimestal", "Consiste em 12 diárias expressas em datas que o cliente definir", 1.7, 12));
-    this.planos.push(new PlanoDTO(4, "Semestral", "Consiste em 24 diárias expressas em datas que o cliente definir", 1.6, 24));
-    this.planos.push(new PlanoDTO(5, "Anual", "Consiste em 48 diárias expressas em datas que o cliente definir", 1.5, 48));
+
+    if (this.isAdmin) {
+      this.planos.push(new PlanoDTO(0, "Diária", "Consiste em 1 diária expressa ou detalhada em data que o cliente definir.", 0, 1, 1));
+    }
+
+    this.planos.push(new PlanoDTO(1, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 5, 2, 2));
+    this.planos.push(new PlanoDTO(2, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 10, 4, 4));
+    this.planos.push(new PlanoDTO(3, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 15, 12, 6));
+    this.planos.push(new PlanoDTO(4, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 20, 24, 6));
+    this.planos.push(new PlanoDTO(5, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 25, 48, 12));
   }
 
-  public calcularTotal(plano: PlanoDTO) {
-    const porcentagem = 0;
+  public calcularTotal(plano: PlanoDTO): AgendamentoInfoDTO {
     if (!this.pagamento.metragem) {
-      return 0;
+      return new AgendamentoInfoDTO();
+    }
+
+    if (this.pagamento.metragem < 0) {
+      this.pagamento.metragem = 0;
     }
 
     return AgendamentoConstantes.calcularTotal(
-      plano.valorMetro, this.pagamento.metragem, plano.qtdDias,
-      porcentagem, this.pagamento.extraPlus, false,
-      TurnoEnum.NAO_DEFINIDO);
+      this.pagamento.metragem, this.pagamento.isDetalhada, plano.qtdDias, plano.desconto, this.pagamento.extraPlus);
   }
 
-  public calcularDesconto(plano: PlanoDTO) {
-    const porcentagem = 0;
-    if (!this.pagamento.metragem) {
-      return 0;
-    }
-
-    const valorComDesconto = this.calcularTotal(plano);
-    const valorOriginal = AgendamentoConstantes.calcularTotal(
-      AgendamentoConstantes.VALOR_PADRAO_METRO, this.pagamento.metragem, plano.qtdDias,
-      porcentagem, this.pagamento.extraPlus, false,
-      TurnoEnum.NAO_DEFINIDO);
-
-    return valorOriginal - valorComDesconto;
+  public selecionarPlano() {
+    this.planos.forEach(plano => {
+      if (this.pagamento.tipoPlano == plano.id) {
+        this.planoSelecionado = plano;
+        this.atualizarValores(plano);
+      }
+    });
   }
 
-  public calcularDiaria(plano: PlanoDTO) {
+  public atualizarValores(plano: PlanoDTO) {
     if (!this.pagamento.metragem) {
-      return 0;
+      this.agendamento = new AgendamentoInfoDTO();
+      return;
     }
 
-    const valorComDesconto = this.calcularTotal(plano);
-    return valorComDesconto / plano.qtdDias;
+    this.agendamento = this.calcularTotal(plano);
+  }
+
+
+  public agendar() {
+    const email: string | undefined = this.authService.validarUsuario();
+    if (!email) {
+      return;
+    }
+
+    let dadosAgendamento: AgendamentoDTO = new AgendamentoDTO();
+    let endereco = new EnderecoDTO();
+    // endereco.bairro = this.formCep.controls['bairro'].value;
+    // endereco.numero = this.formCep.controls['numero'].value;
+    // endereco.logradouro = this.formCep.controls['logradouro'].value;
+    // endereco.complemento = this.formCep.controls['complemento'].value;
+    // endereco.localidade = this.formCep.controls['localidade'].value;
+    // endereco.cep = this.formCep.controls['cep'].value;
+    // endereco.uf = this.formCep.controls['uf'].value;
+    // dadosAgendamento.endereco = EnderecoUtils.montarEndereco(endereco);
+    // dadosAgendamento.dataHora = new Date();
+    // dadosAgendamento.desconto = this.agendamento.desconto;
+    // dadosAgendamento.metragem = this.agendamento.metragem;
+    // dadosAgendamento.email = this.email;
+    // dadosAgendamento.extraPlus = this.pagamento.extraPlus;
+    // dadosAgendamento.diasSelecionados = [this.data];
+    // dadosAgendamento.origem = OrigemPagamentoEnum.AGENDAMENTO;
+    // dadosAgendamento.quantidadeItens = 1;
+    // dadosAgendamento.qtdParcelas = 1;
+    // dadosAgendamento.turno = this.turno;
+    // dadosAgendamento.valor = this.pagamento.valor;
+
+    // dadosAgendamento.tipoLimpeza = this.pagamento.tipoLimpeza;
+    // this._agendamentoService.agendar(dadosAgendamento)
+    //   .subscribe((result: PagamentoMpDTO) => {
+    //     this.urlPagamento = result.url;
+    //   }, (error) => this.notification.erro(error.error));
   }
 
   public comprar(plano: PlanoDTO) {
@@ -106,30 +153,30 @@ export class PlanosComponent {
       return;
     }
 
-    this.pagamento.valor = this.calcularTotal(plano);
-    this.pagamento.desconto = this.calcularDesconto(plano);
+    const agendamento: AgendamentoInfoDTO = this.calcularTotal(plano);
+    this.pagamento.valor = agendamento.valor;
+    this.pagamento.desconto = agendamento.desconto;
     this.pagamento.quantidadeItens = 1;
-    this.pagamento.qtdParcelas = 1;
+    this.pagamento.qtdParcelas = this.planoSelecionado?.qtdParcelas;
     this.pagamento.tipoLimpeza = TipoLimpezaEnum.EXPRESSA;
     this.pagamento.email = email ? email : "";
-    this.planos.forEach(plano => {
-      if (this.pagamento.tipoPlano = plano.id) {
-        this.planoService.criar(plano)
-          .subscribe((pag: PagamentoMpDTO) => {
-            const documentWidth = document.documentElement.clientWidth;
-            const documentHeight = document.documentElement.clientHeight;
-            let dialogRef = this.dialog.open(PagamentoComponent, {
-              minWidth: `${documentWidth * 0.6}px`,
-              maxWidth: `${documentWidth * 0.8}px`,
-              minHeight: `70vh`,
-              maxHeight: `90vh`,
-              data: { pagamento: this.pagamento, url: pag.url }
-            });
-            this.authService.autenticar(email);
-          }, (error) => {
-            this.notification.erro(error);
-          });
-      }
-    });
+    this.planoService.criar(plano)
+      .subscribe((pag: PagamentoMpDTO) => {
+        this.urlPagamento = pag.url;
+        const documentWidth = document.documentElement.clientWidth;
+        const documentHeigth = document.documentElement.clientHeight;
+        this.dialog.open(PagamentoComponent, {
+          minWidth: `${documentWidth * 0.8}px`,
+          maxWidth: `${documentWidth * 0.9}px`,
+          minHeight: `${documentHeigth * 0.9}px`,
+          maxHeight: `${documentHeigth * 0.95}px`,
+          data: {
+            email: email,
+            data: { pagamento: this.pagamento, url: pag.url }
+          }
+        });
+      }, (error) => {
+        this.notification.erro(error);
+      });
   }
 }

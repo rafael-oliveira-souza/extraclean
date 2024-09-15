@@ -14,7 +14,6 @@ import { ScrollComponent } from '../../components/scroll/scroll.component';
 import { PerfilComponent } from '../../components/perfil/perfil.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/overlay';
-import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Rota } from '../../app.routes';
 import { AutenticacaoService } from '../../services/autenticacao.service';
@@ -142,6 +141,12 @@ export class MenuComponent {
       }, (error: any) => {
         this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
       });
+  }
+
+  public abrirAdministrador() {
+    if (this.authService.isAdminLoggedIn()) {
+      this._router.navigate([Rota.ADMIN]);
+    }
   }
 
   public abrirPerfil() {

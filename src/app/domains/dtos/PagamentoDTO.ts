@@ -6,7 +6,7 @@ import { TipoPlanoEnum } from "../enums/TipoPlanoEnum";
 export class PagamentoDTO {
     id!: number;
     titulo!: string;
-    qtdParcelas!: number;
+    qtdParcelas!: number | undefined;
     codigoPagamento!: string;
     metragem!: number;
     desconto: number = 0;
@@ -20,4 +20,5 @@ export class PagamentoDTO {
     origem!: OrigemPagamentoEnum;
     tipoPlano!: TipoPlanoEnum;
     extraPlus: boolean = false;
+    isDetalhada: boolean = false;
 }

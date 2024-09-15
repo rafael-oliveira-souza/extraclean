@@ -75,6 +75,11 @@ export class AutenticacaoService {
     return null;
   }
 
+  public isAdminLoggedIn(): boolean {
+    const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+    return auth != null && auth.tipoUsuario == 0;
+  }
+
   public isLoggedIn(): boolean {
     const auth = this.getUsuarioAutenticado();
     return auth != null;
