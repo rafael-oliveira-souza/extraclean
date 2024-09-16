@@ -17,12 +17,22 @@ import { ScrollComponent } from '../scroll/scroll.component';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CepComponent } from '../cep/cep.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
+import { ProfissionalComponent } from '../profissional/profissional.component';
+import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
+import { ProfissionalService } from '../../services/profissional.service';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { EnderecoUtils } from '../../utils/EnderecoUtils';
+import {MatDatepickerModule} from '@angular/material/datepicker';
+import {MatInputModule} from '@angular/material/input';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
   imports: [
     FormsModule,
+    MatDatepickerModule,
+    MatInputModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
@@ -34,7 +44,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     CepComponent,
     CommonModule,
     ScrollComponent,
-    PlanosComponent
+    PlanosComponent,
+    ProfissionalComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -42,18 +53,21 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 export class AdminComponent implements OnInit {
   public readonly ATTR_SELECTED: string = "selected";
   public width: number | null = null;
-  public formCep!: FormGroup;
   public menus: MenuDTO[] = [
-    { label: "Calcular", id: "idCalculoAgendamento", index: 1 },
-    { label: "Enviar Agendamento", id: "idEnvioAgendamento", index: 2 },
+    { label: "Enviar Agendamento", id: "idEnvioAgendamento", index: 1 },
   ];
+
   public selectedMenu: MenuDTO = this.menus[0];
   public selectedIndex: number = 1;
+  public endereco: EnderecoDTO = new EnderecoDTO();
+  public profissionais: Array<ProfissionalDTO> = [];
+  public profissionaisSelecionados: number[] = [0];
+  public agendamento: AgendamentoDTO = new AgendamentoDTO();
 
   constructor(
-    private _formBuilder: FormBuilder,
     public authService: AutenticacaoService,
     private _router: Router,
+    private _profissionalService: ProfissionalService,
     private route: ActivatedRoute) { }
 
   ngOnInit() {
@@ -68,6 +82,17 @@ export class AdminComponent implements OnInit {
     if (!this.authService.isAdminLoggedIn()) {
       this._router.navigate([Rota.LOGIN]);
     }
+
+    this.recuperarProfissionais();
+  }
+
+  public recuperarProfissional(profissional: ProfissionalDTO) {
+    this.agendamento.profissionais = this.profissionaisSelecionados;
+  }
+
+  public getEndereco(endereco: EnderecoDTO) {
+    this.endereco = endereco;
+    this.agendamento.endereco = EnderecoUtils.montarEndereco(endereco);
   }
 
   public updateSelectedMenu(): void {
@@ -80,6 +105,13 @@ export class AdminComponent implements OnInit {
     });
   }
 
+  public recuperarProfissionais() {
+    this._profissionalService.get()
+      .subscribe((prof: Array<ProfissionalDTO>) => {
+        this.profissionais = prof;
+      });
+  }
+
   public select(index: number) {
     this.selectedIndex = index;
     this._router.navigate([Rota.ADMIN], { queryParams: { tab: index } });
@@ -88,38 +120,6 @@ export class AdminComponent implements OnInit {
 
   public home() {
     this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
-  }
-
-  public montarFormCep(habilitaInput: boolean) {
-    this.formCep = this._formBuilder.group({
-      cep: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
-      numero: ['', Validators.required],
-      logradouro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      complemento: new FormControl({ value: '', disabled: false }),
-      bairro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      localidade: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      uf: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      naoEncontrado: false
-    });
-
-    this.formCep.controls['naoEncontrado'].valueChanges.subscribe(val => {
-      if (val) {
-        this.formCep.controls['logradouro'].setValue("");
-        this.formCep.controls['localidade'].setValue("");
-        this.formCep.controls['bairro'].setValue("");
-        this.formCep.controls['uf'].setValue("");
-        this.formCep.controls['numero'].setValue("");
-        this.formCep.controls['logradouro'].enable();
-        this.formCep.controls['localidade'].enable();
-        this.formCep.controls['bairro'].enable();
-        this.formCep.controls['uf'].enable();
-      } else {
-        this.formCep.controls['logradouro'].disable();
-        this.formCep.controls['localidade'].disable();
-        this.formCep.controls['bairro'].disable();
-        this.formCep.controls['uf'].disable();
-      }
-    });
   }
 }
 

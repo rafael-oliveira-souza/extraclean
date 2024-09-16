@@ -21,7 +21,6 @@ import { PipeModule } from '../../pipes/pipe.module';
     MatButtonModule,
     MatIconModule,
     MatButtonModule,
-    FormsModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -30,13 +29,10 @@ import { PipeModule } from '../../pipes/pipe.module';
     MatCheckboxModule,
     NgxMaskPipe
   ],
-  providers: [
-    provideNgxMask(),
-  ],
   templateUrl: './cep.component.html',
   styleUrls: ['./cep.component.scss']
 })
-export class CepComponent implements OnInit {
+export class CepComponent {
 
   @Input("formCep")
   public formCep!: FormGroup;
@@ -52,8 +48,6 @@ export class CepComponent implements OnInit {
     this.montarFormCep(true);
   }
 
-  ngOnInit(): void {
-  }
 
   public atualizarEndereco() {
     let endereco = new EnderecoDTO();
@@ -64,6 +58,7 @@ export class CepComponent implements OnInit {
     endereco.localidade = this.formCep.controls['localidade'].value;
     endereco.cep = this.formCep.controls['cep'].value;
     endereco.uf = this.formCep.controls['uf'].value;
+    endereco.valido = this.formCep.valid;
 
     this.getEndereco.emit(endereco);
   }

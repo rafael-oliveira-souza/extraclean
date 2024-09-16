@@ -14,7 +14,7 @@ export class LocalStorageUtils {
     }
 
     static setAuth(auth: AutenticacaoDTO, ttl: number = this.TTL): void {
-        this.setItem(this.USUARIO_CACHE_AUTH, auth, ttl);
+        this.setItem(this.USUARIO_CACHE_AUTH, auth, auth.expirationDate.getTime() - auth.creationDate.getTime());
     }
 
     static getAuth(): AutenticacaoDTO | null {

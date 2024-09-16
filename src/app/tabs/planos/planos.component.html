@@ -45,10 +45,10 @@
                     <br><br>
                 </div>
                 <div *ngIf="pagamento.metragem">
-                    <small class="cor-branca">Valor Total : {{agendamento.total| moeda}}</small><br>
-                    <small class="cor-branca">Valor Diária : {{agendamento.valor| moeda}}</small><br>
-                    <small class="cor-branca">Valor Desconto : {{agendamento.desconto | moeda}}</small><br>
-                    <small class="cor-branca">Valor por Diária : {{agendamento.valor / planoSelecionado.qtdDias |
+                    <small class="cor-branca">Valor Total : {{agendamentoInfo.total| moeda}}</small><br>
+                    <small class="cor-branca">Valor Diária : {{agendamentoInfo.valor| moeda}}</small><br>
+                    <small class="cor-branca">Valor Desconto : {{agendamentoInfo.desconto | moeda}}</small><br>
+                    <small class="cor-branca">Valor por Diária : {{agendamentoInfo.valor / planoSelecionado.qtdDias |
                         moeda}}</small><br>
                     <!-- <small class="cor-branca">Valor Total de Deslocamento : {{VALOR_DESLOCAMENTO * planoSelecionado.qtdDias|
                         moeda}}</small><br> -->
@@ -60,7 +60,7 @@
                     <button *ngIf="!isAdmin" [disabled]="!pagamento.metragem" mat-button class="mt-3 p-4 mb-3"
                         (click)="comprar(planoSelecionado)">Selecionar</button>
                     <button *ngIf="isAdmin" [disabled]="!pagamento.metragem" mat-button class="mt-3 p-4 mb-3"
-                        (click)="comprar(planoSelecionado)">Agendar</button>
+                        (click)="agendar(planoSelecionado)">Agendar</button>
                 </div>
             </div>
         </div>

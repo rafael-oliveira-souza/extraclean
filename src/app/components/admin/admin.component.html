@@ -11,11 +11,46 @@
           <h6> {{menu.label}}</h6>
         </div>
       </div>
-      <div class="body">
+      <div class="body container">
         <app-scroll>
           <div *ngIf="selectedIndex == 1">
-            <app-cep></app-cep>
-            <app-planos></app-planos>
+            <div class="row justify-content-center">
+              <div>
+                <mat-form-field class="col-12 mt-4">
+                  <mat-label>Data da Diária</mat-label>
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="agendamento.dataHora">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-12 " *ngIf="agendamento.dataHora">
+                <mat-form-field class="col-12 ">
+                  <mat-label>Email Cliente</mat-label>
+                  <input type="text" matInput [(ngModel)]="agendamento.email">
+                </mat-form-field>
+              </div>
+              <div class="col-12" *ngIf="agendamento.email">
+                <mat-form-field class="col-12">
+                  <mat-label>Escolha um Período</mat-label>
+                  <select matNativeControl [(ngModel)]="agendamento.turno">
+                    <option value="0">Sem preferência</option>
+                    <option value="1">Matutino</option>
+                    <option value="2">Vespertino</option>
+                    <option value="3">Integral</option>
+                  </select>
+                </mat-form-field>
+              </div>
+              <div class="col-12" *ngIf="agendamento.turno">
+                <app-profissional [profissionais]="profissionais"
+                  (atualizarProfissional)="recuperarProfissional($event)"
+                  [(profissionaisSelecionados)]="profissionaisSelecionados">
+                </app-profissional>
+              </div>
+              <div class="col-12">
+                <app-cep *ngIf="agendamento.turno" (getEndereco)="getEndereco($event)"></app-cep>
+              </div>
+            </div>
+            <app-planos [agendamento]="agendamento" *ngIf="endereco.valido"></app-planos>
           </div>
           <div *ngIf="selectedIndex == 2">
           </div>

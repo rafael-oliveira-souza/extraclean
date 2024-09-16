@@ -23,15 +23,30 @@ import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 import { CalculoUtils } from '../../utils/CalculoUtils';
 import { ProfissionalService } from '../../services/profissional.service';
-import { environment } from '../../../enviromment';
 import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
+import { ProfissionalComponent } from '../profissional/profissional.component';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-calendario',
   standalone: true,
-  providers: [],
+  providers: [
+    provideMomentDateAdapter(MY_FORMATS),
+  ],
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -44,7 +59,8 @@ import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
     CommonModule,
     PipeModule,
     MatIconModule,
-    LegendaComponent
+    LegendaComponent,
+    ProfissionalComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendario.component.html',
@@ -273,34 +289,11 @@ export class CalendarioComponent {
     this.desconto = 0;
 
     const qtdDias = this.getQtdDias();
-    if (qtdDias && this.valorMetro && this.metragem) {
-      this.valorTotal += qtdDias * NumberUtils.arredondarCasasDecimais(this.valorMetro, 2) * this.metragem;
-    }
+    let agendamento: AgendamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada, qtdDias,
+      qtdDias-1, this.profissionalSelecionado != 0, this.turno);
 
-    if (this.profissionalSelecionado != 0) {
-      if (qtdDias > 0) {
-        this.valorTotal += this.VALOR_PROFISSIONAL_SELECIONADO * qtdDias;
-      } else {
-        this.valorTotal += this.VALOR_PROFISSIONAL_SELECIONADO;
-      }
-    }
-
-    if (this.isDetalhada) {
-      this.valorTotal *= AgendamentoConstantes.VALOR_DIARIA_DETALHADA;
-    }
-
-    if (this.turno == TurnoEnum.INTEGRAL) {
-      this.valorTotal *= 2;
-    }
-    if (qtdDias == 1) {
-      let porcentagem = 0;
-      this.valorTotal += AgendamentoConstantes.VALOR_DESLOCAMENTO;
-      this.valorTotal = this.aplicarDesconto(this.valorTotal, porcentagem);
-    } else if (qtdDias > 1) {
-      let porcentagem = qtdDias * AgendamentoConstantes.PERCENTUAL_DESCONTO;
-      this.valorTotal += AgendamentoConstantes.VALOR_DESLOCAMENTO * qtdDias;
-      this.valorTotal = this.aplicarDesconto(this.valorTotal, porcentagem);
-    }
+    this.desconto = agendamento.desconto;
+    this.valorTotal = agendamento.total;
 
     this.emitirDadosAgendamento();
     return this.valorTotal;
@@ -330,28 +323,6 @@ export class CalendarioComponent {
     }
     this.limparDiasSelecionados();
     this.calcular();
-  }
-
-  private aplicarDesconto(valor: number, percentual: number) {
-    this.desconto = 0;
-    if (valor > 0 && percentual > 0) {
-      this.desconto = this.calcularDesconto(valor, percentual);
-    }
-
-    return valor - this.desconto
-  }
-
-  private calcularDesconto(valor: number, percentual: number): number {
-    let desconto = 0;
-    if (percentual > AgendamentoConstantes.MAX_PERCENTUAL) {
-      percentual = AgendamentoConstantes.MAX_PERCENTUAL;
-    }
-
-    if (valor > 0 && percentual > 0) {
-      desconto = valor * percentual / 100;
-    }
-
-    return desconto;
   }
 
   public gerarIdElementoCalendarioDiario(dia: MomentInput) {

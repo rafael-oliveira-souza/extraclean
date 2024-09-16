@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -30,6 +30,7 @@ import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { Router } from '@angular/router';
 import { Rota } from '../../app.routes';
+import { CepComponent } from '../../components/cep/cep.component';
 
 @Component({
   selector: 'app-agendamento',
@@ -53,7 +54,8 @@ import { Rota } from '../../app.routes';
     PipeModule,
     NgxMaskDirective,
     MatCheckboxModule,
-    NgxMaskPipe
+    NgxMaskPipe,
+    CepComponent
   ],
   providers: [
     provideNgxMask(),
@@ -61,7 +63,7 @@ import { Rota } from '../../app.routes';
   templateUrl: './agendamento.component.html',
   styleUrl: './agendamento.component.scss'
 })
-export class AgendamentoComponent {
+export class AgendamentoComponent implements OnInit {
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly METRAGEM_MAX = AgendamentoConstantes.METRAGEM_MAX;
@@ -84,7 +86,7 @@ export class AgendamentoComponent {
   public profissionais: Array<ProfissionalDTO> = [];
   public profissional = null;
   public habilitaStep: boolean[] = [true, true, true, true, true, true];
-
+  public endereco = new EnderecoDTO();
 
   constructor(private _authService: AutenticacaoService, private _router: Router,
     private _formBuilder: FormBuilder, private _cepService: CepService,
@@ -96,18 +98,13 @@ export class AgendamentoComponent {
     this.buildForm();
   }
 
+  public getEndereco(endereco: EnderecoDTO) {
+    this.endereco = endereco;
+  }
+
   public agendar() {
     this._authService.validarUsuario();
-
-    let endereco = new EnderecoDTO();
-    endereco.bairro = this.formCep.controls['bairro'].value;
-    endereco.numero = this.formCep.controls['numero'].value;
-    endereco.logradouro = this.formCep.controls['logradouro'].value;
-    endereco.complemento = this.formCep.controls['complemento'].value;
-    endereco.localidade = this.formCep.controls['localidade'].value;
-    endereco.cep = this.formCep.controls['cep'].value;
-    endereco.uf = this.formCep.controls['uf'].value;
-    this.dadosAgendamento.endereco = EnderecoUtils.montarEndereco(endereco);
+    this.dadosAgendamento.endereco = EnderecoUtils.montarEndereco(this.endereco);
 
     this.dadosAgendamento.tipoLimpeza = this.formTipoLimpeza.controls['valor'].value;
     this._agendamentoService.agendar(this.dadosAgendamento)
@@ -202,69 +199,12 @@ export class AgendamentoComponent {
       valor: ['', Validators.required]
     });
 
-    this.montarFormCep(true);
-
     this.formTipoLimpeza.valueChanges.subscribe(value => {
       const tipoLimpezaControl = this.formTipoLimpeza.controls['valor'];
       if (tipoLimpezaControl.valid && tipoLimpezaControl.value == '1' && this.profissionais.length == 0) {
         this.recuperarProfissionais();
       }
     });
-
-    this.formArea.valueChanges.subscribe(value => {
-      if (this.formArea.controls['valor'].valid) {
-        this.calcularValorPorMetro(this.formArea.controls['valor'].value);
-      }
-    });
-  }
-
-  public montarFormCep(habilitaInput: boolean) {
-    this.formCep = this._formBuilder.group({
-      cep: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
-      numero: ['', Validators.required],
-      logradouro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      complemento: new FormControl({ value: '', disabled: false }),
-      bairro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      localidade: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      uf: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      naoEncontrado: false
-    });
-
-    this.formCep.valueChanges.subscribe(cep => {
-      if (this.formCep.controls['cep'].invalid) {
-        this.exibeCep = false;
-      }
-    });
-
-
-    this.formCep.controls['naoEncontrado'].valueChanges.subscribe(val => {
-      if (val) {
-        this.formCep.controls['logradouro'].setValue("");
-        this.formCep.controls['localidade'].setValue("");
-        this.formCep.controls['bairro'].setValue("");
-        this.formCep.controls['uf'].setValue("");
-        this.formCep.controls['numero'].setValue("");
-        this.formCep.controls['logradouro'].enable();
-        this.formCep.controls['localidade'].enable();
-        this.formCep.controls['bairro'].enable();
-        this.formCep.controls['uf'].enable();
-      } else {
-        this.formCep.controls['logradouro'].disable();
-        this.formCep.controls['localidade'].disable();
-        this.formCep.controls['bairro'].disable();
-        this.formCep.controls['uf'].disable();
-      }
-    });
-    // this._changes.detectChanges()
-  }
-
-  public calcularValorPorMetro(metragem: number) {
-    this.valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
-    // let metragemCalculada = metragem;
-    // while (metragemCalculada > this.METRAGEM_MIN * 2 && this.valorMetro >= 1.5) {
-    //   metragemCalculada -= this.METRAGEM_MIN * 2;
-    //   this.valorMetro -= 0.1;
-    // }
   }
 
   public recuperarProfissionais() {

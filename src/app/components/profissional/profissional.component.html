@@ -1,0 +1,21 @@
+<div>
+  <mat-form-field *ngIf="multiplo" class="col-12">
+    <mat-label>Escolha uma profissional</mat-label>
+    <select matNativeControl [(ngModel)]="profissionalSelecionado" (ngModelChange)="recuperarProfissional()">
+      <option value="0">Sem preferência</option>
+      <option *ngFor="let prof of profissionais" [value]="prof.id">
+        {{prof.nome}} {{prof.sobrenome | ponto: 20}}
+      </option>
+    </select>
+  </mat-form-field>
+  <mat-form-field *ngIf="!multiplo" class="col-12">
+    <mat-label>Escolha uma profissional</mat-label>
+    <mat-select [(ngModel)]="profissionaisSelecionados" multiple (ngModelChange)="recuperarProfissional()">
+      <mat-option value="0">Sem preferência</mat-option>
+      @for (prof of profissionais; track prof) {
+      <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome | ponto: 20}}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+
+</div>
