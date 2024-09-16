@@ -54,6 +54,10 @@ export class LoginComponent implements OnInit {
 
     return false;
   }
+  
+  public home() {
+    this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
+  }
 
   public logar() {
     if (this.formLogin.invalid) {

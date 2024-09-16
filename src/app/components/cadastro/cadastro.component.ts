@@ -48,6 +48,10 @@ export class CadastroComponent implements OnInit {
   public logar() {
     this._router.navigate([Rota.LOGIN]);
   }
+  
+  public home() {
+    this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
+  }
 
   public cadastrar() {
     if (this.formLogin.invalid) {
