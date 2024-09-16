@@ -9,4 +9,14 @@ export class ClienteDTO {
     localizacao!: string;
     cep!: string;
     tipo!: number;
+
+    public isValido() {
+        return this.nome &&
+            this.sobrenome &&
+            this.email &&
+            this.telefone &&
+            this.endereco &&
+            this.numero &&
+            this.cep;
+    }
 }

@@ -53,6 +53,63 @@
             <app-planos [agendamento]="agendamento" *ngIf="endereco.valido"></app-planos>
           </div>
           <div *ngIf="selectedIndex == 2">
+            <div>
+              <div class="mt-2 row justify-content-center text-center">
+                <h3>Criar Cliente/Diarista</h3>
+                <div class="mt-2">
+                  <mat-button-toggle-group [(ngModel)]="tipoCliente" required>
+                    <mat-button-toggle value="1">Cliente</mat-button-toggle>
+                    <mat-button-toggle value="2">Diarista</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+                <div class="col-12 mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Email</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['email']">
+                  </mat-form-field>
+                </div>
+                <div class=" col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12 mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Nome</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['nome']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Sobrenome</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['sobrenome']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Endereço</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['endereco']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Número</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['numero']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Cep</mat-label>
+                    <input mask="00000-000" maxlength="9" autocomplete="false" type="text" matInput
+                      [(ngModel)]="cliente['cep']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Telefone</mat-label>
+                    <input mask="(00) 00000-0000 | (00) 0000-0000" autocomplete="false" type="text" matInput
+                      [(ngModel)]="cliente['telefone']">
+                  </mat-form-field>
+                </div>
+              </div>
+              <button [disabled]="!cliente.isValido()" class="btn btn-primary" type="button"
+                (click)="criarCliente()">Criar Cliente</button>
+            </div>
           </div>
         </app-scroll>
       </div>

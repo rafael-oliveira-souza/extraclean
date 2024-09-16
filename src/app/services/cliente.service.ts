@@ -21,4 +21,9 @@ export class ClienteService {
     const url = `${this.HOST_URL}/criar`;
     return this._http.post<ClienteDTO>(url, cliente);
   }
+  
+  public criar(cliente: ClienteDTO): Observable<ClienteDTO> {
+    const url = `${this.HOST_URL}/criar-completo`;
+    return this._http.post<ClienteDTO>(url, cliente);
+  }
 }

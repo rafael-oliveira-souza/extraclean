@@ -121,7 +121,7 @@ export class PlanosComponent {
     dadosAgendamento.metragem = this.pagamento.metragem;
     dadosAgendamento.email = this.agendamento.email;
     dadosAgendamento.extraPlus = this.pagamento.extraPlus;
-    dadosAgendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora)];
+    dadosAgendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora, 'yyyy-MM-dd')];
     dadosAgendamento.origem = OrigemPagamentoEnum.AGENDAMENTO;
     dadosAgendamento.quantidadeItens = 1;
     dadosAgendamento.profissionais = this.agendamento.profissionais;

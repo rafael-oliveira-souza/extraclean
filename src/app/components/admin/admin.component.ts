@@ -23,8 +23,12 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalService } from '../../services/profissional.service';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { EnderecoUtils } from '../../utils/EnderecoUtils';
-import {MatDatepickerModule} from '@angular/material/datepicker';
-import {MatInputModule} from '@angular/material/input';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatInputModule } from '@angular/material/input';
+import { ClienteService } from '../../services/cliente.service';
+import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
+import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
+import { MatButtonToggleModule } from '@angular/material/button-toggle';
 
 @Component({
   selector: 'app-admin',
@@ -46,6 +50,7 @@ import {MatInputModule} from '@angular/material/input';
     ScrollComponent,
     PlanosComponent,
     ProfissionalComponent,
+    MatButtonToggleModule
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -55,6 +60,7 @@ export class AdminComponent implements OnInit {
   public width: number | null = null;
   public menus: MenuDTO[] = [
     { label: "Enviar Agendamento", id: "idEnvioAgendamento", index: 1 },
+    { label: "Criar Cliente", id: "idCriarCliente", index: 2 },
   ];
 
   public selectedMenu: MenuDTO = this.menus[0];
@@ -63,10 +69,14 @@ export class AdminComponent implements OnInit {
   public profissionais: Array<ProfissionalDTO> = [];
   public profissionaisSelecionados: number[] = [0];
   public agendamento: AgendamentoDTO = new AgendamentoDTO();
+  public cliente: ClienteDTO = new ClienteDTO();
+  public tipoCliente: TipoClienteEnum = TipoClienteEnum.CLIENTE;
 
   constructor(
     public authService: AutenticacaoService,
+    public clienteService: ClienteService,
     private _router: Router,
+    private _formBuilder: FormBuilder,
     private _profissionalService: ProfissionalService,
     private route: ActivatedRoute) { }
 
@@ -120,6 +130,12 @@ export class AdminComponent implements OnInit {
 
   public home() {
     this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
+  }
+
+  public criarCliente() {
+    this.cliente.tipo = this.tipoCliente;
+    this.clienteService.criar(this.cliente)
+      .subscribe(cliente => console.log(cliente));
   }
 }
 
