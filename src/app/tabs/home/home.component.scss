@@ -1,6 +1,7 @@
 @import '../../../color.scss';
 
 .centered-background {
+    max-width: 100%;
     // background-size: cover;
     background-repeat: no-repeat;
     background-image: url('../../../assets/imgs/material-de-limpeza.gif');

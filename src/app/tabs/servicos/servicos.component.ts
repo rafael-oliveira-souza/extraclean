@@ -27,10 +27,9 @@ export class ServicosComponent {
   public servicos: Array<ServicoDTO> = [];
 
   constructor() {
-    this.servicos.push(new ServicoDTO("Condomínio", "Temos funcionários treinados, capacitados e compromissados com os resultados pretendidos.", "apartment"))
-    this.servicos.push(new ServicoDTO("Residencial", "Limpeza residencial, empresas, sanitização e cuidados domésticos em geral.", "home"))
-    this.servicos.push(new ServicoDTO("Limpeza pós obra", "Somos especialistas de mão de obra terceirizada para empresas em Brasília em limpeza pós obra.", "construction"))
-    // this.servicos.push(new ServicoDTO("Indústria", "Na limpeza industrial é feita a higienização e desinfecção de todos os equipamentos.", "factory"))
+    this.servicos.push(new ServicoDTO("Limpeza Residencial", "Limpeza residencial, sanitização e cuidados domésticos em geral.", "home"))
+    this.servicos.push(new ServicoDTO("Limpeza Pré Mudança", " Nosso serviço de limpeza pré-mudança é projetado para garantir que seu novo lar ou escritório esteja completamente pronto para receber você, livre de sujeira, poeira e resíduos.", "construction"))
+    this.servicos.push(new ServicoDTO("Limpeza Empresarial", "Nosso serviço de limpeza empresarial oferece soluções completas e personalizadas para atender às necessidades específicas de sua empresa, garantindo que seus espaços de trabalho estejam sempre limpos, organizados e prontos para o sucesso.", "factory"))
     // this.servicos.push(new ServicoDTO("Terceirização", "Terceirização de Mão de Obra com Qualidade. Conte Com a Excelência de Nossos Serviços.", "groups"))
   }
 }
