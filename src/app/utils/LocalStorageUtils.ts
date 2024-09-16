@@ -2,7 +2,7 @@ import { AutenticacaoDTO } from "../domains/dtos/AutenticacaoDTO";
 
 export class LocalStorageUtils {
     // Padrao TTL de 30 minutos (1800000 ms)
-    public static readonly TTL: number = 1800000;
+    public static readonly TTL: number = 7200000;
     public static readonly USUARIO_CACHE_EMAIL: string = "XXXX_USUARIO_CACHE_EMAIL_XXXX";
     public static readonly USUARIO_CACHE_AUTH: string = "XXXX_USUARIO_CACHE_AUTH_XXXX";
     public static readonly USUARIO_CACHE_CLIENTE: string = "XXXX_USUARIO_CACHE_CLIENTE_XXXX";
@@ -14,7 +14,7 @@ export class LocalStorageUtils {
     }
 
     static setAuth(auth: AutenticacaoDTO, ttl: number = this.TTL): void {
-        this.setItem(this.USUARIO_CACHE_AUTH, auth, auth.expirationDate.getTime() - auth.creationDate.getTime());
+        this.setItem(this.USUARIO_CACHE_AUTH, auth, ttl);
     }
 
     static getAuth(): AutenticacaoDTO | null {
