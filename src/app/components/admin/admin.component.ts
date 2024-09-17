@@ -153,7 +153,10 @@ export class AdminComponent implements OnInit {
   public criarCliente() {
     this.cliente.tipo = this.tipoCliente;
     this.clienteService.criar(this.cliente)
-      .subscribe(cliente => this.cliente = new ClienteDTO());
+      .subscribe(cliente => {
+        this._notificacaoService.alerta("Cliente Criado com sucesso.");
+        this.cliente = new ClienteDTO();
+      });
   }
 }
 

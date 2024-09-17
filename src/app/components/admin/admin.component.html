@@ -53,7 +53,7 @@
                 <mat-form-field class="col-12">
                   <mat-label>Tipo de Limpeza</mat-label>
                   <select matNativeControl [(ngModel)]="agendamento.tipoLimpeza">
-                    <option value="1">Expresa</option>
+                    <option value="1">Expressa</option>
                     <option value="2">Detalhada</option>
                     <option value="3">Pré Mudança</option>
                   </select>
@@ -80,7 +80,7 @@
                   <input type="text" matInput [(ngModel)]="agendamento.desconto">
                 </mat-form-field>
               </div>
-              <div class="col-12  mt-2" *ngIf="agendamento.email">
+              <div class="col-12  mt-2" *ngIf="endereco.valido">
                 <mat-form-field class="col-12 ">
                   <mat-label>Metragem</mat-label>
                   <input type="text" matInput [(ngModel)]="agendamento.metragem">
