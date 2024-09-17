@@ -158,7 +158,7 @@ export class AdminComponent implements OnInit {
       .subscribe(cliente => {
         this._notificacaoService.alerta("Cliente Criado com sucesso.");
         this.cliente = new ClienteDTO();
-      });
+      }, (error) => this._notificacaoService.erro(error.error));
   }
 }
 
