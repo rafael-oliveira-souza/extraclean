@@ -7,6 +7,8 @@ export class AgendamentoDTO extends PagamentoDTO {
     profissionais: number[] = [];
     endereco!: string;
     ignoreQtdProfissionais: boolean = false;
+    enviarEmail: boolean = false;
+    gerarPagamento: boolean = true;
 
     public getQtdDias() {
         return this.diasSelecionados.length;

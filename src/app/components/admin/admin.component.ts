@@ -71,6 +71,7 @@ export class AdminComponent implements OnInit {
   public agendamento: AgendamentoDTO = new AgendamentoDTO();
   public cliente: ClienteDTO = new ClienteDTO();
   public tipoCliente: TipoClienteEnum = TipoClienteEnum.CLIENTE;
+  public url!: string;
 
   constructor(
     public authService: AutenticacaoService,
@@ -119,6 +120,7 @@ export class AdminComponent implements OnInit {
     this._profissionalService.get()
       .subscribe((prof: Array<ProfissionalDTO>) => {
         this.profissionais = prof;
+        this.agendamento.ignoreQtdProfissionais = true;
       });
   }
 
@@ -135,7 +137,12 @@ export class AdminComponent implements OnInit {
   public criarCliente() {
     this.cliente.tipo = this.tipoCliente;
     this.clienteService.criar(this.cliente)
-      .subscribe(cliente => console.log(cliente));
+      .subscribe(cliente => this.cliente = new ClienteDTO());
+  }
+
+  public recuperarUrl(url: string) {
+    this.url = url;
+    this.agendamento = new AgendamentoDTO()
   }
 }
 

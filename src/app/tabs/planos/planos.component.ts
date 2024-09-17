@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject, Input } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlanoDTO } from '../../domains/dtos/PlanoDTO';
 import { MatIconModule } from '@angular/material/icon';
@@ -47,6 +47,9 @@ export class PlanosComponent {
 
   @Input("agendamento")
   public agendamento: AgendamentoDTO = new AgendamentoDTO();
+
+  @Output()
+  public getUrl: EventEmitter<string> = new EventEmitter();
 
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
@@ -132,6 +135,7 @@ export class PlanosComponent {
     this._agendamentoService.agendar(dadosAgendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.urlPagamento = result.url;
+        this.getUrl.emit(result.url);
         this.notification.alerta("Agendamento realizado com sucesso. O seu agendamento será efetivado após o pagamento!");
       }, (error) => this.notification.erro(error));
   }
@@ -155,6 +159,7 @@ export class PlanosComponent {
     this.planoService.criar(plano)
       .subscribe((pag: PagamentoMpDTO) => {
         this.urlPagamento = pag.url;
+        this.getUrl.emit(pag.url);
         this.notification.alerta("Plano solicitado com sucesso. O seu plano será efetivado após o pagamento!");
         const documentWidth = document.documentElement.clientWidth;
         const documentHeigth = document.documentElement.clientHeight;
