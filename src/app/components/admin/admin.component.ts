@@ -136,6 +136,8 @@ export class AdminComponent implements OnInit {
   }
 
   public agendar() {
+    this.agendamento.diasSelecionados = [this.agendamento.dataHora];
+    this.agendamento.dataHora = new Date();
     this._agendamentoService.agendar(this.agendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.url = result.url;
