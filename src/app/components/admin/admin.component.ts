@@ -29,6 +29,10 @@ import { ClienteService } from '../../services/cliente.service';
 import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
 import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { NotificacaoService } from '../../services/notificacao.service';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 
 @Component({
   selector: 'app-admin',
@@ -50,7 +54,8 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     ScrollComponent,
     PlanosComponent,
     ProfissionalComponent,
-    MatButtonToggleModule
+    MatButtonToggleModule,
+    MatCheckboxModule
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -76,8 +81,9 @@ export class AdminComponent implements OnInit {
   constructor(
     public authService: AutenticacaoService,
     public clienteService: ClienteService,
+    public _agendamentoService: AgendamentoService,
     private _router: Router,
-    private _formBuilder: FormBuilder,
+    private _notificacaoService: NotificacaoService,
     private _profissionalService: ProfissionalService,
     private route: ActivatedRoute) { }
 
@@ -129,6 +135,14 @@ export class AdminComponent implements OnInit {
     this._router.navigate([Rota.ADMIN], { queryParams: { tab: index } });
   }
 
+  public agendar() {
+    this._agendamentoService.agendar(this.agendamento)
+      .subscribe((result: PagamentoMpDTO) => {
+        this.url = result.url;
+        this.agendamento = new AgendamentoDTO();
+        this._notificacaoService.alerta("Agendamento Criado com sucesso.");
+      }, (error) => this._notificacaoService.erro(error.error));
+  }
 
   public home() {
     this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
@@ -138,11 +152,6 @@ export class AdminComponent implements OnInit {
     this.cliente.tipo = this.tipoCliente;
     this.clienteService.criar(this.cliente)
       .subscribe(cliente => this.cliente = new ClienteDTO());
-  }
-
-  public recuperarUrl(url: string) {
-    this.url = url;
-    this.agendamento = new AgendamentoDTO()
   }
 }
 
