@@ -42,10 +42,10 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     this.formLogin = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]]
+      senha: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
-  
+
   public isXs() {
     if (typeof document !== 'undefined') {
       const documentWidth = document.documentElement.clientWidth;
@@ -54,12 +54,17 @@ export class LoginComponent implements OnInit {
 
     return false;
   }
-  
+
   public home() {
     this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
   }
 
   public logar() {
+    if (this.formLogin.controls['senha'].invalid) {
+      this._notificacaoService.erro("Senha inválida.");
+      return;
+    }
+    
     if (this.formLogin.invalid) {
       this._notificacaoService.erro("Formulario invalido.");
       return;

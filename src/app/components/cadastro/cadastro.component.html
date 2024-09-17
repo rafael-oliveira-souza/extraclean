@@ -9,25 +9,33 @@
         <div class="col-8  ">
           <mat-form-field class="col-12 ">
             <mat-label>Email</mat-label>
-            <input autocomplete="false" type="text" matInput formControlName="email">
+            <input autofocus autocomplete="off" type="text" matInput formControlName="email">
           </mat-form-field>
         </div>
         <div class="col-8 mt-2">
           <mat-form-field class="col-12 ">
             <mat-label>Senha</mat-label>
-            <input autocomplete="false" type="password" matInput formControlName="senha">
+            <input autofocus autocomplete="off" type="password" matInput formControlName="senha">
           </mat-form-field>
         </div>
         <div class="col-8 mt-2">
           <mat-form-field class="col-12 ">
             <mat-label>Confime a Senha</mat-label>
-            <input autocomplete="false" type="password" matInput formControlName="senhaVal">
+            <input autofocus autocomplete="off" type="password" matInput formControlName="senhaVal">
           </mat-form-field>
+        </div>
+        <small class="text-danger text-center"
+          *ngIf="formLogin.controls['senha'].valid && formLogin.controls['senha'].value != formLogin.controls['senhaVal'].value">
+          As Senhas informadas são diferentes.
+        </small>
+        <div class=" text-danger text-center p-4"
+          *ngIf="formLogin.controls['senha'].value && formLogin.controls['senha'].invalid">
+          <small>A senha deve ter no mínimo 8 caracteres.</small>
         </div>
 
       </form>
       <p>Já possui uma conta? <b class="link" (click)="logar()">Entrar</b></p>
-      <button mat-button class="mt-5 p-4 mb-3" (click)="cadastrar()">Cadastrar</button>
+      <button mat-button class="p-4 mb-3" (click)="cadastrar()">Cadastrar</button>
     </div>
 
   </div>

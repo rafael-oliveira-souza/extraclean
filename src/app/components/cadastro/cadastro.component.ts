@@ -11,6 +11,7 @@ import { Rota } from '../../app.routes';
 import { Router } from '@angular/router';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { CalculoUtils } from '../../utils/CalculoUtils';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-cadastro',
@@ -21,6 +22,7 @@ import { CalculoUtils } from '../../utils/CalculoUtils';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    CommonModule
   ],
   templateUrl: './cadastro.component.html',
   styleUrls: ['./cadastro.component.scss']
@@ -40,27 +42,26 @@ export class CadastroComponent implements OnInit {
   ngOnInit() {
     this.formLogin = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]],
-      senhaVal: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]]
+      senha: ['', [Validators.required, Validators.minLength(8)]],
+      senhaVal: ['', [Validators.required]]
     });
   }
 
   public logar() {
     this._router.navigate([Rota.LOGIN]);
   }
-  
+
   public home() {
     this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
   }
 
   public cadastrar() {
     if (this.formLogin.invalid) {
-      this._notificacaoService.erro("Formulario invalido.");
+      this._notificacaoService.alerta("Por favor, preencha todos os campos!");
       return;
     }
 
     if (this.formLogin.controls['senha'].value != this.formLogin.controls['senhaVal'].value) {
-      this._notificacaoService.erro("As Senhas informadas são diferentes.");
       return;
     }
 
