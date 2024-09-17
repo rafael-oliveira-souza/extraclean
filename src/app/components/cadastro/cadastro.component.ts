@@ -12,6 +12,7 @@ import { Router } from '@angular/router';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { CalculoUtils } from '../../utils/CalculoUtils';
 import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-cadastro',
@@ -22,6 +23,7 @@ import { CommonModule } from '@angular/common';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
     CommonModule
   ],
   templateUrl: './cadastro.component.html',
@@ -31,6 +33,8 @@ export class CadastroComponent implements OnInit {
   public formLogin!: FormGroup;
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
   public bg: string = "fullbg";
+  public showBooleanSenha: boolean = false;
+  public showBooleanReSenha: boolean = false;
 
   constructor(
     private _router: Router,

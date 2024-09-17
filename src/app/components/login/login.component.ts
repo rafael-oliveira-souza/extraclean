@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
   public formLogin!: FormGroup;
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
   public bg: string = "fullbg";
+  public showBooleanSenha: boolean = false;
 
   constructor(private _formBuilder: FormBuilder,
     private _router: Router,
@@ -64,7 +65,7 @@ export class LoginComponent implements OnInit {
       this._notificacaoService.erro("Senha inválida.");
       return;
     }
-    
+
     if (this.formLogin.invalid) {
       this._notificacaoService.erro("Formulario invalido.");
       return;

@@ -2,10 +2,15 @@
 
 .card-login {
     max-height: 95vh;
+    margin-top: 50px;
     background-color: $primary;
     // border: 5px solid;
     border-radius: 30px;
     text-align: center;
+}
+
+img {
+    cursor: pointer;
 }
 
 .fullbg {

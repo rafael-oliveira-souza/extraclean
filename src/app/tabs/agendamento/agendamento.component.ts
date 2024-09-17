@@ -31,6 +31,7 @@ import { AutenticacaoService } from '../../services/autenticacao.service';
 import { Router } from '@angular/router';
 import { Rota } from '../../app.routes';
 import { CepComponent } from '../../components/cep/cep.component';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 
 @Component({
   selector: 'app-agendamento',
@@ -85,7 +86,7 @@ export class AgendamentoComponent implements OnInit {
   public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
   public profissional = null;
-  public habilitaStep: boolean[] = [true, true, true, true, true, true];
+  public habilitaStep: boolean[] = [false, false, false, false, true, true];
   public endereco = new EnderecoDTO();
 
   constructor(private _authService: AutenticacaoService, private _router: Router,
@@ -109,6 +110,7 @@ export class AgendamentoComponent implements OnInit {
     this.dadosAgendamento.tipoLimpeza = this.formTipoLimpeza.controls['valor'].value;
     this._agendamentoService.agendar(this.dadosAgendamento)
       .subscribe((result: PagamentoMpDTO) => {
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
         const documentWidth = document.documentElement.clientWidth;
         const documentHeight = document.documentElement.clientHeight;
         let dialogRef = this.dialog.open(PagamentoComponent, {

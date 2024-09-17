@@ -1,11 +1,16 @@
 @import '../../../color.scss';
 
 .card-login {
-    max-height: 95vh;
+    margin-top: 50px;
+    max-height: 98vh;
     max-width: 100%;
     background-color: $primary;
     border-radius: 30px;
     text-align: center;
+}
+
+img {
+    cursor: pointer;
 }
 
 .fullbg {

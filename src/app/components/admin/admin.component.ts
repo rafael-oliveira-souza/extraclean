@@ -33,6 +33,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 
 @Component({
   selector: 'app-admin',
@@ -143,7 +144,7 @@ export class AdminComponent implements OnInit {
       .subscribe((result: PagamentoMpDTO) => {
         this.url = result.url;
         this.agendamento = new AgendamentoDTO();
-        this._notificacaoService.alerta("Agendamento Criado com sucesso.");
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
       }, (error) => this._notificacaoService.erro(error.error));
   }
 

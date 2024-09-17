@@ -1,6 +1,6 @@
 <div [class]="isXs() ? bg : 'container'">
-  <div class="row justify-content-center ">
-    <div class="  card-login col-12 col-xl-6 col-lg-8 col-md-8 col-sm-12">
+  <div class=" row justify-content-center ">
+    <div class="card-login col-12 col-xl-6 col-lg-8 col-md-8 col-sm-12 mb-5  ">
       <div class="col-12 col-xl-8 col-lg-8 col-md-12 col-sm-12">
         <img width="50%" src="../../../assets/imgs/logo.svg" (click)="home()">
       </div>
@@ -15,27 +15,33 @@
         <div class="col-8 mt-2">
           <mat-form-field class="col-12 ">
             <mat-label>Senha</mat-label>
-            <input autofocus autocomplete="off" type="password" matInput formControlName="senha">
+            <input autofocus autocomplete="off" [type]="showBooleanSenha ? 'text' : 'password'" matInput
+              formControlName="senha">
+            <mat-icon matSuffix style="cursor: pointer;" (click)="showBooleanSenha = !showBooleanSenha">
+              {{!showBooleanSenha?'visibility':'visibility_off'}}</mat-icon>
           </mat-form-field>
         </div>
         <div class="col-8 mt-2">
           <mat-form-field class="col-12 ">
             <mat-label>Confime a Senha</mat-label>
-            <input autofocus autocomplete="off" type="password" matInput formControlName="senhaVal">
+            <input autofocus autocomplete="off" [type]="showBooleanReSenha ? 'text' : 'password'" matInput
+              formControlName="senhaVal">
+            <mat-icon matSuffix style="cursor: pointer;" (click)="showBooleanReSenha = !showBooleanReSenha">
+              {{!showBooleanReSenha?'visibility':'visibility_off'}}</mat-icon>
           </mat-form-field>
         </div>
-        <small class="text-danger text-center"
+        <small class="text-danger text-center mb-2"
           *ngIf="formLogin.controls['senha'].valid && formLogin.controls['senha'].value != formLogin.controls['senhaVal'].value">
           As Senhas informadas são diferentes.
         </small>
-        <div class=" text-danger text-center p-4"
+        <div class=" text-danger text-center mb-2"
           *ngIf="formLogin.controls['senha'].value && formLogin.controls['senha'].invalid">
           <small>A senha deve ter no mínimo 8 caracteres.</small>
         </div>
 
       </form>
       <p>Já possui uma conta? <b class="link" (click)="logar()">Entrar</b></p>
-      <button mat-button class="p-4 mb-3" (click)="cadastrar()">Cadastrar</button>
+      <button mat-button class="p-4 mb-5" (click)="cadastrar()">Cadastrar</button>
     </div>
 
   </div>
