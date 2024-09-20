@@ -158,6 +158,12 @@
                       [(ngModel)]="cliente['telefone']">
                   </mat-form-field>
                 </div>
+                <div class="col-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Localização</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['localizacao']">
+                  </mat-form-field>
+                </div>
               </div>
               <div class="row justify-content-center">
                 <button [disabled]="!cliente.isValido()" class="btn btn-primary" type="button"
