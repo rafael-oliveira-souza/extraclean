@@ -19,7 +19,7 @@ export class AgendamentoConstantes {
     public static calcularTotal(metragem: number, isDetalhada: boolean, qtdDias: number = 1, porcentagemDesconto: number = 0,
         profissionalSelecionado: boolean = false, turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO): AgendamentoInfoDTO {
         const metragemInicial = 60;
-        const valorInicial = 110;
+        const valorInicial = 120;
         const maxMetroPorProf = 140;
         const aumentoACadaMetro = 12.5;
         const relacaoMetroValor = 10;
