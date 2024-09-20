@@ -1,4 +1,3 @@
-import { NumberUtils } from "../../utils/NumberUtils";
 import { AgendamentoInfoDTO } from "../dtos/AgendamentoInfoDTO";
 import { TurnoEnum } from "../enums/TurnoEnum";
 
@@ -23,7 +22,7 @@ export class AgendamentoConstantes {
         const maxMetroPorProf = 140;
         const aumentoACadaMetro = 12.5;
         const relacaoMetroValor = 10;
-        const valorMinimoPagoProfissional = 65;
+        const valorMinimoPagoProfissional = 60;
         const porcentagemProfissionalInicial = 65;
 
         let info: AgendamentoInfoDTO = new AgendamentoInfoDTO();
@@ -50,12 +49,12 @@ export class AgendamentoConstantes {
         info.valor *= qtdDias;
         info.valorProfissionais = ajusteValorPorcentagem;
         if (isDetalhada) {
-            info.valor += info.valorProfissionais;
+            info.valor = (info.valor + info.valorProfissionais);
             info.numProfissionais++;
         }
 
         if (profissionalSelecionado) {
-            info.valor += this.VALOR_PROFISSIONAL_SELECIONADO;
+            info.valor += this.VALOR_PROFISSIONAL_SELECIONADO * qtdDias;
         }
 
         info.desconto = this.aplicarDesconto(info.valor, porcentagemDesconto);

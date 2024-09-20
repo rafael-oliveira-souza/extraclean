@@ -71,11 +71,11 @@ export class PlanosComponent {
       this.planos.push(new PlanoDTO(0, "Diária", "Consiste em 1 diária expressa ou detalhada em data que o cliente definir.", 0, 1, 1));
     }
 
-    this.planos.push(new PlanoDTO(1, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 5, 2, 2));
-    this.planos.push(new PlanoDTO(2, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 10, 4, 4));
-    this.planos.push(new PlanoDTO(3, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 15, 12, 6));
-    this.planos.push(new PlanoDTO(4, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 20, 24, 6));
-    this.planos.push(new PlanoDTO(5, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 25, 48, 12));
+    this.planos.push(new PlanoDTO(1, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 3, 2, 2));
+    this.planos.push(new PlanoDTO(2, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 6, 4, 4));
+    this.planos.push(new PlanoDTO(3, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 9, 12, 6));
+    this.planos.push(new PlanoDTO(4, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 12, 24, 6));
+    this.planos.push(new PlanoDTO(5, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 15, 48, 12));
   }
 
   public calcularTotal(plano: PlanoDTO): AgendamentoInfoDTO {
