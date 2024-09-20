@@ -33,3 +33,7 @@ h3 {
     // color: $primary !important;
     background-color: $sub !important;
 }
+
+::ng-deep .mat-icon {
+    color: $primary !important;
+}
