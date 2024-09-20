@@ -145,7 +145,7 @@ export class AdminComponent implements OnInit {
         this.url = result.url;
         this.agendamento = new AgendamentoDTO();
         this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
-      }, (error) => this._notificacaoService.erro(error.error));
+      }, (error) => this._notificacaoService.erro(error));
   }
 
   public home() {
@@ -158,7 +158,8 @@ export class AdminComponent implements OnInit {
       .subscribe(cliente => {
         this._notificacaoService.alerta("Cliente Criado com sucesso.");
         this.cliente = new ClienteDTO();
-      }, (error) => this._notificacaoService.erro(error.error));
+        this._notificacaoService.alerta(MensagemEnum.CLIENTE_CRIADO_CONCLUIDO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
   }
 }
 
