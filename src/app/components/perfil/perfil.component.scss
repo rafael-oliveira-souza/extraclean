@@ -1,0 +1,29 @@
+@import '../../../color.scss';
+
+h2 {
+    color: $laranja;
+}
+
+
+.imgPerfil {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+}
+
+::ng-deep .mdc-button:hover {
+    color: $primary !important;
+    background-color: $white !important;
+    border: 1px solid $primary ;
+}
+
+::ng-deep .mdc-button {
+    cursor: pointer;
+    color: $white !important;
+    background-color: $primary !important;
+}
+
+::ng-deep .mat-icon {
+    color: $primary !important;
+    cursor: pointer;
+}

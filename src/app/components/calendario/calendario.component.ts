@@ -21,13 +21,32 @@ import { MatButtonModule } from '@angular/material/button';
 import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
-import { DiaristaService } from '../../services/diarista.service';
+import { CalculoUtils } from '../../utils/CalculoUtils';
+import { ProfissionalService } from '../../services/profissional.service';
+import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
+import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
+import { ProfissionalComponent } from '../profissional/profissional.component';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
 
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-calendario',
   standalone: true,
-  providers: [],
+  providers: [
+    provideMomentDateAdapter(MY_FORMATS),
+  ],
   imports: [
     FormsModule,
     ReactiveFormsModule,
@@ -40,7 +59,8 @@ import { DiaristaService } from '../../services/diarista.service';
     CommonModule,
     PipeModule,
     MatIconModule,
-    LegendaComponent
+    LegendaComponent,
+    ProfissionalComponent
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   templateUrl: './calendario.component.html',
@@ -93,7 +113,7 @@ export class CalendarioComponent {
   public corIndisponivel: CorEnum = CorEnum.laranja;
   public corPrincipal: CorEnum = CorEnum.primary;
 
-  constructor(private _changes: ChangeDetectorRef, private _diaristaService: DiaristaService) {
+  constructor(private _changes: ChangeDetectorRef, private _diaristaService: ProfissionalService) {
     this.calcular();
   }
 
@@ -114,7 +134,13 @@ export class CalendarioComponent {
     this._changes.detectChanges();
   }
 
-  public atualizarDiasSelecionados() {
+  public atualizarDiasSelecionados(updateAll: boolean = false) {
+    this.atualizarDias();
+    this.atualizarProfissional();
+    this.emitirDadosAgendamento();
+  }
+
+  public atualizarDias() {
     const diasMes = DateUtils.datesInMonth(this.diaSelecionado.value);
     diasMes.forEach(dia => {
       const diaFormatado = this.getDiaFormatado(dia);
@@ -128,8 +154,6 @@ export class CalendarioComponent {
         inputData?.setAttribute(this.ATTR_SELECTED, "false");
       }
     });
-    this.atualizarProfissional();
-    this.emitirDadosAgendamento();
   }
 
   public atualizarDiasDisponiveisProfissional() {
@@ -171,22 +195,30 @@ export class CalendarioComponent {
     const diasSelecionados = Array.from(this.diasAgendados.values());
     const agendamento = new AgendamentoDTO();
     agendamento.desconto = NumberUtils.arredondarCasasDecimais(this.desconto, 2);
-    agendamento.total = NumberUtils.arredondarCasasDecimais(this.valorTotal, 2);
-    agendamento.valor = NumberUtils.arredondarCasasDecimais(agendamento.total + agendamento.desconto, 2);
+    agendamento.valor = NumberUtils.arredondarCasasDecimais(this.valorTotal, 2);
     agendamento.diasSelecionados = diasSelecionados;
     agendamento.metragem = this.metragem;
-    agendamento.profissionalSelecionado = this.profissionalSelecionado;
+    agendamento.profissionais = [this.profissionalSelecionado];
     agendamento.turno = this.turno;
     agendamento.dataHora = new Date();
-    agendamento.cliente = "extraclean@email.com";
+    agendamento.email = LocalStorageUtils.getAuth()?.username;
+    agendamento.extraPlus = !ProfissionalDTO.isEmpty(this.profissionalSelecionado);
+    agendamento.origem = OrigemPagamentoEnum.AGENDAMENTO;
+    agendamento.ignoreQtdProfissionais = false;
 
     this.getDadosAgendamento.emit(agendamento);
   }
 
   public habilitarData(inputData: HTMLElement, dia: MomentInput) {
+
     if (dia) {
-      inputData.id = this.gerarIdElementoCalendarioDiario(dia);
-      inputData.setAttribute(this.ATTR_DISABLED, "false");
+      if (DateUtils.isSameOrBefore(dia, new Date())) {
+        inputData.setAttribute(this.ATTR_DISABLED, "true");
+        inputData.setAttribute(this.ATTR_SELECTED, "false");
+      } else {
+        inputData.id = this.gerarIdElementoCalendarioDiario(dia);
+        inputData.setAttribute(this.ATTR_DISABLED, "false");
+      }
     } else {
       inputData.id = "idBlockedDay";
       inputData.setAttribute(this.ATTR_DISABLED, "true");
@@ -208,8 +240,8 @@ export class CalendarioComponent {
   }
 
   public adicionarDataVazia() {
-    let primeiroDia: number = DateUtils.toDate(this.diasCalendario[0]).day();
-    let ultimoDia: number = DateUtils.toDate(this.diasCalendario[this.diasCalendario.length - 1]).day();
+    let primeiroDia: number = DateUtils.toMoment(this.diasCalendario[0]).day();
+    let ultimoDia: number = DateUtils.toMoment(this.diasCalendario[this.diasCalendario.length - 1]).day();
     while (primeiroDia > 0) {
       this.diasCalendario.unshift(null);
       primeiroDia--;
@@ -226,7 +258,7 @@ export class CalendarioComponent {
       const newDate = DateUtils.subtract(this.diaSelecionado.value, 1, 'month');
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
-      this.atualizarDiasSelecionados();
+      this.atualizarDiasSelecionados(false);
     }
   }
 
@@ -235,7 +267,7 @@ export class CalendarioComponent {
       const newDate = DateUtils.add(this.diaSelecionado.value, 1, 'month');
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
-      this.atualizarDiasSelecionados();
+      this.atualizarDiasSelecionados(false);
     }
   }
 
@@ -253,14 +285,16 @@ export class CalendarioComponent {
   }
 
   public calcular() {
+    this.valorTotal = 0;
+    this.desconto = 0;
+
     const qtdDias = this.getQtdDias();
-    const profSelecionado = this.profissionalSelecionado != 0;
-    const porcentagem = qtdDias * AgendamentoConstantes.PERCENTUAL_DESCONTO;
-    this.valorTotal = AgendamentoConstantes.calcularTotal(
-      this.valorMetro, this.metragem, qtdDias,
-      porcentagem, profSelecionado, this.isDetalhada,
-      this.turno
-    );
+    const porcentagemDesconto = AgendamentoConstantes.calcularPorcentagemDias(qtdDias);
+    let agendamento: AgendamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada, qtdDias,
+      porcentagemDesconto, this.profissionalSelecionado != 0, this.turno);
+
+    this.desconto = agendamento.desconto;
+    this.valorTotal = agendamento.total;
 
     this.emitirDadosAgendamento();
     return this.valorTotal;
@@ -278,17 +312,17 @@ export class CalendarioComponent {
       this.profissionais.forEach(prof => {
         if (this.profissionalSelecionado == prof.id) {
           this.profissional = prof;
-          const data = DateUtils.toDate(this.diaSelecionado.value).toDate();
+          const data = DateUtils.toMoment(this.diaSelecionado.value).toDate();
           this._diaristaService.recuperarDiariasPorProfissional(prof.id, this.turno, data)
             .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
               this.diasAgendadosProfissional = agendamentos.map(agend =>
-                new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME)
-                  .toDate(), agend.turno));
+                new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME), agend.turno));
               this.atualizarDiasDisponiveisProfissional();
             })
         }
       });
     }
+    // this.limparDiasSelecionados();
     this.calcular();
   }
 
@@ -298,10 +332,19 @@ export class CalendarioComponent {
 
   public limparDiasSelecionados() {
     this.diasAgendados.clear();
-    this.atualizarDiasSelecionados();
+    this.atualizarDias();
   }
 
   private getDiaFormatado(diaSelecionado: MomentInput) {
     return DateUtils.format(diaSelecionado, "yyyy_MM_DD");
+  }
+
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isLessThan(documentWidth, 900);
+    }
+
+    return false;
   }
 }

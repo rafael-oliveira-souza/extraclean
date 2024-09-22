@@ -1,22 +1,29 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, inject } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, inject, Input, Output } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PlanoDTO } from '../../domains/dtos/PlanoDTO';
 import { MatIconModule } from '@angular/material/icon';
 import { PipeModule } from '../../pipes/pipe.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDialog } from '@angular/material/dialog';
-import { ContratacaoComponent } from './contratacao/contratacao.component';
 import { DialogModule } from '@angular/cdk/dialog';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { TurnoEnum } from '../../domains/enums/TurnoEnum';
-import { Router } from '@angular/router';
-import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
-import { Rota } from '../../app.routes';
 import { PagamentoComponent } from '../../components/pagamento/pagamento.component';
+import { PagamentoDTO } from '../../domains/dtos/PagamentoDTO';
+import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
+import { NotificacaoService } from '../../services/notificacao.service';
+import { PlanoService } from '../../services/plano.service';
+import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
+import { AutenticacaoService } from '../../services/autenticacao.service';
+import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
+import { DateUtils } from '../../utils/DateUtils';
+import { TipoPlanoEnum } from '../../domains/enums/TipoPlanoEnum';
 
 @Component({
   selector: 'app-planos',
@@ -38,95 +45,144 @@ import { PagamentoComponent } from '../../components/pagamento/pagamento.compone
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanosComponent {
+
+  @Input("agendamento")
+  public agendamento: AgendamentoDTO = new AgendamentoDTO();
+
+  @Output()
+  public getUrl: EventEmitter<string> = new EventEmitter();
+
+  public static readonly PLANOS: PlanoDTO[] = [
+    new PlanoDTO(TipoPlanoEnum.SEMANAL, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 3, 2, 2),
+    new PlanoDTO(TipoPlanoEnum.MENSAL, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 6, 4, 4),
+    new PlanoDTO(TipoPlanoEnum.TRIMESTAL, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 9, 12, 6),
+    new PlanoDTO(TipoPlanoEnum.SEMESTRAL, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 12, 24, 6),
+    new PlanoDTO(TipoPlanoEnum.ANUAL, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 15, 48, 12)
+  ];
+
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public planos: Array<PlanoDTO> = [];
-  public planoPlus: boolean = false;
-  public metragem!: number;
-  public profissionalSelecionado: boolean = false;
-  public planoSelecionado!: string;
+  public pagamento: PagamentoDTO = new PagamentoDTO();
+  public agendamentoInfo: AgendamentoInfoDTO = new AgendamentoInfoDTO();
+  public planoSelecionado: PlanoDTO | null = null;
+  public urlPagamento: string | null = null;
+  public isAdmin: boolean = false;
 
-  constructor(private _router: Router, private dialog: MatDialog) {
-    // this.planos.push(new PlanoDTO("Diário", "Plano Meu lar", 99));
-    this.planos.push(new PlanoDTO("Semanal", "Consiste em 2 diárias expressas em datas que o cliente definir.", 1.9, 2));
-    this.planos.push(new PlanoDTO("Mensal", "Consiste em 4 diárias expressas em datas que o cliente definir", 1.8, 4));
-    this.planos.push(new PlanoDTO("Trimestal", "Consiste em 12 diárias expressas em datas que o cliente definir", 1.7, 12));
-    this.planos.push(new PlanoDTO("Semestral", "Consiste em 24 diárias expressas em datas que o cliente definir", 1.6, 24));
-    this.planos.push(new PlanoDTO("Anual", "Consiste em 48 diárias expressas em datas que o cliente definir", 1.5, 48));
+  constructor(private planoService: PlanoService,
+    private authService: AutenticacaoService,
+    private notification: NotificacaoService,
+    private _agendamentoService: AgendamentoService,
+    private dialog: MatDialog) {
+
+    if (this.authService.isAdminLoggedIn()) {
+      this.isAdmin = true;
+      this.planos.push(new PlanoDTO(0, "Diária", "Consiste em 1 diária expressa ou detalhada em data que o cliente definir.", 0, 1, 1));
+    }
+
+    PlanosComponent.PLANOS.forEach(plano => this.planos.push(plano));
   }
 
-  public abrirContratacao(plano: PlanoDTO) {
-    const documentWidth = document.documentElement.clientWidth;
-    const documentHeight = document.documentElement.clientHeight;
-    let dialogRef = this.dialog.open(ContratacaoComponent, {
-      minWidth: `${documentWidth * 0.4}px`,
-      maxWidth: `${documentWidth * 0.8}px`,
-      minHeight: `${documentHeight * 0.2}px`,
-      maxHeight: `${documentHeight * 0.8}px`,
-      data: plano
-    });
-  }
+  public calcularTotal(plano: PlanoDTO): AgendamentoInfoDTO {
+    if (!this.pagamento.metragem) {
+      return new AgendamentoInfoDTO();
+    }
 
-  public calcularTotal(plano: PlanoDTO) {
-    const porcentagem = 0;
-    if (!this.metragem) {
-      return 0;
+    if (this.pagamento.metragem < 0) {
+      this.pagamento.metragem = 0;
     }
 
     return AgendamentoConstantes.calcularTotal(
-      plano.valorMetro, this.metragem, plano.qtdDias,
-      porcentagem, this.profissionalSelecionado, false,
-      TurnoEnum.NAO_DEFINIDO);
+      this.pagamento.metragem, this.pagamento.isDetalhada, plano.qtdDias, plano.desconto, this.pagamento.extraPlus);
   }
 
-  public calcularDesconto(plano: PlanoDTO) {
-    const porcentagem = 0;
-    if (!this.metragem) {
-      return 0;
-    }
-
-    const valorComDesconto = this.calcularTotal(plano);
-    const valorOriginal = AgendamentoConstantes.calcularTotal(
-      AgendamentoConstantes.VALOR_PADRAO_METRO, this.metragem, plano.qtdDias,
-      porcentagem, this.profissionalSelecionado, false,
-      TurnoEnum.NAO_DEFINIDO);
-
-    return valorOriginal - valorComDesconto;
+  public selecionarPlano() {
+    this.planos.forEach(plano => {
+      if (this.pagamento.tipoPlano == plano.id) {
+        this.planoSelecionado = plano;
+        this.atualizarValores(plano);
+      }
+    });
   }
 
-  public calcularDiaria(plano: PlanoDTO) {
-    if (!this.metragem) {
-      return 0;
+  public atualizarValores(plano: PlanoDTO) {
+    if (!this.pagamento.metragem) {
+      this.agendamentoInfo = new AgendamentoInfoDTO();
+      return;
     }
 
-    const valorComDesconto = this.calcularTotal(plano);
-    return valorComDesconto / plano.qtdDias;
+    this.agendamentoInfo = this.calcularTotal(plano);
+  }
+
+
+  public agendar(plano: PlanoDTO) {
+    const email: string | undefined = this.authService.validarUsuario(true, true);
+    if (!email) {
+      return;
+    }
+
+    let dadosAgendamento: AgendamentoDTO = new AgendamentoDTO();
+    dadosAgendamento.endereco = this.agendamento.endereco;
+    dadosAgendamento.dataHora = new Date();
+    dadosAgendamento.desconto = this.agendamentoInfo.desconto;
+    dadosAgendamento.valor = this.agendamentoInfo.valor;
+    dadosAgendamento.metragem = this.pagamento.metragem;
+    dadosAgendamento.email = this.agendamento.email;
+    dadosAgendamento.extraPlus = this.pagamento.extraPlus;
+    dadosAgendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora, 'yyyy-MM-dd')];
+    dadosAgendamento.origem = OrigemPagamentoEnum.AGENDAMENTO;
+    dadosAgendamento.quantidadeItens = 1;
+    dadosAgendamento.profissionais = this.agendamento.profissionais;
+    dadosAgendamento.isDetalhada = this.pagamento.isDetalhada;
+    dadosAgendamento.qtdParcelas = plano.qtdParcelas;
+    dadosAgendamento.turno = this.agendamento.turno;
+    dadosAgendamento.tipoLimpeza = this.pagamento.isDetalhada ? TipoLimpezaEnum.DETALHADA : TipoLimpezaEnum.EXPRESSA;
+    this._agendamentoService.agendar(dadosAgendamento)
+      .subscribe((result: PagamentoMpDTO) => {
+        this.urlPagamento = result.url;
+        window.open(result['url'], '_blank');
+        this.getUrl.emit(result.url);
+        this.notification.alerta("Agendamento realizado com sucesso. O seu agendamento será efetivado após o pagamento!");
+      }, (error) => this.notification.erro(error));
   }
 
   public comprar(plano: PlanoDTO) {
-    if (!this.isUserNaoLogado()) {
-      // this._router.navigate([Rota.LOGIN]);
-    } else {
-      // this.calcularTotal(plano);
-      // this._router.navigate([Rota.PAGAMENTO]);
-
-      const documentWidth = document.documentElement.clientWidth;
-      const documentHeight = document.documentElement.clientHeight;
-      let dialogRef = this.dialog.open(PagamentoComponent, {
-        minWidth: `${documentWidth * 0.8}px`,
-        maxWidth: `${documentWidth * 0.9}px`,
-        minHeight: `90vh`,
-        maxHeight: `100vh`,
-      });
-
-      dialogRef.afterClosed().subscribe(logout => {
-      })
+    const email: string | undefined = this.authService.validarUsuario(false, true);
+    if (!email) {
+      return;
     }
-  }
 
-  private isUserNaoLogado(): boolean {
-    const userMail: string | null = LocalStorageUtils.getUsuario();
-    return !userMail;
+    const agendamento: AgendamentoInfoDTO = this.calcularTotal(plano);
+    plano.dataHora = new Date();
+    plano.valor = agendamento.valor;
+    plano.desconto = agendamento.desconto;
+    plano.quantidadeItens = 1;
+    plano.qtdParcelas = plano.qtdParcelas;
+    plano.tipoLimpeza = plano.isDetalhada ? TipoLimpezaEnum.DETALHADA : TipoLimpezaEnum.EXPRESSA;
+    plano.email = email ? email : "";
+    plano.origem = OrigemPagamentoEnum.PLANO;
+    plano.extraPlus = plano.extraPlus;
+    plano.tipoPlano = plano.id;
+    this.planoService.criar(plano)
+      .subscribe((pag: PagamentoMpDTO) => {
+        this.urlPagamento = pag.url;
+        this.getUrl.emit(pag.url);
+        this.notification.alerta("Plano solicitado com sucesso. O seu plano será efetivado após o pagamento!");
+        const documentWidth = document.documentElement.clientWidth;
+        const documentHeigth = document.documentElement.clientHeight;
+        window.open(pag['url'], '_blank');
+        // this.dialog.open(PagamentoComponent, {
+        //   minWidth: `${documentWidth * 0.8}px`,
+        //   maxWidth: `${documentWidth * 0.9}px`,
+        //   minHeight: `${documentHeigth * 0.9}px`,
+        //   maxHeight: `${documentHeigth * 0.95}px`,
+        //   data: {
+        //     email: email,
+        //     data: { pagamento: this.pagamento, url: pag.url }
+        //   }
+        // });
+      }, (error) => {
+        this.notification.erro(error);
+      });
   }
-
 }

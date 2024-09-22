@@ -12,4 +12,5 @@ export class EnderecoDTO {
     gia: string = "";
     ddd: string = "";
     siafi: string = "";
+    valido: boolean = false;
 }

@@ -1,5 +1,6 @@
 export const environment = {
     production: false,
-    apiUrl: 'http://localhost:8080',
-    token: 'APP_USR-f33e43a0-2c60-4507-b2b1-4a874e1ef96a',
+    email: 'extracleanlimpezaprofissional@gmail.com',
+    // apiUrl: 'https://extraclean-b5d0e43574c6.herokuapp.com',
+    apiUrl: 'http://localhost:8080'
 };

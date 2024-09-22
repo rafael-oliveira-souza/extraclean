@@ -10,15 +10,18 @@ import 'moment/locale/pt-br';
 import localePt from '@angular/common/locales/pt';
 import { ImageComponent } from './components/image/image.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from './interceptors/AuthInterceptor';
+import { LoadingComponent } from './components/loading/loading.component';
 
 registerLocaleData(localePt);
 
 export const MY_FORMATS = {
   parse: {
-    dateInput: 'MM/YYYY',
+    dateInput: 'DD/MM/YYYY',
   },
   display: {
-    dateInput: 'MM/YYYY',
+    dateInput: 'DD/MM/YYYY',
     monthYearLabel: 'MMM YYYY',
     dateA11yLabel: 'LL',
     monthYearA11yLabel: 'MMMM YYYY',
@@ -45,6 +48,7 @@ export const MY_FORMATS = {
   imports: [
     RouterOutlet,
     ImageComponent,
+    LoadingComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss'

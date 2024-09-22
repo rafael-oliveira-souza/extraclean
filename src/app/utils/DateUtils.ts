@@ -30,8 +30,8 @@ export class DateUtils {
         return this.toMoment(date).format(format.toString());
     }
 
-    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): moment.Moment {
-        return this.toMoment(date, format);
+    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
+        return this.toMoment(date, format).toDate();
     }
 
     public static subtract(date: MomentInput, amount: number | string, unit: DurationInputArg2): moment.Moment {
@@ -42,27 +42,47 @@ export class DateUtils {
         return this.toMoment(date).add(amount, unit);
     }
 
-    public static between(date: MomentInput, dateA: MomentInput, dateB: MomentInput, inclusivity?: InclusividadeEnum): boolean {
+    public static between(date: MomentInput, dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification, inclusivity?: InclusividadeEnum): boolean {
+        if (format) {
+            return this.toMoment(date, format).isBetween(this.toMoment(dateA, format), this.toMoment(dateB, format));
+        }
         return this.toMoment(date).isBetween(dateA, dateB, null, inclusivity);
     }
 
-    public static isBefore(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isBefore(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isBefore(this.toMoment(dateB, format));
+        }
+
         return this.toMoment(dateA).isBefore(dateB);
     }
 
-    public static isSame(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isSame(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isSame(this.toMoment(dateB, format));
+        }
+
         return this.toMoment(dateA).isSame(dateB);
     }
 
-    public static isAfter(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isAfter(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isAfter(this.toMoment(dateB, format));
+        }
         return this.toMoment(dateA).isAfter(dateB);
     }
 
-    public static isSameOrAfter(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isSameOrAfter(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isSameOrAfter(this.toMoment(dateB, format));
+        }
         return this.toMoment(dateA).isSameOrAfter(dateB);
     }
 
-    public static isSameOrBefore(dateA: MomentInput, dateB: MomentInput): boolean {
+    public static isSameOrBefore(dateA: MomentInput, dateB: MomentInput, format?: moment.MomentFormatSpecification): boolean {
+        if (format) {
+            return this.toMoment(dateA, format).isSameOrBefore(this.toMoment(dateB, format));
+        }
         return this.toMoment(dateA).isSameOrBefore(dateB);
     }
 
@@ -72,10 +92,28 @@ export class DateUtils {
         let datesInMonth: Array<Date> = [];
 
         for (let i = 1; i <= daysInMonth; i++) {
-            const day: Date = this.toMoment().date(i).month(date.month()).year(date.year()).toDate();
+            let day: Date = this.toMoment().date(i).month(date.month()).year(date.year()).toDate();
+            if (i - daysInMonth == 0) {
+                day = this.toMoment().date(0).month(date.month()).year(date.year()).toDate();
+            }
+
             datesInMonth.push(day);
+
         }
 
         return datesInMonth;
     }
+
+    public static startOfDay(dateA: MomentInput): MomentInput {
+        return this.toMoment(dateA).startOf('day');
+    }
+
+    public static endOfDay(dateA: MomentInput): MomentInput {
+        return this.toMoment(dateA).endOf('day');
+    }
+    public static diffMinutes(dateA: MomentInput, dateB: MomentInput): number {
+        const diffInMs = this.toDate(dateA).getTime() - this.toDate(dateB).getTime(); // Diferença em milissegundos
+        return Math.floor(diffInMs / (1000 * 60))
+    }
+
 }

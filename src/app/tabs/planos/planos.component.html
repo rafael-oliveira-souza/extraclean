@@ -4,52 +4,63 @@
             <mat-label>
                 <mat-icon class="cor-padrao" aria-hidden="false" aria-label="Planos" fontIcon="bolt"></mat-icon>Escolha
                 um Plano</mat-label>
-            <select matNativeControl [(ngModel)]="planoSelecionado">
-                <option *ngFor="let plano of planos;" [value]="plano.nome">{{plano.nome}}</option>
+            <select matNativeControl [(ngModel)]="pagamento.tipoPlano" (ngModelChange)="selecionarPlano()">
+                <option *ngFor="let plano of planos;" [value]="plano.id">{{plano.nome}}</option>
             </select>
         </mat-form-field>
     </div>
-    <div *ngIf="planoSelecionado" class="mt-3 container-fluid row justify-content-start">
-        <div class="col-12  mt-2" *ngFor="let plano of planos;">
-            <div *ngIf="planoSelecionado == plano.nome" class="p-4 clip-path-rectangle">
+    <div *ngIf="pagamento.tipoPlano" class="mt-3 row justify-content-start">
+        <div class="col-12  mt-2">
+            <div *ngIf="planoSelecionado" class="p-4 clip-path-rectangle">
                 <h4 class="cor-azul">
                     <mat-icon class="cor-branca" aria-hidden="false" aria-label="Planos"
-                        fontIcon="bolt"></mat-icon>{{plano.nome}}
+                        fontIcon="bolt"></mat-icon>{{planoSelecionado.nome}}
                 </h4>
                 <br>
-                <small>{{plano.descricao}}</small>
+                <small>{{planoSelecionado.descricao}}</small>
                 <br><br>
                 <mat-form-field class="col-12 ">
                     <mat-label>Metragem (m²)</mat-label>
-                    <input type="number" matInput autocomplete="off" [(ngModel)]="metragem">
+                    <input type="number" matInput autocomplete="off" [(ngModel)]="pagamento.metragem"
+                        (ngModelChange)="atualizarValores(planoSelecionado)">
                 </mat-form-field>
                 <section class="example-section">
-                    <mat-checkbox [(ngModel)]="profissionalSelecionado">EXTRA PLUS</mat-checkbox> <br>
-                    <small style="margin-left: 20px;" class=" font-italic text-secondary">
+                    <mat-checkbox [(ngModel)]="pagamento.isDetalhada"
+                        (ngModelChange)="atualizarValores(planoSelecionado)">DETALHADA</mat-checkbox> <br>
+                </section>
+                <section class="example-section">
+                    <mat-checkbox [(ngModel)]="pagamento.extraPlus"
+                        (ngModelChange)="atualizarValores(planoSelecionado)">EXTRA
+                        PLUS</mat-checkbox> <br>
+                    <small style="margin-left: 20px;" class="text-white font-italic text-secondary">
                         Ao adicionar o EXTRA PLUS é possível selecionar o profissional que irá realizar as diárias.
                     </small>
                 </section>
                 <br><br>
                 <div>
-                    <small class="cor-branca">Valor por Metro : {{plano.valorMetro | moeda}}</small><br>
+                    <!-- <small class="cor-branca">Valor por Metro : {{planoSelecionado.valorMetro | moeda}}</small><br> -->
                     <small class="cor-branca">Valor de Deslocamento : {{VALOR_DESLOCAMENTO | moeda}}</small><br>
-                    <small *ngIf="profissionalSelecionado" class="cor-branca">Valor Extra Plus :
+                    <small *ngIf="pagamento.extraPlus" class="cor-branca">Valor Extra Plus :
                         {{VALOR_PROFISSIONAL_SELECIONADO | moeda}}</small><br>
                     <br><br>
                 </div>
-                <div *ngIf="metragem">
-                    <small class="cor-branca">Valor Total : {{calcularTotal(plano) | moeda}}</small><br>
-                    <small class="cor-branca">Valor Desconto : {{calcularDesconto(plano) | moeda}}</small><br>
-                    <small class="cor-branca">Valor por Diária : {{calcularDiaria(plano) | moeda}}</small><br>
-                    <small class="cor-branca">Valor Total de Deslocamento : {{VALOR_DESLOCAMENTO * plano.qtdDias|
+                <div *ngIf="pagamento.metragem">
+                    <small class="cor-branca">Valor Total : {{agendamentoInfo.total| moeda}}</small><br>
+                    <small class="cor-branca">Valor Diária : {{agendamentoInfo.valor| moeda}}</small><br>
+                    <small class="cor-branca">Valor Desconto : {{agendamentoInfo.desconto | moeda}}</small><br>
+                    <small class="cor-branca">Valor por Diária : {{agendamentoInfo.valor / planoSelecionado.qtdDias |
                         moeda}}</small><br>
-                    <small *ngIf="profissionalSelecionado" class="cor-branca">Valor Total Extra Plus :
-                        {{VALOR_PROFISSIONAL_SELECIONADO * plano.qtdDias|
+                    <!-- <small class="cor-branca">Valor Total de Deslocamento : {{VALOR_DESLOCAMENTO * planoSelecionado.qtdDias|
+                        moeda}}</small><br> -->
+                    <small *ngIf="pagamento.extraPlus" class="cor-branca">Valor Total Extra Plus :
+                        {{VALOR_PROFISSIONAL_SELECIONADO * planoSelecionado.qtdDias|
                         moeda}}</small><br>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <button [disabled]="!metragem" mat-button class="mt-3 p-4 mb-3"
-                        (click)="comprar(plano)">Selecionar</button>
+                    <button  [disabled]="!pagamento.metragem" mat-button class="mt-3 p-4 mb-3"
+                        (click)="comprar(planoSelecionado)">Selecionar</button>
+                    <!-- <button *ngIf="isAdmin" [disabled]="!pagamento.metragem" mat-button class="mt-3 p-4 mb-3"
+                        (click)="agendar(planoSelecionado)">Agendar</button> -->
                 </div>
             </div>
         </div>

@@ -14,9 +14,15 @@ import { ScrollComponent } from '../../components/scroll/scroll.component';
 import { PerfilComponent } from '../../components/perfil/perfil.component';
 import { MatDialog } from '@angular/material/dialog';
 import { ComponentType } from '@angular/cdk/overlay';
-import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Rota } from '../../app.routes';
+import { AutenticacaoService } from '../../services/autenticacao.service';
+import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
+import { ClienteService } from '../../services/cliente.service';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { HistoricoAgendamentoComponent } from '../../components/historico-agendamento/historico-agendamento.component';
+import { HistoricoAgendamentoDTO } from '../../domains/dtos/HistoricoAgendamentoDTO';
+import { NotificacaoService } from '../../services/notificacao.service';
 
 @Component({
   selector: 'app-menu',
@@ -50,7 +56,13 @@ export class MenuComponent {
   public selectedMenu: MenuDTO = this.menus[0];
   public selectedIndex: number = 1;
 
+  public cliente: ClienteDTO | null = null;
+
   constructor(private dialog: MatDialog,
+    public authService: AutenticacaoService,
+    private _agendamentoService: AgendamentoService,
+    private _notificacaoService: NotificacaoService,
+    private _clienteService: ClienteService,
     private _router: Router,
     private route: ActivatedRoute) { }
 
@@ -69,22 +81,23 @@ export class MenuComponent {
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (this.isUserNaoLogado()) {
+    if (this.authService.isLoggedIn()) {
       this.logout();
     }
   }
 
-  private isUserNaoLogado(): boolean {
-    const userMail: string | null = LocalStorageUtils.getUsuario();
-    return !userMail;
+  login(): void {
+    this._router.navigate([Rota.LOGIN]);
   }
 
   public contratar() {
-    if (this.isUserNaoLogado()) {
-      this._router.navigate([Rota.LOGIN]);
-    } else {
-      this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
+    const email: string | undefined = this.authService.validarUsuario(false, true);
+    if (!email) {
+      return;
     }
+
+    this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
+    return;
   }
 
   public updateSelectedMenu(): void {
@@ -115,31 +128,68 @@ export class MenuComponent {
     return (menu.index == 3 && this.isXs() ? 'Agende!' : menu.label);
   }
 
-  public abrirPaginaMenu(componentName: string) {
-    let component: ComponentType<any> = PerfilComponent;
-    if (typeof document !== 'undefined') {
-      if (componentName == 'perfil') {
-        component = PerfilComponent;
-      }
+  public abrirHistoricoAgendamento() {
+    const email: string | null = this.authService.getUsuarioAutenticado();
+    if (email == null) {
+      this._router.navigate([Rota.LOGIN]);
+      return;
+    }
 
-      const documentWidth = document.documentElement.clientWidth;
-      const documentHeight = document.documentElement.clientHeight;
-      let dialogRef = this.dialog.open(component, {
-        minWidth: `${documentWidth * 0.8}px`,
-        maxWidth: `${documentWidth * 0.9}px`,
-        minHeight: `${documentHeight * 0.8}px`,
-        maxHeight: `${documentHeight * 0.8}px`,
+    this._agendamentoService.recuperarHistorico(email)
+      .subscribe((agendamentos: HistoricoAgendamentoDTO[]) => {
+        this.abrirPagina(HistoricoAgendamentoComponent, agendamentos, email);
+      }, (error: any) => {
+        this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
       });
+  }
 
-      dialogRef.afterClosed().subscribe(logout => {
-        if (logout) {
-          this.logout();
-        }
-      })
+  public abrirAdministrador() {
+    if (this.authService.isAdminLoggedIn()) {
+      this._router.navigate([Rota.ADMIN]);
     }
   }
 
+  public abrirPerfil() {
+    this.authService.validarUsuario(true, true);
+  }
+
+  public abrirPagina(component: ComponentType<any>, data: any, email: string) {
+    let dialogRef;
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      const documentHeigth = document.documentElement.clientHeight;
+      dialogRef = this.dialog.open(component, {
+        minWidth: `${documentWidth * 0.8}px`,
+        maxWidth: `${documentWidth * 0.9}px`,
+        minHeight: `${documentHeigth * 0.9}px`,
+        maxHeight: `${documentHeigth * 0.95}px`,
+        data: {
+          email: email,
+          data: data
+        }
+      });
+    } else {
+      dialogRef = this.dialog.open(component, {
+        minWidth: `90%`,
+        maxWidth: `100%`,
+        minHeight: '90%',
+        maxHeight: '100%',
+        data: {
+          email: email,
+          data: data
+        }
+      });
+
+    }
+
+    dialogRef.afterClosed().subscribe(logout => {
+      if (logout) {
+        this.logout();
+      }
+    });
+  }
+
   public logout() {
-    LocalStorageUtils.clear();
+    this.authService.logout();
   }
 }

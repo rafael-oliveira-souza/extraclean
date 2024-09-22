@@ -1,24 +1,20 @@
 import { MomentInput } from "moment";
-import { ProfissionalDTO } from "./ProfissionalDTO";
+import { PagamentoDTO } from "./PagamentoDTO";
 
-export class AgendamentoDTO {
+export class AgendamentoDTO extends PagamentoDTO {
     turno: number = 0;
-    metragem: number = 0;
-    desconto: number = 0;
-    total: number = 0;
-    valor: number = 0;
     diasSelecionados: MomentInput[] = [];
-    profissionalSelecionado: number = 0;
-    tipoLimpeza: string = "";
-    endereco: string = "";
-    dataHora!: Date;
-    cliente: string = "";
+    profissionais: number[] = [];
+    endereco!: string;
+    ignoreQtdProfissionais: boolean = false;
+    enviarEmail: boolean = false;
+    gerarPagamento: boolean = true;
 
     public getQtdDias() {
-        return this.diasSelecionados.length;
+        return this.diasSelecionados ? this.diasSelecionados.length : 0;
     }
 
     public isSemAgendamento() {
-        return this.diasSelecionados.length <= 0;
+        return this.diasSelecionados ? this.diasSelecionados.length <= 0 : false;
     }
 }

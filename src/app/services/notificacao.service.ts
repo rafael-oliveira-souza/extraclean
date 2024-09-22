@@ -21,6 +21,9 @@ export class NotificacaoService {
   }
 
   public erro(msg: any) {
-    this._snackBar.open(msg, "", this.config);
+    let error = msg['error']['message'];
+    error = error ? error : msg['error'];
+    error = error ? error : msg;
+    this._snackBar.open(error, "", this.config);
   }
 }

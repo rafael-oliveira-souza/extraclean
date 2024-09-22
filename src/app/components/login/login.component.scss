@@ -1,12 +1,22 @@
 @import '../../../color.scss';
 
 .card-login {
-    // max-height: 60vh;
-    max-width: 100%;
+    max-height: 95vh;
+    margin-top: 50px;
     background-color: $primary;
-    border: 5px solid;
+    // border: 5px solid;
     border-radius: 30px;
     text-align: center;
+}
+
+img {
+    cursor: pointer;
+}
+
+.fullbg {
+    height: 100vh;
+    width: 100%;
+    background-color: $primary;
 }
 
 p {
@@ -18,7 +28,12 @@ p {
     background-color: $white !important;
 }
 
-::ng-deep .mat-mdc-button-disabled {
+::ng-deep .mdc-button:disabled {
+    // color: $primary !important;
+    background-color: $sub !important;
+}
+
+
+::ng-deep .mat-icon {
     color: $primary !important;
-    background-color: $cinza !important;
 }

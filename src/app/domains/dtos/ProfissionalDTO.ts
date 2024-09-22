@@ -24,4 +24,8 @@ export class ProfissionalDTO {
     public static empty(): ProfissionalDTO {
         return new ProfissionalDTO(0, "");
     }
+
+    public static isEmpty(id: number): boolean {
+        return this.empty().id == id;
+    }
 }

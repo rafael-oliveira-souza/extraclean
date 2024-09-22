@@ -10,7 +10,8 @@ import { Rota } from '../../app.routes';
 import { UsuarioService } from '../../services/usuario.service';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
-import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
+import { AutenticacaoService } from '../../services/autenticacao.service';
+import { CalculoUtils } from '../../utils/CalculoUtils';
 
 @Component({
   selector: 'app-login',
@@ -30,35 +31,60 @@ import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 export class LoginComponent implements OnInit {
   public formLogin!: FormGroup;
   public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
+  public bg: string = "fullbg";
+  public showBooleanSenha: boolean = false;
 
   constructor(private _formBuilder: FormBuilder,
     private _router: Router,
     private _usuarioService: UsuarioService,
+    private _authService: AutenticacaoService,
     private _notificacaoService: NotificacaoService) { }
 
   ngOnInit() {
     this.formLogin = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required, Validators.minLength(8), Validators.pattern(this.PASSWORD_PATTERN)]]
+      senha: ['', [Validators.required, Validators.minLength(8)]]
     });
   }
 
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
+    }
+
+    return false;
+  }
+
+  public home() {
+    this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
+  }
+
   public logar() {
+    if (this.formLogin.controls['senha'].invalid) {
+      this._notificacaoService.erro("Senha inválida.");
+      return;
+    }
+
     if (this.formLogin.invalid) {
       this._notificacaoService.erro("Formulario invalido.");
+      return;
     }
 
     const email = this.formLogin.controls['email'].value;
     const senha = this.formLogin.controls['senha'].value;
-    this._usuarioService.login(email, senha)
+    this._authService.login(email, senha)
       .subscribe(
         (usuario: UsuarioDTO) => {
-          LocalStorageUtils.setUsuario(email);
           this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
         },
         (error) => {
           this._notificacaoService.erro(error);
         });
+  }
+
+  public cadastrar() {
+    this._router.navigate([Rota.CADASTRO]);
   }
 
 }

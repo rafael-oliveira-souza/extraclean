@@ -1,0 +1,186 @@
+<div class="bg-padrao">
+  <div class="menu-fixed">
+    <div class=" container-fluid row justify-content-between  align-items-center">
+      <div class="col-8">
+        <img width="250" height="75" src="../../../assets/imgs/logo.svg" (click)="home()">
+      </div>
+    </div>
+    <div class="nav_custom">
+      <div class="header container-fluid row justify-content-start ">
+        <div [id]="menu.id" *ngFor="let menu of menus;" class="col " (click)="select(menu.index)">
+          <h6> {{menu.label}}</h6>
+        </div>
+      </div>
+      <div class="body container">
+        <app-scroll>
+          <div *ngIf="selectedIndex == 1">
+            <div class="row justify-content-center">
+              <h3>Criar Agendamento</h3>
+              <div class="mt-2 text-center">
+                <p>Enviar Email</p>
+                <mat-button-toggle-group [(ngModel)]="agendamento.enviarEmail" required>
+                  <mat-button-toggle value="true">Sim</mat-button-toggle>
+                  <mat-button-toggle value="false">Não</mat-button-toggle>
+                </mat-button-toggle-group>
+              </div>
+              <div>
+                <mat-form-field class="col-12 mt-4">
+                  <mat-label>Data da Diária</mat-label>
+                  <input matInput [matDatepicker]="picker" [(ngModel)]="agendamento.dataHora">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <div class="col-12 " *ngIf="agendamento.dataHora">
+                <mat-form-field class="col-12 ">
+                  <mat-label>Email Cliente</mat-label>
+                  <input type="text" matInput [(ngModel)]="agendamento.email">
+                </mat-form-field>
+              </div>
+              <div class="col-6" *ngIf="agendamento.email">
+                <mat-form-field class="col-12">
+                  <mat-label>Escolha um Período</mat-label>
+                  <select matNativeControl [(ngModel)]="agendamento.turno">
+                    <option value="0">Sem preferência</option>
+                    <option value="1">Matutino</option>
+                    <option value="2">Vespertino</option>
+                    <option value="3">Integral</option>
+                  </select>
+                </mat-form-field>
+              </div>
+
+              <div class="col-6" *ngIf="agendamento.email">
+                <mat-form-field class="col-12">
+                  <mat-label>Tipo de Limpeza</mat-label>
+                  <select matNativeControl [(ngModel)]="agendamento.tipoLimpeza">
+                    <option value="1">Expressa</option>
+                    <option value="2">Detalhada</option>
+                    <option value="3">Pré Mudança</option>
+                  </select>
+                </mat-form-field>
+              </div>
+              <div class="col-12" *ngIf="agendamento.turno">
+                <app-profissional [profissionais]="profissionais"
+                  (atualizarProfissional)="recuperarProfissional($event)"
+                  [(profissionaisSelecionados)]="profissionaisSelecionados">
+                </app-profissional>
+              </div>
+              <div class="col-12">
+                <app-cep *ngIf="agendamento.turno" (getEndereco)="getEndereco($event)"></app-cep>
+              </div>
+              <div class="col-6 mt-2 " *ngIf="endereco.valido">
+                <mat-form-field class="col-12 ">
+                  <mat-label>Valor</mat-label>
+                  <input type="text" matInput [(ngModel)]="agendamento.valor">
+                </mat-form-field>
+              </div>
+              <div class="col-6  mt-2" *ngIf="endereco.valido">
+                <mat-form-field class="col-12 ">
+                  <mat-label>Desconto</mat-label>
+                  <input type="text" matInput [(ngModel)]="agendamento.desconto">
+                </mat-form-field>
+              </div>
+              <div class="col-12  mt-2" *ngIf="endereco.valido">
+                <mat-form-field class="col-12 ">
+                  <mat-label>Metragem</mat-label>
+                  <input type="text" matInput [(ngModel)]="agendamento.metragem">
+                </mat-form-field>
+              </div>
+              <div>
+                <mat-form-field class="col-12 mt-4">
+                  <mat-label>Data Expiração do Pagamento</mat-label>
+                  <input matInput [matDatepicker]="picker2" [(ngModel)]="agendamento.dataExpiracaoPagamento">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                  <mat-datepicker #picker2></mat-datepicker>
+                </mat-form-field>
+              </div>
+              <section class="example-section">
+                <mat-checkbox [(ngModel)]="agendamento.isDetalhada">DETALHADA</mat-checkbox> <br>
+              </section>
+              <section class="example-section">
+                <mat-checkbox [(ngModel)]="agendamento.extraPlus">EXTRA
+                  PLUS</mat-checkbox> <br>
+              </section>
+              <div class="d-flex justify-content-center">
+                <button [disabled]="!agendamento.metragem" class="col-8 btn btn-primary mt-3 p-4 mb-3"
+                  (click)="agendar()">Agendar</button>
+              </div>
+            </div>
+
+            <div *ngIf="url">
+              <p>Link de Pagamento:</p>
+              <textarea style="width: 100%;" class="mt-5">{{url}}</textarea>
+            </div>
+          </div>
+          <div *ngIf=" selectedIndex==2">
+            <div>
+              <div class="mt-2 row justify-content-center text-center">
+                <h3>Criar Cliente/Diarista</h3>
+                <div class="mt-2">
+                  <mat-button-toggle-group [(ngModel)]="tipoCliente" required>
+                    <mat-button-toggle value="1">Cliente</mat-button-toggle>
+                    <mat-button-toggle value="2">Diarista</mat-button-toggle>
+                  </mat-button-toggle-group>
+                </div>
+                <div class="col-12 mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Email</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['email']">
+                  </mat-form-field>
+                </div>
+                <div class=" col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12 mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Nome</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['nome']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Sobrenome</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['sobrenome']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Endereço</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['endereco']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Número</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['numero']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Cep</mat-label>
+                    <input mask="00000-000" maxlength="9" autocomplete="false" type="text" matInput
+                      [(ngModel)]="cliente['cep']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Telefone</mat-label>
+                    <input mask="(00) 00000-0000 | (00) 0000-0000" autocomplete="false" type="text" matInput
+                      [(ngModel)]="cliente['telefone']">
+                  </mat-form-field>
+                </div>
+                <div class="col-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>Localização</mat-label>
+                    <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['localizacao']">
+                  </mat-form-field>
+                </div>
+              </div>
+              <div class="row justify-content-center">
+                <button [disabled]="!cliente.isValido()" class="btn btn-primary" type="button"
+                  (click)="criarCliente()">Criar Cliente</button>
+              </div>
+            </div>
+          </div>
+        </app-scroll>
+      </div>
+    </div>
+  </div>
+</div>

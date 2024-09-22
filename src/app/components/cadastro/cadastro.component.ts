@@ -9,6 +9,10 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { Rota } from '../../app.routes';
 import { Router } from '@angular/router';
+import { AutenticacaoService } from '../../services/autenticacao.service';
+import { CalculoUtils } from '../../utils/CalculoUtils';
+import { CommonModule } from '@angular/common';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-cadastro',
@@ -19,29 +23,50 @@ import { Router } from '@angular/router';
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
+    MatIconModule,
+    CommonModule
   ],
   templateUrl: './cadastro.component.html',
   styleUrls: ['./cadastro.component.scss']
 })
 export class CadastroComponent implements OnInit {
   public formLogin!: FormGroup;
+  public readonly PASSWORD_PATTERN = /^(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).*$/;
+  public bg: string = "fullbg";
+  public showBooleanSenha: boolean = false;
+  public showBooleanReSenha: boolean = false;
 
   constructor(
     private _router: Router,
     private _formBuilder: FormBuilder,
+    private _authService: AutenticacaoService,
     private _usuarioService: UsuarioService,
     private _notificacaoService: NotificacaoService) { }
 
   ngOnInit() {
     this.formLogin = this._formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      senha: ['', [Validators.required]]
+      senha: ['', [Validators.required, Validators.minLength(8)]],
+      senhaVal: ['', [Validators.required]]
     });
   }
 
   public logar() {
+    this._router.navigate([Rota.LOGIN]);
+  }
+
+  public home() {
+    this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
+  }
+
+  public cadastrar() {
     if (this.formLogin.invalid) {
-      this._notificacaoService.erro("Formulario invalido.");
+      this._notificacaoService.alerta("Por favor, preencha todos os campos!");
+      return;
+    }
+
+    if (this.formLogin.controls['senha'].value != this.formLogin.controls['senhaVal'].value) {
+      return;
     }
 
     let usuario = new UsuarioDTO();
@@ -50,12 +75,21 @@ export class CadastroComponent implements OnInit {
     this._usuarioService.cadastrar(usuario)
       .subscribe(
         (usuario: UsuarioDTO) => {
-          LocalStorageUtils.setUsuario(usuario.email);
+          this._authService.autenticar(usuario.email);
           this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
         },
         (error) => {
+          LocalStorageUtils.removeCacheAutenticacao();
           this._notificacaoService.erro(error);
         });
   }
 
+  public isXs() {
+    if (typeof document !== 'undefined') {
+      const documentWidth = document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
+    }
+
+    return false;
+  }
 }
