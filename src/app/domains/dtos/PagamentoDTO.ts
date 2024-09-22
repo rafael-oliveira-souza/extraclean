@@ -21,4 +21,5 @@ export class PagamentoDTO {
     tipoPlano!: TipoPlanoEnum;
     extraPlus: boolean = false;
     isDetalhada: boolean = false;
+    dataExpiracaoPagamento!: Date;
 }

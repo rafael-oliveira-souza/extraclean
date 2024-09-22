@@ -91,7 +91,7 @@ export class MenuComponent {
   }
 
   public contratar() {
-    const email: string | undefined = this.authService.validarUsuario(false);
+    const email: string | undefined = this.authService.validarUsuario(false, true);
     if (!email) {
       return;
     }
@@ -150,7 +150,7 @@ export class MenuComponent {
   }
 
   public abrirPerfil() {
-    this.authService.validarUsuario(true);
+    this.authService.validarUsuario(true, true);
   }
 
   public abrirPagina(component: ComponentType<any>, data: any, email: string) {

@@ -13,6 +13,8 @@ import { PerfilComponent } from '../components/perfil/perfil.component';
 import { ComponentType } from '@angular/cdk/overlay';
 import { MatDialog } from '@angular/material/dialog';
 import { ClienteService } from './cliente.service';
+import { NotificacaoService } from './notificacao.service';
+import { MensagemEnum } from '../domains/enums/MensagemEnum';
 
 @Injectable({
   providedIn: 'root'
@@ -21,7 +23,9 @@ export class AutenticacaoService {
   public readonly HOST_URL = `${environment.apiUrl}/autenticacao`;
 
   constructor(private dialog: MatDialog, private _http: HttpClient,
-    private _clienteService: ClienteService, private _router: Router) { }
+    private _clienteService: ClienteService,
+    private _notificacaoService: NotificacaoService,
+    private _router: Router) { }
 
   public login(email: string, senha: string): Observable<UsuarioDTO> {
     const url = `${this.HOST_URL}/login`;
@@ -85,27 +89,61 @@ export class AutenticacaoService {
     return auth != null;
   }
 
-  public validarUsuario(abrePerfilCliente: boolean = false) {
+  public validarUsuario(abrePerfilCliente: boolean, abreMensagem: boolean) {
     const email: string | null = this.getUsuarioAutenticado();
     if (email == null) {
       this._router.navigate([Rota.LOGIN]);
       return;
     }
 
+    LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_EMAIL, email);
+    let clienteRecuperado: ClienteDTO | null = LocalStorageUtils.getItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE);
     if (abrePerfilCliente) {
-      let cliente = LocalStorageUtils.getItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE);
-      if (!cliente) {
+      if (!clienteRecuperado) {
         this._clienteService.recuperarCliente(email)
           .subscribe((cliente: ClienteDTO) => {
+            clienteRecuperado = cliente;
+            if (abreMensagem) {
+              this.enviarNotificacaoPerfil(cliente);
+            }
             LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, cliente);
             this.abrirPagina(PerfilComponent, cliente, email);
           });
       } else {
-        this.abrirPagina(PerfilComponent, cliente, email);
+        if (abreMensagem) {
+          this.enviarNotificacaoPerfil(clienteRecuperado);
+        }
+        this.abrirPagina(PerfilComponent, clienteRecuperado, email);
+        LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, clienteRecuperado);
+      }
+    } else if (abreMensagem) {
+      if (!clienteRecuperado) {
+        this._clienteService.recuperarCliente(email)
+          .subscribe((cliente: ClienteDTO) => {
+            clienteRecuperado = cliente;
+            LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, clienteRecuperado);
+            if (this.enviarNotificacaoPerfil(clienteRecuperado)) {
+              this.abrirPagina(PerfilComponent, clienteRecuperado, email);
+            }
+          });
+      } else {
+        LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, clienteRecuperado);
+        if (this.enviarNotificacaoPerfil(clienteRecuperado)) {
+          this.abrirPagina(PerfilComponent, clienteRecuperado, email);
+        }
       }
     }
 
     return email;
+  }
+
+  private enviarNotificacaoPerfil(cliente: ClienteDTO | null) {
+    if (!cliente || !cliente.endereco || !cliente.nome || !cliente.telefone) {
+      this._notificacaoService.alerta(MensagemEnum.NECESSARIO_ATUALIZAR_PERFIL);
+      return true;
+    }
+
+    return false;
   }
 
   private abrirPagina(component: ComponentType<any>, data: any, email: string) {

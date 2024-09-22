@@ -1,4 +1,6 @@
+import { PlanosComponent } from "../../tabs/planos/planos.component";
 import { AgendamentoInfoDTO } from "../dtos/AgendamentoInfoDTO";
+import { PlanoDTO } from "../dtos/PlanoDTO";
 import { TurnoEnum } from "../enums/TurnoEnum";
 
 export class AgendamentoConstantes {
@@ -6,13 +8,33 @@ export class AgendamentoConstantes {
     public static VALOR_DESLOCAMENTO = 15;
     public static VALOR_DIARIA_DETALHADA = 1.5;
     public static VALOR_PADRAO_METRO = 2.0;
-    public static MAX_PERCENTUAL = 25;
+    public static MAX_PERCENTUAL = 15;
     public static PERCENTUAL_DESCONTO = 2;
     public static METRAGEM_MIN = 15;
     public static METRAGEM_MAX = 1000;
 
     private static calcularValorPago(valor: number, numProfissionais: number, porcentagemProfissionais: number) {
         return valor / numProfissionais * porcentagemProfissionais / 100;
+    }
+
+    public static calcularPorcentagemDias(qtdDias: number = 1) {
+        if (qtdDias == null || qtdDias <= 1) {
+            return 0;
+        }
+
+        let desconto: number = 0;
+        const ultPlano: PlanoDTO = PlanosComponent.PLANOS[PlanosComponent.PLANOS.length - 1];
+        for (let i = 1; i < PlanosComponent.PLANOS.length; i++) {
+            let planoAnt: PlanoDTO = PlanosComponent.PLANOS[i - 1];
+            let planoProx: PlanoDTO = PlanosComponent.PLANOS[i];
+            if (qtdDias >= planoAnt.qtdDias && qtdDias < planoProx.qtdDias) {
+                desconto = planoAnt.desconto;
+            } else if (qtdDias >= ultPlano.qtdDias) {
+                desconto = ultPlano.desconto;
+            }
+        }
+
+        return desconto;
     }
 
     public static calcularTotal(metragem: number, isDetalhada: boolean, qtdDias: number = 1, porcentagemDesconto: number = 0,

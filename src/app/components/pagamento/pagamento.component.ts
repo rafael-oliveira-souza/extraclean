@@ -24,13 +24,17 @@ import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
   ],
   styleUrl: './pagamento.component.scss'
 })
-export class PagamentoComponent {
+export class PagamentoComponent implements OnInit {
   readonly dialogRef = inject(MatDialogRef<PagamentoComponent>);
   readonly data: any = inject<any>(MAT_DIALOG_DATA);
 
-  public linkPagamento  : SafeResourceUrl;
+  public linkPagamento!: SafeResourceUrl;
 
-  constructor(private sanitizer: DomSanitizer) {
-    this.linkPagamento = this.sanitizer.bypassSecurityTrustResourceUrl(this.data['url']);
+  constructor(public sanitizer: DomSanitizer) { }
+
+  ngOnInit(): void {
+    window.open(this.data['url'], '_blank');
+    // open(this.data['url']);
+    // this.linkPagamento = this.sanitizer.bypassSecurityTrustResourceUrl(this.data['url']);
   }
 }

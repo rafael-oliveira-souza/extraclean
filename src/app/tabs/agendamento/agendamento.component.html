@@ -84,72 +84,10 @@
                         </div>
                         <div class="d-flex justify-content-center">
                             <div class="col-12 cor-laranja mt-3">
-                                <small *ngIf="isLimpezaDetalhada()">
-                                    <div class="">
-                                        <p>A <strong>limpeza detalhada</strong> é um processo mais minucioso que se
-                                            concentra em
-                                            cada aspecto do ambiente, incluindo áreas menos visíveis e frequentemente
-                                            negligenciadas. O objetivo é uma limpeza completa e profunda que garante a
-                                            remoção
-                                            de sujeira, poeira e manchas em todos os cantos e superfícies.</p>
-                                        <ul>
-                                            <li><strong>Profundidade:</strong> Abrange uma limpeza completa e minuciosa.
-                                            </li>
-                                            <li><strong>Atenção aos Detalhes:</strong> Foca em áreas difíceis de
-                                                alcançar,
-                                                limpeza de manchas, desinfecção e polimento.</li>
-                                            <li><strong>Áreas Abrangidas:</strong> Inclui todas as superfícies, cantos,
-                                                rodapés,
-                                                armários, eletrodomésticos, e áreas de difícil acesso.</li>
-                                            <li><strong>Produtos Utilizados:</strong> Produtos especializados e técnicas
-                                                de
-                                                limpeza que garantem a remoção completa de sujeira e sujeira acumulada.
-                                            </li>
-                                        </ul>
-                                        <p><strong>Exemplos de Tarefas:</strong></p>
-                                        <ul>
-                                            <li>Limpeza profunda de pisos, incluindo a remoção de manchas e polimento.
-                                            </li>
-                                            <li>Limpeza de janelas e persianas.</li>
-                                            <li>Desinfecção de superfícies de cozinha e banheiros.</li>
-                                            <li>Limpeza e organização de armários e gavetas.</li>
-                                            <li>Remoção de poeira acumulada em móveis e equipamentos.</li>
-                                        </ul>
-                                    </div>
-                                </small>
-                                <small *ngIf="isLimpezaExpressa()">
-                                    <div class="">
-                                        <p>A <strong>limpeza expressa</strong> é um tipo de limpeza rápida e superficial
-                                            que
-                                            foca em áreas de alto tráfego e pontos críticos que precisam de atenção
-                                            imediata. O
-                                            objetivo principal é remover sujeira e manter uma aparência geral limpa sem
-                                            entrar
-                                            em muitos detalhes. É ideal para situações onde o tempo é limitado e uma
-                                            limpeza
-                                            completa não é viável.</p>
-                                        <ul>
-                                            <li><strong>Rapidez:</strong> Concluída em um curto período de tempo.</li>
-                                            <li><strong>Superficialidade:</strong> Foca em limpar as áreas visíveis e
-                                                mais
-                                                sujas.</li>
-                                            <li><strong>Áreas Focadas:</strong> Geralmente inclui áreas como bancadas,
-                                                pisos, e
-                                                o banheiro, mas não entra em detalhes menores ou espaços
-                                                difíceis de alcançar.</li>
-                                            <li><strong>Produtos Utilizados:</strong> Produtos de limpeza genéricos e
-                                                eficazes
-                                                para áreas de uso comum.</li>
-                                        </ul>
-                                        <p><strong>Exemplos de Tarefas:</strong></p>
-                                        <ul>
-                                            <li>Limpeza rápida de superfícies de cozinha.</li>
-                                            <li>Esvaziamento de lixeiras.</li>
-                                            <li>Limpeza de pisos com um mop ou aspirador.</li>
-                                            <li>Limpeza básica de banheiros.</li>
-                                        </ul>
-                                    </div>
-                                </small>
+                                <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="false"
+                                    [exibeTipoLimpeza]="true"
+                                    [isLimpezaDetalhada]="isLimpezaDetalhada()"></app-itens-limpeza>
+
                             </div>
                         </div>
                     </div>
@@ -192,15 +130,8 @@
                             [metragem]="formArea.controls['valor'].value" [isDetalhada]="isLimpezaDetalhada()"
                             (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
                         <div class="row justify-content-end">
-                            <small class="col-12">* É disponibilizado {{PERCENTUAL_DESCONTO}}% de desconto em cada dia
-                                para agendamentos acima de 2 dias. Podendo acumular até {{MAX_PERCENTUAL}}% de desconto
-                                nos
-                                seus agendamentos. </small>
-                            <small class="col-12">* A escolha do profissional aumenta R$ 20 para cada dia ao valor
-                                total.</small>
-                            <small class="col-12">* Uma taxa de deslocamento do profissional será aplicada ao valor
-                                total.</small>
-                            <small class="col-12">* O período integral é calculado como 8 horas.</small>
+                            <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="true"
+                                [exibeTipoLimpeza]="false"></app-itens-limpeza>
                         </div>
                     </div>
                 </div>
@@ -218,7 +149,7 @@
                             <div class="payment-header">
                                 <h2>Detalhes do Pagamento</h2>
                             </div>
-                            <div class="payment-info">
+                            <div *ngIf="dadosAgendamento" class="payment-info">
                                 <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno|
                                     turno}}
                                 </p>
@@ -330,72 +261,9 @@
                         </div>
                         <div class="d-flex justify-content-center">
                             <div class="col-12 cor-laranja mt-3">
-                                <small *ngIf="isLimpezaDetalhada()">
-                                    <div class="">
-                                        <p>A <strong>limpeza detalhada</strong> é um processo mais minucioso que se
-                                            concentra em
-                                            cada aspecto do ambiente, incluindo áreas menos visíveis e frequentemente
-                                            negligenciadas. O objetivo é uma limpeza completa e profunda que garante a
-                                            remoção
-                                            de sujeira, poeira e manchas em todos os cantos e superfícies.</p>
-                                        <ul>
-                                            <li><strong>Profundidade:</strong> Abrange uma limpeza completa e minuciosa.
-                                            </li>
-                                            <li><strong>Atenção aos Detalhes:</strong> Foca em áreas difíceis de
-                                                alcançar,
-                                                limpeza de manchas, desinfecção e polimento.</li>
-                                            <li><strong>Áreas Abrangidas:</strong> Inclui todas as superfícies, cantos,
-                                                rodapés,
-                                                armários, eletrodomésticos, e áreas de difícil acesso.</li>
-                                            <li><strong>Produtos Utilizados:</strong> Produtos especializados e técnicas
-                                                de
-                                                limpeza que garantem a remoção completa de sujeira e sujeira acumulada.
-                                            </li>
-                                        </ul>
-                                        <p><strong>Exemplos de Tarefas:</strong></p>
-                                        <ul>
-                                            <li>Limpeza profunda de pisos, incluindo a remoção de manchas e polimento.
-                                            </li>
-                                            <li>Limpeza de janelas e persianas.</li>
-                                            <li>Desinfecção de superfícies de cozinha e banheiros.</li>
-                                            <li>Limpeza e organização de armários e gavetas.</li>
-                                            <li>Remoção de poeira acumulada em móveis e equipamentos.</li>
-                                        </ul>
-                                    </div>
-                                </small>
-                                <small *ngIf="isLimpezaExpressa()">
-                                    <div class="">
-                                        <p>A <strong>limpeza expressa</strong> é um tipo de limpeza rápida e superficial
-                                            que
-                                            foca em áreas de alto tráfego e pontos críticos que precisam de atenção
-                                            imediata. O
-                                            objetivo principal é remover sujeira e manter uma aparência geral limpa sem
-                                            entrar
-                                            em muitos detalhes. É ideal para situações onde o tempo é limitado e uma
-                                            limpeza
-                                            completa não é viável.</p>
-                                        <ul>
-                                            <li><strong>Rapidez:</strong> Concluída em um curto período de tempo.</li>
-                                            <li><strong>Superficialidade:</strong> Foca em limpar as áreas visíveis e
-                                                mais
-                                                sujas.</li>
-                                            <li><strong>Áreas Focadas:</strong> Geralmente inclui áreas como bancadas,
-                                                pisos, e
-                                                o banheiro, mas não entra em detalhes menores ou espaços
-                                                difíceis de alcançar.</li>
-                                            <li><strong>Produtos Utilizados:</strong> Produtos de limpeza genéricos e
-                                                eficazes
-                                                para áreas de uso comum.</li>
-                                        </ul>
-                                        <p><strong>Exemplos de Tarefas:</strong></p>
-                                        <ul>
-                                            <li>Limpeza rápida de superfícies de cozinha.</li>
-                                            <li>Esvaziamento de lixeiras.</li>
-                                            <li>Limpeza de pisos com um mop ou aspirador.</li>
-                                            <li>Limpeza básica de banheiros.</li>
-                                        </ul>
-                                    </div>
-                                </small>
+                                <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="false"
+                                    [exibeTipoLimpeza]="true"
+                                    [isLimpezaDetalhada]="isLimpezaDetalhada()"></app-itens-limpeza>
                             </div>
                         </div>
                     </div>
@@ -438,15 +306,8 @@
                             [metragem]="formArea.controls['valor'].value" [isDetalhada]="isLimpezaDetalhada()"
                             (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
                         <div class="row justify-content-end">
-                            <small class="col-12">* É disponibilizado {{PERCENTUAL_DESCONTO}}% de desconto em cada dia
-                                para agendamentos acima de 2 dias. Podendo acumular até {{MAX_PERCENTUAL}}% de desconto
-                                nos
-                                seus agendamentos. </small>
-                            <small class="col-12">* A escolha do profissional aumenta R$ 20 para cada dia ao valor
-                                total.</small>
-                            <small class="col-12">* Uma taxa de deslocamento do profissional será aplicada ao valor
-                                total.</small>
-                            <small class="col-12">* O período integral é calculado como 8 horas.</small>
+                            <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="true"
+                                [exibeTipoLimpeza]="false"></app-itens-limpeza>
                         </div>
                     </div>
                 </div>
@@ -464,7 +325,7 @@
                             <div class="payment-header">
                                 <h2>Detalhes do Pagamento</h2>
                             </div>
-                            <div class="payment-info">
+                            <div *ngIf="dadosAgendamento" class="payment-info">
                                 <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno|
                                     turno}}
                                 </p>

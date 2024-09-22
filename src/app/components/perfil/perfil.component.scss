@@ -22,3 +22,8 @@ h2 {
     color: $white !important;
     background-color: $primary !important;
 }
+
+::ng-deep .mat-icon {
+    color: $primary !important;
+    cursor: pointer;
+}

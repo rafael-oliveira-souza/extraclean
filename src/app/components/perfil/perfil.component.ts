@@ -78,6 +78,11 @@ export class PerfilComponent {
     this.formCliente.disable();
   }
 
+  public fechar() {
+    this._dialogRef.close();
+  }
+
+
   public alterarSenha() {
     this.exibePerfil = false;
   }

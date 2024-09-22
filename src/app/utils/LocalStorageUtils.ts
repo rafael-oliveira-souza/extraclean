@@ -1,16 +1,19 @@
+import { AgendamentoDTO } from "../domains/dtos/AgendamentoDTO";
 import { AutenticacaoDTO } from "../domains/dtos/AutenticacaoDTO";
 
 export class LocalStorageUtils {
     // Padrao TTL de 30 minutos (1800000 ms)
-    public static readonly TTL: number = 7200000;
+    public static readonly TTL: number = 21600000; // 6 Horas em milisegundos
     public static readonly USUARIO_CACHE_EMAIL: string = "XXXX_USUARIO_CACHE_EMAIL_XXXX";
     public static readonly USUARIO_CACHE_AUTH: string = "XXXX_USUARIO_CACHE_AUTH_XXXX";
     public static readonly USUARIO_CACHE_CLIENTE: string = "XXXX_USUARIO_CACHE_CLIENTE_XXXX";
+    public static readonly USUARIO_CACHE_CARRINHO_AGENDAMENTO: string = "XXXX_USUARIO_CACHE_CARRINHO_AGENDAMENTO_XXXX";
 
     static removeCacheAutenticacao(): void {
         this.removeItem(this.USUARIO_CACHE_AUTH);
         this.removeItem(this.USUARIO_CACHE_EMAIL);
         this.removeItem(this.USUARIO_CACHE_CLIENTE);
+        this.removeItem(this.USUARIO_CACHE_CARRINHO_AGENDAMENTO);
     }
 
     static setAuth(auth: AutenticacaoDTO, ttl: number = this.TTL): void {
@@ -19,6 +22,19 @@ export class LocalStorageUtils {
 
     static getAuth(): AutenticacaoDTO | null {
         return this.getItem(this.USUARIO_CACHE_AUTH);
+    }
+
+    static setAgendamento(agend: AgendamentoDTO, ttl: number = this.TTL): void {
+        this.setItem(this.USUARIO_CACHE_CARRINHO_AGENDAMENTO, agend, ttl);
+    }
+
+    static getAgendamento(): AgendamentoDTO {
+        let agendamento: AgendamentoDTO | null = this.getItem(this.USUARIO_CACHE_CARRINHO_AGENDAMENTO);
+        if (agendamento) {
+            return Object.assign(new AgendamentoDTO(), agendamento);
+        }
+
+        return new AgendamentoDTO();
     }
 
     // Método para salvar um item no localStorage com TTL

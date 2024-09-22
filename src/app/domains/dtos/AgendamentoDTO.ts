@@ -11,10 +11,10 @@ export class AgendamentoDTO extends PagamentoDTO {
     gerarPagamento: boolean = true;
 
     public getQtdDias() {
-        return this.diasSelecionados.length;
+        return this.diasSelecionados ? this.diasSelecionados.length : 0;
     }
 
     public isSemAgendamento() {
-        return this.diasSelecionados.length <= 0;
+        return this.diasSelecionados ? this.diasSelecionados.length <= 0 : false;
     }
 }

@@ -21,5 +21,6 @@ export const routes: Routes = [
     { path: Rota.ADMIN, component: AdminComponent },
     { path: Rota.CADASTRO, component: CadastroComponent },
     { path: Rota.LOGIN, component: LoginComponent },
-    { path: Rota.PAGAMENTO, component: PagamentoComponent, canActivate: [AuthGuard] },
+    { path: Rota.PAGAMENTO, component: PagamentoComponent },
+    // { path: '**', redirectTo: '' }
 ];

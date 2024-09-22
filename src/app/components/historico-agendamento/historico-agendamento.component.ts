@@ -1,7 +1,7 @@
 import { AfterViewInit, Component, inject, OnInit, ViewChild } from '@angular/core';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
-import { MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { CommonModule } from '@angular/common';
 import { PipeModule } from '../../pipes/pipe.module';
 import { CalculoUtils } from '../../utils/CalculoUtils';
@@ -42,7 +42,9 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   public displayedColumns: string[] = ['endereco', 'tipoLimpeza', 'turno', 'metragem',
     'valor', 'desconto', 'dataHora'];
 
-  constructor(private _agendamentoService: AgendamentoService, private _notificacaoService: NotificacaoService) { }
+  constructor(private _agendamentoService: AgendamentoService,
+    private _notificacaoService: NotificacaoService,
+    private _dialogRef: MatDialogRef<HistoricoAgendamentoComponent>) { }
 
   ngAfterViewInit() {
     this.dataSource.paginator = this.paginator;
@@ -88,6 +90,10 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
       }
     }
     return false;
+  }
+
+  public fechar() {
+    this._dialogRef.close();
   }
 
   public mostrarBotaoChegada(): boolean {

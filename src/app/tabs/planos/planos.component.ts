@@ -23,6 +23,7 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
 import { DateUtils } from '../../utils/DateUtils';
+import { TipoPlanoEnum } from '../../domains/enums/TipoPlanoEnum';
 
 @Component({
   selector: 'app-planos',
@@ -51,6 +52,14 @@ export class PlanosComponent {
   @Output()
   public getUrl: EventEmitter<string> = new EventEmitter();
 
+  public static readonly PLANOS: PlanoDTO[] = [
+    new PlanoDTO(TipoPlanoEnum.SEMANAL, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 3, 2, 2),
+    new PlanoDTO(TipoPlanoEnum.MENSAL, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 6, 4, 4),
+    new PlanoDTO(TipoPlanoEnum.TRIMESTAL, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 9, 12, 6),
+    new PlanoDTO(TipoPlanoEnum.SEMESTRAL, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 12, 24, 6),
+    new PlanoDTO(TipoPlanoEnum.ANUAL, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 15, 48, 12)
+  ];
+
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public planos: Array<PlanoDTO> = [];
@@ -71,11 +80,7 @@ export class PlanosComponent {
       this.planos.push(new PlanoDTO(0, "Diária", "Consiste em 1 diária expressa ou detalhada em data que o cliente definir.", 0, 1, 1));
     }
 
-    this.planos.push(new PlanoDTO(1, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 3, 2, 2));
-    this.planos.push(new PlanoDTO(2, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 6, 4, 4));
-    this.planos.push(new PlanoDTO(3, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 9, 12, 6));
-    this.planos.push(new PlanoDTO(4, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 12, 24, 6));
-    this.planos.push(new PlanoDTO(5, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 15, 48, 12));
+    PlanosComponent.PLANOS.forEach(plano => this.planos.push(plano));
   }
 
   public calcularTotal(plano: PlanoDTO): AgendamentoInfoDTO {
@@ -111,7 +116,7 @@ export class PlanosComponent {
 
 
   public agendar(plano: PlanoDTO) {
-    const email: string | undefined = this.authService.validarUsuario();
+    const email: string | undefined = this.authService.validarUsuario(true, true);
     if (!email) {
       return;
     }
@@ -135,27 +140,29 @@ export class PlanosComponent {
     this._agendamentoService.agendar(dadosAgendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.urlPagamento = result.url;
+        window.open(result['url'], '_blank');
         this.getUrl.emit(result.url);
         this.notification.alerta("Agendamento realizado com sucesso. O seu agendamento será efetivado após o pagamento!");
       }, (error) => this.notification.erro(error));
   }
 
   public comprar(plano: PlanoDTO) {
-    const email: string | undefined = this.authService.validarUsuario();
+    const email: string | undefined = this.authService.validarUsuario(false, true);
     if (!email) {
       return;
     }
 
     const agendamento: AgendamentoInfoDTO = this.calcularTotal(plano);
-    this.pagamento.dataHora = new Date();
-    this.pagamento.valor = agendamento.valor;
-    this.pagamento.desconto = agendamento.desconto;
-    this.pagamento.quantidadeItens = 1;
-    this.pagamento.qtdParcelas = plano.qtdParcelas;
-    this.pagamento.tipoLimpeza = this.pagamento.isDetalhada ? TipoLimpezaEnum.DETALHADA : TipoLimpezaEnum.EXPRESSA;
-    this.pagamento.email = email ? email : "";
-    this.pagamento.origem = OrigemPagamentoEnum.PLANO;
-    this.pagamento.extraPlus = this.pagamento.extraPlus;
+    plano.dataHora = new Date();
+    plano.valor = agendamento.valor;
+    plano.desconto = agendamento.desconto;
+    plano.quantidadeItens = 1;
+    plano.qtdParcelas = plano.qtdParcelas;
+    plano.tipoLimpeza = plano.isDetalhada ? TipoLimpezaEnum.DETALHADA : TipoLimpezaEnum.EXPRESSA;
+    plano.email = email ? email : "";
+    plano.origem = OrigemPagamentoEnum.PLANO;
+    plano.extraPlus = plano.extraPlus;
+    plano.tipoPlano = plano.id;
     this.planoService.criar(plano)
       .subscribe((pag: PagamentoMpDTO) => {
         this.urlPagamento = pag.url;
@@ -163,16 +170,17 @@ export class PlanosComponent {
         this.notification.alerta("Plano solicitado com sucesso. O seu plano será efetivado após o pagamento!");
         const documentWidth = document.documentElement.clientWidth;
         const documentHeigth = document.documentElement.clientHeight;
-        this.dialog.open(PagamentoComponent, {
-          minWidth: `${documentWidth * 0.8}px`,
-          maxWidth: `${documentWidth * 0.9}px`,
-          minHeight: `${documentHeigth * 0.9}px`,
-          maxHeight: `${documentHeigth * 0.95}px`,
-          data: {
-            email: email,
-            data: { pagamento: this.pagamento, url: pag.url }
-          }
-        });
+        window.open(pag['url'], '_blank');
+        // this.dialog.open(PagamentoComponent, {
+        //   minWidth: `${documentWidth * 0.8}px`,
+        //   maxWidth: `${documentWidth * 0.9}px`,
+        //   minHeight: `${documentHeigth * 0.9}px`,
+        //   maxHeight: `${documentHeigth * 0.95}px`,
+        //   data: {
+        //     email: email,
+        //     data: { pagamento: this.pagamento, url: pag.url }
+        //   }
+        // });
       }, (error) => {
         this.notification.erro(error);
       });

@@ -32,6 +32,9 @@ import { Router } from '@angular/router';
 import { Rota } from '../../app.routes';
 import { CepComponent } from '../../components/cep/cep.component';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
+import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
+import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
+import { ItensLimpezaComponent } from '../../components/itens-limpeza/itens-limpeza.component';
 
 @Component({
   selector: 'app-agendamento',
@@ -56,7 +59,8 @@ import { MensagemEnum } from '../../domains/enums/MensagemEnum';
     NgxMaskDirective,
     MatCheckboxModule,
     NgxMaskPipe,
-    CepComponent
+    CepComponent,
+    ItensLimpezaComponent,
   ],
   providers: [
     provideNgxMask(),
@@ -97,6 +101,11 @@ export class AgendamentoComponent implements OnInit {
 
   ngOnInit(): void {
     this.buildForm();
+    this.montarAgendamentoEmCache();
+  }
+
+  public montarAgendamentoEmCache() {
+    this.dadosAgendamento = LocalStorageUtils.getAgendamento();
   }
 
   public getEndereco(endereco: EnderecoDTO) {
@@ -104,24 +113,29 @@ export class AgendamentoComponent implements OnInit {
   }
 
   public agendar() {
-    this._authService.validarUsuario();
+    this._authService.validarUsuario(false, true);
     this.dadosAgendamento.endereco = EnderecoUtils.montarEndereco(this.endereco);
-
     this.dadosAgendamento.tipoLimpeza = this.formTipoLimpeza.controls['valor'].value;
+    LocalStorageUtils.setAgendamento(this.dadosAgendamento);
+
     this._agendamentoService.agendar(this.dadosAgendamento)
       .subscribe((result: PagamentoMpDTO) => {
+        window.open(result.url, '_blank');
         this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
-        const documentWidth = document.documentElement.clientWidth;
-        const documentHeight = document.documentElement.clientHeight;
-        let dialogRef = this.dialog.open(PagamentoComponent, {
-          minWidth: `${documentWidth * 0.8}px`,
-          maxWidth: `${documentWidth * 0.9}px`,
-          minHeight: `90vh`,
-          maxHeight: `95vh`,
-          data: { pagamento: null, url: result.url }
-        });
+        LocalStorageUtils.removeItem(LocalStorageUtils.USUARIO_CACHE_CARRINHO_AGENDAMENTO);
+        this.dadosAgendamento = new AgendamentoDTO();
+        this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
+        // const documentWidth = document.documentElement.clientWidth;
+        // const documentHeight = document.documentElement.clientHeight;
+        // let dialogRef = this.dialog.open(PagamentoComponent, {
+        //   minWidth: `${documentWidth * 0.8}px`,
+        //   maxWidth: `${documentWidth * 0.9}px`,
+        //   minHeight: `90vh`,
+        //   maxHeight: `95vh`,
+        //   data: { pagamento: null, url: result.url }
+        // });
       },
-        (error) => this._notificacaoService.erro(error.error));
+        (error) => this._notificacaoService.erro(error));
   }
 
   public limparDiasSelecionados() {
@@ -198,7 +212,7 @@ export class AgendamentoComponent implements OnInit {
       valor: ['', Validators.required]
     });
     this.formTipoLimpeza = this._formBuilder.group({
-      valor: ['', Validators.required]
+      valor: ['1', Validators.required]
     });
 
     this.formTipoLimpeza.valueChanges.subscribe(value => {

@@ -134,7 +134,7 @@ export class CalendarioComponent {
     this._changes.detectChanges();
   }
 
-  public atualizarDiasSelecionados() {
+  public atualizarDiasSelecionados(updateAll: boolean = false) {
     this.atualizarDias();
     this.atualizarProfissional();
     this.emitirDadosAgendamento();
@@ -258,7 +258,7 @@ export class CalendarioComponent {
       const newDate = DateUtils.subtract(this.diaSelecionado.value, 1, 'month');
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
-      this.atualizarDiasSelecionados();
+      this.atualizarDiasSelecionados(false);
     }
   }
 
@@ -267,7 +267,7 @@ export class CalendarioComponent {
       const newDate = DateUtils.add(this.diaSelecionado.value, 1, 'month');
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
-      this.atualizarDiasSelecionados();
+      this.atualizarDiasSelecionados(false);
     }
   }
 
@@ -289,8 +289,9 @@ export class CalendarioComponent {
     this.desconto = 0;
 
     const qtdDias = this.getQtdDias();
+    const porcentagemDesconto = AgendamentoConstantes.calcularPorcentagemDias(qtdDias);
     let agendamento: AgendamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada, qtdDias,
-      qtdDias-1, this.profissionalSelecionado != 0, this.turno);
+      porcentagemDesconto, this.profissionalSelecionado != 0, this.turno);
 
     this.desconto = agendamento.desconto;
     this.valorTotal = agendamento.total;
@@ -321,7 +322,7 @@ export class CalendarioComponent {
         }
       });
     }
-    this.limparDiasSelecionados();
+    // this.limparDiasSelecionados();
     this.calcular();
   }
 

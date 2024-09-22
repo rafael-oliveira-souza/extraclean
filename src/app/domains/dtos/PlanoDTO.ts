@@ -1,3 +1,4 @@
+import { TipoPlanoEnum } from "../enums/TipoPlanoEnum";
 import { PagamentoDTO } from "./PagamentoDTO";
 
 export class PlanoDTO extends PagamentoDTO {
@@ -5,7 +6,7 @@ export class PlanoDTO extends PagamentoDTO {
     descricao!: string;
     qtdDias!: number;
 
-    constructor(id: number, nome: string, descricao: string, desconto: number, qtdDias: number, qtdParcelas: number = 1) {
+    constructor(id: TipoPlanoEnum, nome: string, descricao: string, desconto: number, qtdDias: number, qtdParcelas: number = 1) {
         super();
         this.id = id;
         this.nome = nome;

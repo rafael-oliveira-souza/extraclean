@@ -1,7 +1,13 @@
 <div class="container">
   <div class="row justify-content-center align-items-center text-center ">
     <div class="col-12 mt-4">
-      <h2>Meus Agendamentos</h2>
+      <div class="container">
+        <div class="d-flex justify-content-between">
+          <div></div>
+          <h2>Meus Agendamentos</h2>
+          <mat-icon (click)="fechar()" matSuffix [fontIcon]="'close'"></mat-icon>
+        </div>
+      </div>
     </div>
     <div *ngIf="agendamentos.length > 0; else other_content">
       <div *ngIf="!isXs() && isCliente()" class="col-12 align-self-center mt-5" style="margin-top: 0px;">
