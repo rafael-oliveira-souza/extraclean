@@ -149,23 +149,7 @@
                             <div class="payment-header">
                                 <h2>Detalhes do Pagamento</h2>
                             </div>
-                            <div *ngIf="dadosAgendamento" class="payment-info">
-                                <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno|
-                                    turno}}
-                                </p>
-                                <p *ngIf="dadosAgendamento.profissionais.length > 0">
-                                    <strong>Profissional:</strong> {{recuperarProfissional().nome}}
-                                </p>
-                                <p *ngIf="dadosAgendamento.profissionais.length == 0">
-                                    <strong>Profissional Selecionado:</strong> Não
-                                </p>
-                                <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
-                                <p><strong>Metragem:</strong> {{dadosAgendamento.metragem}}</p>
-                                <p><strong>Desconto:</strong> {{dadosAgendamento.desconto | moeda}}</p>
-                                <p><strong>Valor:</strong> {{dadosAgendamento.valor+ dadosAgendamento.desconto | moeda}}
-                                </p>
-                                <p><strong>Total:</strong> {{dadosAgendamento.valor | moeda}}
-                            </div>
+                            <app-pagamento [agendamento]="dadosAgendamento"></app-pagamento>
                         </div>
                     </div>
                 </div>
@@ -325,24 +309,7 @@
                             <div class="payment-header">
                                 <h2>Detalhes do Pagamento</h2>
                             </div>
-                            <div *ngIf="dadosAgendamento" class="payment-info">
-                                <p *ngIf="dadosAgendamento.turno"><strong>Turno:</strong> {{dadosAgendamento.turno|
-                                    turno}}
-                                </p>
-                                <p *ngIf="dadosAgendamento.profissionais.length > 0">
-                                    <strong>Profissional:</strong> {{recuperarProfissional().nome}}
-                                </p>
-                                <p *ngIf="dadosAgendamento.profissionais.length  == 0">
-                                    <strong>Profissional Selecionado:</strong> Não
-                                </p>
-                                <p><strong>Quantidade de Dias:</strong> {{dadosAgendamento.getQtdDias()}}</p>
-                                <p><strong>Metragem:</strong> {{dadosAgendamento.metragem}}</p>
-                                <p><strong>Desconto:</strong> {{dadosAgendamento.desconto | moeda}}</p>
-                                <p><strong>Valor:</strong> {{dadosAgendamento.valor + dadosAgendamento.desconto |
-                                    moeda}}</p>
-                                <p><strong>Total:</strong> {{dadosAgendamento.valor | moeda}}
-                                </p>
-                            </div>
+                            <app-pagamento [agendamento]="dadosAgendamento"></app-pagamento>
                         </div>
                     </div>
                 </div>

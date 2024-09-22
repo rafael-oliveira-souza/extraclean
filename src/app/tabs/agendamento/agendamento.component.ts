@@ -61,6 +61,7 @@ import { ItensLimpezaComponent } from '../../components/itens-limpeza/itens-limp
     NgxMaskPipe,
     CepComponent,
     ItensLimpezaComponent,
+    PagamentoComponent,
   ],
   providers: [
     provideNgxMask(),
@@ -90,7 +91,7 @@ export class AgendamentoComponent implements OnInit {
   public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
   public profissional = null;
-  public habilitaStep: boolean[] = [false, false, false, false, true, true];
+  public habilitaStep: boolean[] = [true, true, true, true, true, true];
   public endereco = new EnderecoDTO();
 
   constructor(private _authService: AutenticacaoService, private _router: Router,
