@@ -28,7 +28,6 @@
         background-color: white !important;
     }
 
-
     ::ng-deep .mdc-button {
         color: $white !important;
         background-color: $primary !important;
@@ -75,4 +74,17 @@ h5 {
     justify-content: space-between;
     align-items: center;
     margin-top: 20px;
+}
+
+
+::ng-deep mat-checkbox {
+    .mdc-label {
+        color: $primary !important;
+    }
+}
+
+::ng-deep #checkboxCep  {
+    .mdc-checkbox__background {
+        border: 1px solid $primary !important;
+    }
 }
