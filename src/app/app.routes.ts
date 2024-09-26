@@ -13,6 +13,7 @@ export enum Rota {
     HOME = 'home',
     LOGIN = 'login',
     PAGAMENTO = 'pagamento',
+    RECUPERACAO_SENHA = 'recuperacao-senha',
 }
 
 export const routes: Routes = [

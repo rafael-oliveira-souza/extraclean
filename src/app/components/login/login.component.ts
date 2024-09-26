@@ -95,4 +95,8 @@ export class LoginComponent implements OnInit {
     this._router.navigate([Rota.CADASTRO]);
   }
 
+  public recuperarSenha() {
+    this._router.navigate([Rota.RECUPERACAO_SENHA]);
+  }
+  
 }
