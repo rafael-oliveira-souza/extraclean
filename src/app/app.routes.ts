@@ -5,6 +5,7 @@ import { CadastroComponent } from './components/cadastro/cadastro.component';
 import { AuthGuard } from './services/permissao.service';
 import { PagamentoComponent } from './components/pagamento/pagamento.component';
 import { AdminComponent } from './components/admin/admin.component';
+import { SenhaEsquecidaComponent } from './components/senha-esquecida/senha-esquecida.component';
 
 export enum Rota {
     NONE = '',
@@ -20,6 +21,7 @@ export const routes: Routes = [
     { path: Rota.NONE, component: MenuComponent },
     { path: Rota.HOME, component: MenuComponent },
     { path: Rota.ADMIN, component: AdminComponent },
+    { path: Rota.RECUPERACAO_SENHA, component: SenhaEsquecidaComponent },
     { path: Rota.CADASTRO, component: CadastroComponent },
     { path: Rota.LOGIN, component: LoginComponent },
     { path: Rota.PAGAMENTO, component: PagamentoComponent },
