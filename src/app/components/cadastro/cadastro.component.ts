@@ -76,14 +76,6 @@ export class CadastroComponent implements OnInit {
     this._usuarioService.cadastrar(usuario)
       .subscribe(
         (usuario: UsuarioDTO) => {
-          if (usuario.autenticado) {
-            this._authService.autenticar(usuario.email);
-          } else {
-            this._notificacaoService.alerta(MensagemEnum.USUARIO_NAO_AUTENTICADO);
-            this._usuarioService.confirmarEmail(usuario.email)
-              .subscribe(result => { });
-          }
-
           this._router.navigate([Rota.LOGIN]);
         },
         (error) => {
