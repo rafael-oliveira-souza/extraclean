@@ -19,12 +19,13 @@
             <mat-icon matSuffix style="cursor: pointer;" (click)="showBooleanSenha = !showBooleanSenha">
               {{!showBooleanSenha?'visibility':'visibility_off'}}</mat-icon>
           </mat-form-field>
-          <small style="font-size: 12px; " *ngIf="formLogin.controls['email'].invalid" class="text-danger">
+          <small style="font-size: 12px; "
+            *ngIf="formLogin.controls['email'].touched && formLogin.controls['email'].invalid" class="text-danger">
             <!-- <mat-icon style="font-size: 14px;" aria-hidden="false" fontIcon="error"> </mat-icon> -->
             Email inválido.
           </small>
           <small style="font-size: 12px; "
-            *ngIf="formLogin.controls['email'].valid && formLogin.controls['senha'].invalid" class="text-danger">
+            *ngIf="formLogin.controls['senha'].touched &&  formLogin.controls['email'].valid && formLogin.controls['senha'].invalid" class="text-danger">
             <!-- <mat-icon style="font-size: 14px;" aria-hidden="false" fontIcon="error"> </mat-icon> -->
             Senha Inválida
           </small>
