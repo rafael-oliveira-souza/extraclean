@@ -8,7 +8,7 @@
         <mat-error>Preencha todos os dígitos</mat-error>
         }
       </mat-form-field>
-      <mat-checkbox #check formControlName="naoEncontrado" class="text-start">Cep não
+      <mat-checkbox id="checkboxCep" #check formControlName="naoEncontrado" class="text-start">Cep não
         encontrado.</mat-checkbox> <br>
       <button *ngIf="!formCep.controls['naoEncontrado'].value" class="col-2 col-xl-2 col-lg-2 col-md-2 col-sm-12  "
         (click)="getCep(formCep.controls['cep'].value)" style="margin-left: 20px;"

@@ -12,6 +12,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { CalculoUtils } from '../../utils/CalculoUtils';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 
 @Component({
   selector: 'app-login',
@@ -76,7 +77,14 @@ export class LoginComponent implements OnInit {
     this._authService.login(email, senha)
       .subscribe(
         (usuario: UsuarioDTO) => {
-          this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
+          if (usuario.autenticado) {
+            this._authService.autenticar(usuario.email);
+            this._router.navigate([Rota.HOME], { queryParams: { tab: 3 } });
+          } else {
+            this._notificacaoService.alerta(MensagemEnum.USUARIO_NAO_AUTENTICADO);
+            this._usuarioService.confirmarEmail(usuario.email)
+              .subscribe(result => { });
+          }
         },
         (error) => {
           this._notificacaoService.erro(error);
@@ -87,4 +95,8 @@ export class LoginComponent implements OnInit {
     this._router.navigate([Rota.CADASTRO]);
   }
 
+  public recuperarSenha() {
+    this._router.navigate([Rota.RECUPERACAO_SENHA]);
+  }
+  
 }

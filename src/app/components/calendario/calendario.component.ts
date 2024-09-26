@@ -1,4 +1,4 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, model, Output, ViewEncapsulation } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, model, OnInit, Output, ViewEncapsulation } from '@angular/core';
 import { MatCardModule } from '@angular/material/card';
 
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
@@ -28,6 +28,7 @@ import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { ProfissionalComponent } from '../profissional/profissional.component';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
+import { DiariaService } from '../../services/diaria.service';
 
 export const MY_FORMATS = {
   parse: {
@@ -66,7 +67,7 @@ export const MY_FORMATS = {
   templateUrl: './calendario.component.html',
   styleUrl: './calendario.component.scss'
 })
-export class CalendarioComponent {
+export class CalendarioComponent implements OnInit {
   @Input('disponibilidade')
   public disponibilidade: Array<Date> = [];
 
@@ -113,8 +114,14 @@ export class CalendarioComponent {
   public corIndisponivel: CorEnum = CorEnum.laranja;
   public corPrincipal: CorEnum = CorEnum.primary;
 
-  constructor(private _changes: ChangeDetectorRef, private _diaristaService: ProfissionalService) {
+  constructor(private _changes: ChangeDetectorRef,
+    private _diaristaService: ProfissionalService,
+    private _diariaService: DiariaService) {
     this.calcular();
+  }
+
+  ngOnInit(): void {
+    this.atualizarDiasDisponiveis(new Date());
   }
 
   public adicionarAgendamento(diaSelecionado: MomentInput): void {
@@ -156,13 +163,34 @@ export class CalendarioComponent {
     });
   }
 
+  public atualizarDiasDisponiveis(data: MomentInput) {
+    this._diariaService.recuperarDiariasAgendadasMes(this.turno, DateUtils.toDate(data))
+      .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
+        if (agendamentos) {
+          if (typeof document !== 'undefined') {
+            agendamentos.map(agend =>
+              new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME), agend.turno))
+              .forEach(agend => {
+                const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
+                let inputData: HTMLElement | null = document.getElementById(idDia);
+                if (inputData) {
+                  inputData.setAttribute(this.ATTR_INDISPONIBLE, "true");
+                }
+              });
+          }
+        }
+      });
+  }
+
   public atualizarDiasDisponiveisProfissional() {
     if (this.profissionalSelecionado != 0) {
       this.diasAgendadosProfissional.forEach(agend => {
-        const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
-        let inputData: HTMLElement | null = document.getElementById(idDia);
-        if (inputData) {
-          inputData.setAttribute(this.ATTR_INDISPONIBLE, "true");
+        if (typeof document !== 'undefined') {
+          const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
+          let inputData: HTMLElement | null = document.getElementById(idDia);
+          if (inputData) {
+            inputData.setAttribute(this.ATTR_INDISPONIBLE, "true");
+          }
         }
       });
     }
@@ -259,6 +287,7 @@ export class CalendarioComponent {
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
       this.atualizarDiasSelecionados(false);
+      this.atualizarDiasDisponiveis(newDate);
     }
   }
 
@@ -268,6 +297,7 @@ export class CalendarioComponent {
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
       this.atualizarDiasSelecionados(false);
+      this.atualizarDiasDisponiveis(newDate);
     }
   }
 
@@ -318,7 +348,7 @@ export class CalendarioComponent {
               this.diasAgendadosProfissional = agendamentos.map(agend =>
                 new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME), agend.turno));
               this.atualizarDiasDisponiveisProfissional();
-            })
+            });
         }
       });
     }
