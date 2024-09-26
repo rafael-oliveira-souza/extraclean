@@ -19,9 +19,11 @@ img {
     background-color: $primary;
 }
 
-p {
+p,
+h3 {
     color: $white;
 }
+
 
 ::ng-deep .mdc-button {
     color: $primary !important;
