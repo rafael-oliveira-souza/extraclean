@@ -17,6 +17,14 @@ export class UsuarioService {
     return this._http.post<UsuarioDTO>(url, usuario);
   }
 
+  public confirmarEmail(email: string): Observable<UsuarioDTO> {
+    const url = `${this.HOST_URL}/confirmar-email`;
+    let params = new HttpParams()
+      .set('email', email);
+
+    return this._http.get<UsuarioDTO>(url, { params })
+  }
+
   public atualizarSenha(usuario: UsuarioDTO): Observable<UsuarioDTO> {
     const url = `${this.HOST_URL}/atualizar-senha`;
     return this._http.post<UsuarioDTO>(url, usuario);

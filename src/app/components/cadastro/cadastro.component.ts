@@ -13,6 +13,7 @@ import { AutenticacaoService } from '../../services/autenticacao.service';
 import { CalculoUtils } from '../../utils/CalculoUtils';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 
 @Component({
   selector: 'app-cadastro',
@@ -75,7 +76,14 @@ export class CadastroComponent implements OnInit {
     this._usuarioService.cadastrar(usuario)
       .subscribe(
         (usuario: UsuarioDTO) => {
-          this._authService.autenticar(usuario.email);
+          if (usuario.autenticado) {
+            this._authService.autenticar(usuario.email);
+          } else {
+            this._notificacaoService.alerta(MensagemEnum.USUARIO_NAO_AUTENTICADO);
+            this._usuarioService.confirmarEmail(usuario.email)
+              .subscribe(result => { });
+          }
+
           this._router.navigate([Rota.LOGIN]);
         },
         (error) => {
