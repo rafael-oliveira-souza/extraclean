@@ -34,11 +34,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
-<<<<<<< Updated upstream
-=======
-import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
->>>>>>> Stashed changes
 
 @Component({
   selector: 'app-admin',
