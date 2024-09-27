@@ -11,7 +11,7 @@
           <h6> {{menu.label}}</h6>
         </div>
       </div>
-      <div class="body container">
+      <div class="body container-fluid">
         <app-scroll>
           <div *ngIf="selectedIndex == 1">
             <div class="row justify-content-center">
@@ -41,10 +41,8 @@
                 <mat-form-field class="col-12">
                   <mat-label>Escolha um Período</mat-label>
                   <select matNativeControl [(ngModel)]="agendamento.turno">
-                    <option value="0">Sem preferência</option>
                     <option value="1">Matutino</option>
                     <option value="2">Vespertino</option>
-                    <option value="3">Integral</option>
                   </select>
                 </mat-form-field>
               </div>
@@ -94,9 +92,9 @@
                   <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
               </div>
-              <section class="example-section">
+              <!-- <section class="example-section">
                 <mat-checkbox [(ngModel)]="agendamento.isDetalhada">DETALHADA</mat-checkbox> <br>
-              </section>
+              </section> -->
               <section class="example-section">
                 <mat-checkbox [(ngModel)]="agendamento.extraPlus">EXTRA
                   PLUS</mat-checkbox> <br>
@@ -178,6 +176,9 @@
                   (click)="criarCliente()">Criar Cliente</button>
               </div>
             </div>
+          </div>
+          <div *ngIf=" selectedIndex==3">
+            <app-calendario-agendamento></app-calendario-agendamento>
           </div>
         </app-scroll>
       </div>

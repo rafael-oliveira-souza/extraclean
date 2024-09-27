@@ -9,38 +9,17 @@
                 <div *ngIf="!isXs()">
                     <button class="btn-contrate mr-4" (click)="contratar()" mat-flat-button>AGENDE JÁ!</button>
                 </div>
-                <div *ngIf="authService.isLoggedIn()" class="ml-4">
-                    <mat-icon class="text-white" [matMenuTriggerFor]="menu" aria-hidden="false" aria-label="Perfil"
-                        fontIcon="menu"></mat-icon>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="abrirPerfil()">
-                            <mat-icon aria-hidden="false" aria-label="Meu Perfil" fontIcon="account_circle"></mat-icon>
-                            Meu Perfil
-                        </button>
-                        <button mat-menu-item (click)="abrirHistoricoAgendamento()">
-                            <mat-icon aria-hidden="false" aria-label="Meus Agendamentos"
-                                fontIcon="event_note"></mat-icon>
-                            Meus Agendamentos
-                        </button>
-                        <button *ngIf="authService.isAdminLoggedIn()" mat-menu-item (click)="abrirAdministrador()">
-                            <mat-icon aria-hidden="false" aria-label="Administração" fontIcon="admin_panel_settings"></mat-icon>
-                            Administração
-                        </button>
-                        <button mat-menu-item (click)="logout()">
-                            <mat-icon aria-hidden="false" aria-label="Sair" fontIcon="logout"></mat-icon>
-                            Sair
-                        </button>
-                    </mat-menu>
-                </div>
-                <div *ngIf="!authService.isLoggedIn()" class="ml-4">
-                    <mat-icon class="text-white" [matMenuTriggerFor]="menu" aria-hidden="false" aria-label="Perfil"
-                        fontIcon="menu"></mat-icon>
-                    <mat-menu #menu="matMenu">
-                        <button mat-menu-item (click)="login()">
-                            <mat-icon aria-hidden="false" aria-label="Sair" fontIcon="login"></mat-icon>
-                            Entrar
-                        </button>
-                    </mat-menu>
+                <div>
+                    <mat-icon class="text-white" (click)="exibirMenus()" [matMenuTriggerFor]="menu" aria-hidden="false"
+                        aria-label="Perfil" fontIcon="menu"></mat-icon>
+                    <div class="ml-4">
+                        <mat-menu #menu="matMenu">
+                            <button mat-menu-item *ngFor="let menu of menusHamb" (click)="menu.method()">
+                                <mat-icon aria-hidden="false" [fontIcon]="menu.icon"></mat-icon>
+                                {{menu.label}}
+                            </button>
+                        </mat-menu>
+                    </div>
                 </div>
             </div>
             <div *ngIf="isXs()" class="col-12 mb-4 d-flex justify-content-end ">

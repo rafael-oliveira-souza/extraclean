@@ -2,6 +2,7 @@ import { DurationInputArg2, MomentInput } from "moment";
 import moment from "moment";
 import { InclusividadeEnum } from "../domains/enums/InclusividadeEnum";
 import { LinguagemEnum } from "../domains/enums/LinguagemEnum";
+import { DiaSemanaEnum } from "../domains/enums/DiaSemanaEnum";
 
 export class DateUtils {
     public static BR: string = "DD/MM/yyyy";
@@ -86,6 +87,17 @@ export class DateUtils {
         return this.toMoment(dateA).isSameOrBefore(dateB);
     }
 
+    public static getNextDays(dateA: MomentInput, qtd: number): Array<Date> {
+        const date: MomentInput = this.toMoment(dateA);
+        let datesInMonth: Array<Date> = [date.toDate()];
+
+        for (let i = 1; i < qtd; i++) {
+            datesInMonth.push(date.add(1, 'day').toDate());
+        }
+
+        return datesInMonth;
+    }
+
     public static datesInMonth(dateA: MomentInput): Array<Date> {
         const date: MomentInput = this.toMoment(dateA);
         const daysInMonth: number = date.daysInMonth();
@@ -111,9 +123,29 @@ export class DateUtils {
     public static endOfDay(dateA: MomentInput): MomentInput {
         return this.toMoment(dateA).endOf('day');
     }
+
     public static diffMinutes(dateA: MomentInput, dateB: MomentInput): number {
         const diffInMs = this.toDate(dateA).getTime() - this.toDate(dateB).getTime(); // Diferença em milissegundos
         return Math.floor(diffInMs / (1000 * 60))
+    }
+
+    public static getDiasSemana(dateA: MomentInput) {
+        switch (this.toMoment(dateA).day()) {
+            case 0:
+                return DiaSemanaEnum.DOMINGO;
+            case 1:
+                return DiaSemanaEnum.SEGUNDA;
+            case 2:
+                return DiaSemanaEnum.TERCA;
+            case 3:
+                return DiaSemanaEnum.QUARTA;
+            case 4:
+                return DiaSemanaEnum.QUINTA;
+            case 5:
+                return DiaSemanaEnum.SEXTA;
+            default:
+                return DiaSemanaEnum.SABADO;
+        }
     }
 
 }

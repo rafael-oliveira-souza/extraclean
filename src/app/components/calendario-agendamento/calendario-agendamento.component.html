@@ -1,0 +1,150 @@
+<div class="mt-5">
+  <div>
+    <mat-form-field class="col-12">
+      <mat-label>Profissional</mat-label>
+      <select matNativeControl [(ngModel)]="profissional" (ngModelChange)="atualizarProfissional()">
+        <option></option>
+        <option *ngFor="let prof of profissionais;">{{prof}}
+        </option>
+      </select>
+    </mat-form-field>
+    <mat-form-field class="col-12">
+      <mat-label>Período</mat-label>
+      <select matNativeControl [(ngModel)]="turno" (ngModelChange)="atualizarProfissional()">
+        <option value="0"></option>
+        <option value="1">Matutino</option>
+        <option value="2">Vespertino</option>
+      </select>
+    </mat-form-field>
+  </div>
+  <div *ngIf=" !isXs()">
+    <div>
+      <mat-form-field class="col-12">
+        <mat-label>Escolha um Período</mat-label>
+        <select matNativeControl [(ngModel)]="periodo" (ngModelChange)="atualizarPeriodo()">
+          <option *ngFor="let per of proximosPeriodos; let i = index;" [value]="i">{{getLabel(per)}}</option>
+        </select>
+      </mat-form-field>
+    </div>
+    <mat-grid-list cols="6" rowHeight="3:1">
+      <mat-grid-tile id="per" *ngFor="let per of proximoPeriodoSelecionado">{{per | data}}</mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list cols="6" [rowHeight]="qtdInfo" *ngIf="turno == 1 || turno == 0">
+      <mat-grid-tile id="mat" *ngFor="let mat of proximoPeriodoSelecionado">
+        <div class="row justify-content-center">
+          <div class=" col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(mat, true)">
+            <div class="p-1" *ngIf="diaria">
+              <hr>
+              <small><strong>Cliente: </strong>{{diaria.nomeCliente}}</small><br>
+              <small><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+              <small><strong>Tipo de Limpeza: </strong>{{diaria.tipoLimpeza | tipoLimpeza}}</small><br>
+              <small><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+              <small><strong>Metragem: </strong>{{diaria.metragem}}</small><br>
+              <small><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
+              <small><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
+              <small><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento |
+                situacaoPagamento}}</small><br>
+              <small><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
+                  [href]="diaria.localizacao">Localização</a></small><br>
+              <small *ngIf="isPagamentoEmAberto(diaria)">
+                <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a>
+              </small><br>
+              <div *ngIf="isPagamentoEmAberto(diaria)" class="row justify-content-center mt-3">
+                <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
+                  Agendamento</button>
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+    <mat-grid-list cols="6" [rowHeight]="qtdInfo" *ngIf="turno == 2 || turno == 0">
+      <mat-grid-tile id="vesp" *ngFor="let vesp of proximoPeriodoSelecionado">
+        <div class="row justify-content-center">
+          <div class=" col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(vesp, false)">
+            <div class="p-1" *ngIf="diaria">
+              <hr>
+              <small><strong>Cliente: </strong>{{diaria.nomeCliente}}</small><br>
+              <small><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+              <small><strong>Tipo de Limpeza: </strong>{{diaria.tipoLimpeza | tipoLimpeza}}</small><br>
+              <small><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+              <small><strong>Metragem: </strong>{{diaria.metragem}}</small><br>
+              <small><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
+              <small><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
+              <small><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento |
+                situacaoPagamento}}</small><br>
+              <small><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
+                  [href]="diaria.localizacao">Localização</a></small><br>
+              <small *ngIf="isPagamentoEmAberto(diaria)">
+                <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a>
+              </small><br>
+              <div *ngIf="isPagamentoEmAberto(diaria)" class="row justify-content-center mt-3">
+                <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
+                  Agendamento</button>
+              </div>
+              <hr>
+            </div>
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+
+  <div *ngIf="isXs()">
+    <div>
+      <mat-form-field class="col-12">
+        <mat-label>Escolha um Período</mat-label>
+        <select matNativeControl [(ngModel)]="periodo" (ngModelChange)="atualizarPeriodo()">
+          <option *ngFor="let per of ultimosPeriodos; let i = index;" [value]="i">{{getDiasSemana(per)}} - {{per |
+            data}}
+          </option>
+        </select>
+      </mat-form-field>
+    </div>
+    <mat-grid-list cols="1" [rowHeight]="qtdInfo">
+      <mat-grid-tile *ngIf="turno == 1 || turno == 0" id="mat">
+        <div class="row justify-content-center">
+          <div class=" col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(periodoUnico, true)">
+            <div class="p-1" *ngIf="diaria">
+              <hr>
+              <small><strong>Cliente: </strong>{{diaria.nomeCliente}}</small><br>
+              <small><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+              <small><strong>Tipo de Limpeza: </strong>{{diaria.tipoLimpeza | tipoLimpeza}}</small><br>
+              <small><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+              <small><strong>Metragem: </strong>{{diaria.metragem}}</small><br>
+              <small><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
+              <small><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
+              <small><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento | situacaoPagamento}}</small><br>
+              <small *ngIf="diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 2">
+                <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a>
+              </small><br>
+              <hr>
+            </div>
+          </div>
+        </div>
+      </mat-grid-tile>
+      <mat-grid-tile *ngIf="turno == 2 || turno == 0" id="vesp">
+        <div class="row justify-content-center">
+          <div class=" col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(periodoUnico, false)">
+            <div class="p-1" *ngIf="diaria">
+              <hr>
+              <small><strong>Cliente: </strong>{{diaria.nomeCliente}}</small><br>
+              <small><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+              <small><strong>Tipo de Limpeza: </strong>{{diaria.tipoLimpeza | tipoLimpeza}}</small><br>
+              <small><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+              <small><strong>Metragem: </strong>{{diaria.metragem}}</small><br>
+              <small><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
+              <small><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
+              <small><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento | situacaoPagamento}}</small><br>
+              <small *ngIf="diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 2">
+                <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a>
+              </small><br>
+              <hr>
+            </div>
+          </div>
+        </div>
+      </mat-grid-tile>
+    </mat-grid-list>
+  </div>
+</div>

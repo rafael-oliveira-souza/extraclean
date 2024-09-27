@@ -18,7 +18,6 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Rota } from '../../app.routes';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
-import { ClienteService } from '../../services/cliente.service';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { HistoricoAgendamentoComponent } from '../../components/historico-agendamento/historico-agendamento.component';
 import { HistoricoAgendamentoDTO } from '../../domains/dtos/HistoricoAgendamentoDTO';
@@ -47,22 +46,22 @@ export class MenuComponent {
   public readonly ATTR_SELECTED: string = "selected";
 
   public width: number | null = null;
+  public selectedIndex: number = 1;
+  public cliente: ClienteDTO | null = null;
   public menus: MenuDTO[] = [
     { label: "Home", id: "idMenuHome", index: 1 },
     { label: "Serviços", id: "idMenuServico", index: 2 },
     { label: "Agendamentos", id: "idMenuAgend", index: 3 },
     { label: "Planos", id: "idMenuPlano", index: 4 },
   ];
-  public selectedMenu: MenuDTO = this.menus[0];
-  public selectedIndex: number = 1;
 
-  public cliente: ClienteDTO | null = null;
+  public menusHamb: any[] = [];
+  public selectedMenu: MenuDTO = this.menus[0];
 
   constructor(private dialog: MatDialog,
     public authService: AutenticacaoService,
     private _agendamentoService: AgendamentoService,
     private _notificacaoService: NotificacaoService,
-    private _clienteService: ClienteService,
     private _router: Router,
     private route: ActivatedRoute) { }
 
@@ -74,6 +73,7 @@ export class MenuComponent {
         this.selectedIndex = tab;
       }
     });
+    this.exibirMenus();
   }
 
   ngAfterContentChecked(): void {
@@ -86,11 +86,27 @@ export class MenuComponent {
     }
   }
 
+  public exibirMenus() {
+    if (this.authService.isLoggedIn()) {
+      this.menusHamb = [
+        { label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() },
+        { label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() },
+        { label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() },
+        { label: "Sair", icon: "logout", method: () => this.logout() },
+      ];
+    } else {
+      this.menusHamb = [
+        { label: "Entrar", icon: "login", method: () => this.login() },
+      ];
+    }
+  }
+
   login(): void {
     this._router.navigate([Rota.LOGIN]);
   }
 
   public contratar() {
+    this.exibirMenus();
     const email: string | undefined = this.authService.validarUsuario(false, true);
     if (!email) {
       return;
@@ -116,8 +132,8 @@ export class MenuComponent {
   }
 
   public isXs() {
-    if (typeof document !== 'undefined') {
-      const documentWidth = document.documentElement.clientWidth;
+    if (typeof window !== 'undefined') {
+      const documentWidth = window.document.documentElement.clientWidth;
       return CalculoUtils.isXs(documentWidth);
     }
 

@@ -34,6 +34,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
+import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
 import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
 
 @Component({
@@ -57,7 +58,8 @@ import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
     PlanosComponent,
     ProfissionalComponent,
     MatButtonToggleModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    CalendarioAgendamentoComponent
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -68,6 +70,7 @@ export class AdminComponent implements OnInit {
   public menus: MenuDTO[] = [
     { label: "Enviar Agendamento", id: "idEnvioAgendamento", index: 1 },
     { label: "Criar Cliente", id: "idCriarCliente", index: 2 },
+    { label: "Gerenciar Agendamentos", id: "idCalendAgend", index: 3 },
   ];
 
   public selectedMenu: MenuDTO = this.menus[0];
