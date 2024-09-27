@@ -11,6 +11,8 @@ import { SimNaoPipe } from './simNao.pipe';
 import { TipoLimpezaPipe } from './tipoLimpeza.pipe';
 import { TipoClientePipe } from './tipoCliente.pipe';
 import { SituacaoAgendamentoPipe } from './situacaoAgendamento.pipe';
+import { SituacaoDiariaPipe } from './situacaoDiaria.pipe';
+import { SituacaoPagamentoPipe } from './situacaoPagamento.pipe';
 
 @NgModule({
   declarations: [],
@@ -27,6 +29,8 @@ import { SituacaoAgendamentoPipe } from './situacaoAgendamento.pipe';
     TipoLimpezaPipe,
     TipoClientePipe,
     SituacaoAgendamentoPipe,
+    SituacaoDiariaPipe,
+    SituacaoPagamentoPipe,
   ],
   exports: [
     DatePipe,
@@ -40,6 +44,8 @@ import { SituacaoAgendamentoPipe } from './situacaoAgendamento.pipe';
     TipoLimpezaPipe,
     TipoClientePipe,
     SituacaoAgendamentoPipe,
+    SituacaoDiariaPipe,
+    SituacaoPagamentoPipe,
   ]
 })
 export class PipeModule { }

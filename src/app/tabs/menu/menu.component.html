@@ -10,8 +10,8 @@
                     <button class="btn-contrate mr-4" (click)="contratar()" mat-flat-button>AGENDE JÁ!</button>
                 </div>
                 <div>
-                    <mat-icon class="text-white" [matMenuTriggerFor]="menu" aria-hidden="false" aria-label="Perfil"
-                        fontIcon="menu"></mat-icon>
+                    <mat-icon class="text-white" (click)="exibirMenus()" [matMenuTriggerFor]="menu" aria-hidden="false"
+                        aria-label="Perfil" fontIcon="menu"></mat-icon>
                     <div class="ml-4">
                         <mat-menu #menu="matMenu">
                             <button mat-menu-item *ngFor="let menu of menusHamb" (click)="menu.method()">

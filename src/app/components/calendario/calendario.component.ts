@@ -370,9 +370,9 @@ export class CalendarioComponent implements OnInit {
   }
 
   public isXs() {
-    if (typeof document !== 'undefined') {
-      const documentWidth = document.documentElement.clientWidth;
-      return CalculoUtils.isLessThan(documentWidth, 900);
+    if (typeof window !== 'undefined') {
+      const documentWidth = window.document.documentElement.clientWidth;
+      return CalculoUtils.isXs(documentWidth);
     }
 
     return false;

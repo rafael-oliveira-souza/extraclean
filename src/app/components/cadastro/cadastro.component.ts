@@ -85,8 +85,8 @@ export class CadastroComponent implements OnInit {
   }
 
   public isXs() {
-    if (typeof document !== 'undefined') {
-      const documentWidth = document.documentElement.clientWidth;
+    if (typeof window !== 'undefined') {
+      const documentWidth = window.document.documentElement.clientWidth;
       return CalculoUtils.isXs(documentWidth);
     }
 

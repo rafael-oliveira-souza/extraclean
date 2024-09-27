@@ -86,7 +86,7 @@ export class MenuComponent {
     }
   }
 
-  private exibirMenus() {
+  public exibirMenus() {
     if (this.authService.isLoggedIn()) {
       this.menusHamb = [
         { label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() },
@@ -106,6 +106,7 @@ export class MenuComponent {
   }
 
   public contratar() {
+    this.exibirMenus();
     const email: string | undefined = this.authService.validarUsuario(false, true);
     if (!email) {
       return;
