@@ -121,7 +121,7 @@ export class CalendarioComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.atualizarDiasDisponiveis(new Date());
+    this.atualizarDiasDisponiveis(DateUtils.toMoment());
   }
 
   public adicionarAgendamento(diaSelecionado: MomentInput): void {
@@ -143,7 +143,7 @@ export class CalendarioComponent implements OnInit {
 
   public atualizarDiasSelecionados(updateAll: boolean = false) {
     this.atualizarDias();
-    this.atualizarProfissional();
+    this.atualizarDiasDisponiveis();
     this.emitirDadosAgendamento();
   }
 
@@ -163,11 +163,12 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-  public atualizarDiasDisponiveis(data: MomentInput) {
+  public atualizarDiasDisponiveis(data = this.diaSelecionado.value) {
     this._diariaService.recuperarDiariasAgendadasMes(this.turno, DateUtils.toDate(data))
       .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
-        if (agendamentos) {
-          if (typeof document !== 'undefined') {
+        if (typeof document !== 'undefined') {
+          this.atualizarProfissional();
+          if (agendamentos) {
             agendamentos.map(agend =>
               new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME), agend.turno))
               .forEach(agend => {

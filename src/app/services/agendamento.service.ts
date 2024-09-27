@@ -13,7 +13,7 @@ import { FinalizacaoAgendamentoDTO } from '../domains/dtos/FinalizacaoAgendament
   providedIn: 'root'
 })
 export class AgendamentoService {
-  public readonly HOST_URL = `${environment.apiUrl}/agendamento`;
+  private readonly HOST_URL = `${environment.apiUrl}/agendamento`;
 
   constructor(private _http: HttpClient) { }
 

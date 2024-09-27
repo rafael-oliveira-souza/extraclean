@@ -35,6 +35,7 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
+import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
 
 @Component({
   selector: 'app-admin',
@@ -143,6 +144,7 @@ export class AdminComponent implements OnInit {
     this.agendamento.diasSelecionados = [this.agendamento.dataHora];
     this.agendamento.dataHora = new Date();
     this.agendamento.ignoreQtdProfissionais = true;
+    this.agendamento.isDetalhada = this.agendamento.tipoLimpeza == TipoLimpezaEnum.DETALHADA;
     this._agendamentoService.agendar(this.agendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.url = result.url;
