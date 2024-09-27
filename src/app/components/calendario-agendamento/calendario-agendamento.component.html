@@ -1,0 +1,17 @@
+<div class="mt-5">
+  <div>
+    <mat-form-field class="col-12">
+      <mat-label>Escolha um Período</mat-label>
+      <select matNativeControl [(ngModel)]="periodo" (ngModelChange)="atualizarPeriodo()">
+        <option *ngFor="let per of proximosPeriodos; let i = index;" [value]="i">{{getLabel(per)}}</option>
+      </select>
+    </mat-form-field>
+  </div>
+  <mat-grid-list cols="6" rowHeight="3:1">
+    <mat-grid-tile id="per" *ngFor="let per of proximoPeriodoSelecionado">{{per | data}}</mat-grid-tile>
+  </mat-grid-list>
+  <mat-grid-list cols="6" rowHeight="1:1">
+    <mat-grid-tile id="mat" *ngFor="let mat of diariasMatutinas">{{mat.nomeCliente}}</mat-grid-tile>
+    <mat-grid-tile id="vesp" *ngFor="let vesp of diariasVespertinas">{{vesp.nomeCliente}}</mat-grid-tile>
+  </mat-grid-list>
+</div>

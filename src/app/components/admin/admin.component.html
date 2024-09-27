@@ -94,9 +94,9 @@
                   <mat-datepicker #picker2></mat-datepicker>
                 </mat-form-field>
               </div>
-              <section class="example-section">
+              <!-- <section class="example-section">
                 <mat-checkbox [(ngModel)]="agendamento.isDetalhada">DETALHADA</mat-checkbox> <br>
-              </section>
+              </section> -->
               <section class="example-section">
                 <mat-checkbox [(ngModel)]="agendamento.extraPlus">EXTRA
                   PLUS</mat-checkbox> <br>
@@ -178,6 +178,9 @@
                   (click)="criarCliente()">Criar Cliente</button>
               </div>
             </div>
+          </div>
+          <div *ngIf=" selectedIndex==3">
+            <app-calendario-agendamento></app-calendario-agendamento>
           </div>
         </app-scroll>
       </div>
