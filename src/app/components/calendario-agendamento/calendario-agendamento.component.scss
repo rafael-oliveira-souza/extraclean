@@ -6,6 +6,16 @@
     background: rgb(95, 199, 166) !important;
 }
 
+#mat {
+    background: lightblue !important;
+    border-left: 1px solid white;
+}
+
+#vesp {
+    background: rgb(95, 199, 166) !important;
+    border-left: 1px solid white;
+}
+
 
 ::ng-deep #per.mat-grid-tile {
     background: rgb(237, 240, 157) !important;
