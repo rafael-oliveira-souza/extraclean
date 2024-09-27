@@ -16,6 +16,7 @@ import { DiaSemanaEnum } from '../../domains/enums/DiaSemanaEnum';
 import { FinalizacaoAgendamentoDTO } from '../../domains/dtos/FinalizacaoAgendamentoDTO';
 import { SituacaoDiariaEnum } from '../../domains/enums/SituacaoDiariaEnum';
 import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
+import { ScrollComponent } from '../scroll/scroll.component';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -27,7 +28,8 @@ import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum
     MatInputModule,
     MatGridListModule,
     MatFormFieldModule,
-    PipeModule
+    PipeModule,
+    ScrollComponent
   ],
   templateUrl: './calendario-agendamento.component.html',
   styleUrls: ['./calendario-agendamento.component.scss']
@@ -77,17 +79,6 @@ export class CalendarioAgendamentoComponent implements OnInit {
       .recuperarInfoAgendamentos(this.formatarData(dataAtual))
       .subscribe((infos: InfoAgendamentoDTO[]) => {
         this.infos = infos;
-
-        if (this.isXs()) {
-          for (let i = 1; i * 4 <= infos.length; i++) {
-            this.qtdInfo = `1:${i}`;
-          }
-        } else {
-          for (let i = 1; i * 2 <= infos.length; i++) {
-            this.qtdInfo = `1:${i}`;
-          }
-        }
-
         this.atualizarCalendario(infos);
       });
   }
