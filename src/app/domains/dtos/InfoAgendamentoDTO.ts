@@ -19,4 +19,5 @@ export class InfoAgendamentoDTO {
     localizacao!: string;
     codigoPagamento!: string;
     idCliente!: number;
+    dataReagendamento!: Date;
 }

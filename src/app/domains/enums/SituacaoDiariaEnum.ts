@@ -3,4 +3,5 @@ export enum SituacaoDiariaEnum {
     AGENDADA = 1,
     FINALIZADA = 2,
     CANCELADA = 3,
+    REAGENDADA = 4,
 }

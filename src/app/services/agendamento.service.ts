@@ -47,5 +47,15 @@ export class AgendamentoService {
     const url = `${this.HOST_URL}/finalizar`;
     return this._http.post<any>(url, obj);
   }
+  
+  public cancelarAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
+    const url = `${this.HOST_URL}/cancelar`;
+    return this._http.post<any>(url, obj);
+  }
+  
+  public reagendarAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
+    const url = `${this.HOST_URL}/reagendar`;
+    return this._http.post<any>(url, obj);
+  }
 
 }

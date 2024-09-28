@@ -12,7 +12,6 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { InfoAgendamentoDTO } from '../../domains/dtos/InfoAgendamentoDTO';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 import { CalculoUtils } from '../../utils/CalculoUtils';
-import { DiaSemanaEnum } from '../../domains/enums/DiaSemanaEnum';
 import { FinalizacaoAgendamentoDTO } from '../../domains/dtos/FinalizacaoAgendamentoDTO';
 import { SituacaoDiariaEnum } from '../../domains/enums/SituacaoDiariaEnum';
 import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
@@ -28,6 +27,8 @@ import { ScrollComponent } from '../scroll/scroll.component';
     MatInputModule,
     MatGridListModule,
     MatFormFieldModule,
+    FormsModule,
+    CommonModule,
     PipeModule,
     ScrollComponent
   ],
@@ -47,6 +48,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public profissional!: string;
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = new Date();
+  public dataReagendamento: Date = new Date();
 
   constructor(private _agendService: AgendamentoService, private _changes: ChangeDetectorRef) { }
 
@@ -115,7 +117,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
       this.mapVesp.set(dataDiaria, [null]);
       this.mapMat.set(dataDiaria, [null]);
     });
-    const infos = this.infos.filter(info => !this.profissional || info.nomeDiarista == this.profissional);
+    const infos = this.infos.filter(info => !this.profissional || info.nomeDiarista.trim().toLowerCase() == this.profissional.trim().toLowerCase());
     this.atualizarCalendario(infos);
   }
 
@@ -177,7 +179,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
   }
 
   public isPagamentoEmAberto(diaria: InfoAgendamentoDTO) {
-    return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 2;
+    return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 0 || diaria.situacaoPagamento == 2;
   }
 
   public finalizarAgendamento(diaria: InfoAgendamentoDTO) {
@@ -193,6 +195,36 @@ export class CalendarioAgendamentoComponent implements OnInit {
         diaria.situacaoPagamento = SituacaoPagamentoEnum.APROVADO;
         this._changes.detectChanges();
       });
-
   }
+
+  public cancelarAgendamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+
+    this._agendService
+      .cancelarAgendamento(agend)
+      .subscribe((info: any) => {
+        diaria.situacao = SituacaoDiariaEnum.FINALIZADA;
+        diaria.situacaoPagamento = SituacaoPagamentoEnum.APROVADO;
+        this._changes.detectChanges();
+      });
+  }
+
+  public reagendarAgendamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+    agend.dataReagendamento = diaria.dataReagendamento;
+
+    this._agendService
+      .reagendarAgendamento(agend)
+      .subscribe((info: any) => {
+        this._changes.detectChanges();
+      });
+  }
+
+
 }
