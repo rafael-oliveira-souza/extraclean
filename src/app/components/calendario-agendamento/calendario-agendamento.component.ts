@@ -16,6 +16,8 @@ import { FinalizacaoAgendamentoDTO } from '../../domains/dtos/FinalizacaoAgendam
 import { SituacaoDiariaEnum } from '../../domains/enums/SituacaoDiariaEnum';
 import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
 import { ScrollComponent } from '../scroll/scroll.component';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
+import { NotificacaoService } from '../../services/notificacao.service';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -48,9 +50,11 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public profissional!: string;
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = new Date();
-  public dataReagendamento: Date = new Date();
+  public hoje: Date = new Date();
 
-  constructor(private _agendService: AgendamentoService, private _changes: ChangeDetectorRef) { }
+  constructor(private _agendService: AgendamentoService,
+    private _notificacaoService: NotificacaoService,
+    private _changes: ChangeDetectorRef) { }
 
   ngOnInit() {
     this.getProximosPeriodos();
@@ -194,7 +198,8 @@ export class CalendarioAgendamentoComponent implements OnInit {
         diaria.situacao = SituacaoDiariaEnum.FINALIZADA;
         diaria.situacaoPagamento = SituacaoPagamentoEnum.APROVADO;
         this._changes.detectChanges();
-      });
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_FINALIZADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
   }
 
   public cancelarAgendamento(diaria: InfoAgendamentoDTO) {
@@ -206,10 +211,11 @@ export class CalendarioAgendamentoComponent implements OnInit {
     this._agendService
       .cancelarAgendamento(agend)
       .subscribe((info: any) => {
-        diaria.situacao = SituacaoDiariaEnum.FINALIZADA;
-        diaria.situacaoPagamento = SituacaoPagamentoEnum.APROVADO;
+        diaria.situacao = SituacaoDiariaEnum.CANCELADA;
+        diaria.situacaoPagamento = SituacaoPagamentoEnum.CANCELADO;
         this._changes.detectChanges();
-      });
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CANCELADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
   }
 
   public reagendarAgendamento(diaria: InfoAgendamentoDTO) {
@@ -222,9 +228,12 @@ export class CalendarioAgendamentoComponent implements OnInit {
     this._agendService
       .reagendarAgendamento(agend)
       .subscribe((info: any) => {
+        diaria.dataReagendamento = null;
+        diaria.situacao = SituacaoDiariaEnum.REAGENDADA;
+        diaria.situacaoPagamento = SituacaoPagamentoEnum.EM_ANALISE;
         this._changes.detectChanges();
-      });
+        this._notificacaoService.alerta(MensagemEnum.REAGENDAMENTO_CONCLUIDO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
   }
-
 
 }
