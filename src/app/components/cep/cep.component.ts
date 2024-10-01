@@ -107,6 +107,7 @@ export class CepComponent {
 
     this.formCep.controls['naoEncontrado'].valueChanges.subscribe(val => {
       if (val) {
+        this.formCep.controls['cep'].setValue("00000000");
         this.formCep.controls['logradouro'].setValue("");
         this.formCep.controls['localidade'].setValue("");
         this.formCep.controls['bairro'].setValue("");
@@ -117,6 +118,7 @@ export class CepComponent {
         this.formCep.controls['bairro'].enable();
         this.formCep.controls['uf'].enable();
       } else {
+        this.formCep.controls['cep'].setValue("");
         this.formCep.controls['logradouro'].disable();
         this.formCep.controls['localidade'].disable();
         this.formCep.controls['bairro'].disable();

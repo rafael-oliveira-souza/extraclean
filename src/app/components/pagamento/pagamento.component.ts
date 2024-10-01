@@ -21,6 +21,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { PipeModule } from '../../pipes/pipe.module';
 import { ItensLimpezaComponent } from '../itens-limpeza/itens-limpeza.component';
+import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 
 @Component({
   selector: 'app-pagamento',
@@ -50,7 +51,6 @@ export class PagamentoComponent implements OnInit {
 
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
-  public agendamentoInfo: AgendamentoInfoDTO = new AgendamentoInfoDTO();
 
   constructor(public sanitizer: DomSanitizer) { }
 
@@ -58,5 +58,9 @@ export class PagamentoComponent implements OnInit {
     // window.open(this.data['url'], '_blank');
     // open(this.data['url']);
     // this.linkPagamento = this.sanitizer.bypassSecurityTrustResourceUrl(this.data['url']);
+  }
+
+  public isExtraPlus() {
+    return !ProfissionalDTO.isEmpty(this.agendamento.profissionais[0]);
   }
 }

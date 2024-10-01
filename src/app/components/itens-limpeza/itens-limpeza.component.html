@@ -13,7 +13,7 @@
           </li>
           <li><strong>Atenção aos Detalhes:</strong> Foca em áreas difíceis de
             alcançar,
-            limpeza de manchas, desinfecção e polimento.</li>
+            limpeza de manchas e desinfecção.</li>
           <li><strong>Áreas Abrangidas:</strong> Inclui todas as superfícies, cantos,
             rodapés,
             armários, eletrodomésticos, e áreas de difícil acesso.</li>
@@ -28,7 +28,7 @@
           </li>
           <li>Limpeza de janelas e persianas.</li>
           <li>Desinfecção de superfícies de cozinha e banheiros.</li>
-          <li>Limpeza e organização de armários e gavetas.</li>
+          <li>Limpeza e organização de armários da cozinha.</li>
           <li>Remoção de poeira acumulada em móveis e equipamentos.</li>
         </ul>
       </div>
@@ -41,9 +41,7 @@
           imediata. O
           objetivo principal é remover sujeira e manter uma aparência geral limpa sem
           entrar
-          em muitos detalhes. É ideal para situações onde o tempo é limitado e uma
-          limpeza
-          completa não é viável.</p>
+          em muitos detalhes.</p>
         <ul>
           <li><strong>Rapidez:</strong> Concluída em um curto período de tempo.</li>
           <li><strong>Superficialidade:</strong> Foca em limpar as áreas visíveis e
@@ -79,25 +77,30 @@
     <small class="col-12">* O período integral é calculado como 8 horas.</small><br>
   </div>
 
-  <div *ngIf="exibeInfoProdutos" class=" mt-4">
-    <small>Nossas Limpezas Incluem Produtos Básicos</small>
-    <ul>
-      <li><small>Álcool</small></li>
-      <li><small>Água sanitária</small></li>
-      <li><small>Desinfetante</small></li>
-      <li><small>Limpador multi-uso</small></li>
-      <li><small>Detergente</small></li>
-      <li><small>Limpa vidros</small></li>
-      <li><small>Panos para limpeza</small></li>
-      <li><small>Escovas de limpeza</small></li>
-    </ul>
-
-    <small>Não Disponibilizamos</small>
-    <ul>
-      <li><small>Escadas</small></li>
-      <li><small>Vassouras</small></li>
-      <li><small>Rodos</small></li>
-      <li><small>Baldes</small></li>
-    </ul>
+  <div *ngIf="exibeInfoProdutos" class="">
+    <div class="row justify-content-center align-items-start">
+      <div class="col-12 col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
+        <small>Nossas Limpezas Incluem: </small>
+        <ul>
+          <li><small>Álcool</small></li>
+          <li><small>Água sanitária</small></li>
+          <li><small>Desinfetante</small></li>
+          <li><small>Limpador multi-uso</small></li>
+          <li><small>Detergente</small></li>
+          <li><small>Limpa vidros</small></li>
+          <li><small>Panos para limpeza</small></li>
+          <li><small>Escovas de limpeza</small></li>
+        </ul>
+      </div>
+      <div class="col-12 col-xl-6 col-lg-6 col-md-12 col-sm-12 ">
+        <small>Não Disponibilizamos</small>
+        <ul>
+          <li><small>Escadas</small></li>
+          <li><small>Vassouras</small></li>
+          <li><small>Rodos</small></li>
+          <li><small>Baldes</small></li>
+        </ul>
+      </div>
+    </div>
   </div>
 </div>

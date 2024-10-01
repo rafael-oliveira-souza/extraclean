@@ -19,8 +19,8 @@
               <div class="mt-2 text-center">
                 <p>Enviar Email</p>
                 <mat-button-toggle-group [(ngModel)]="agendamento.enviarEmail" required>
-                  <mat-button-toggle value="true">Sim</mat-button-toggle>
-                  <mat-button-toggle value="false">Não</mat-button-toggle>
+                  <mat-button-toggle [value]="true">Sim</mat-button-toggle>
+                  <mat-button-toggle [value]="false">Não</mat-button-toggle>
                 </mat-button-toggle-group>
               </div>
               <div>
@@ -57,7 +57,7 @@
                   </select>
                 </mat-form-field>
               </div>
-              <div class="col-12" *ngIf="agendamento.turno">
+              <div class="col-12" *ngIf="agendamento.turno" (click)=" recuperarProfissionais()">
                 <app-profissional [profissionais]="profissionais"
                   (atualizarProfissional)="recuperarProfissional($event)"
                   [(profissionaisSelecionados)]="profissionaisSelecionados">
@@ -178,7 +178,7 @@
             </div>
           </div>
           <div *ngIf=" selectedIndex==3">
-            <app-calendario-agendamento></app-calendario-agendamento>
+            <app-calendario-agendamento [isAdm]="true"></app-calendario-agendamento>
           </div>
         </app-scroll>
       </div>

@@ -10,6 +10,10 @@ export class DateUtils {
     public static ES_LOCALDATETIME: string = "YYYY-MM-DDTHH:mm:ss.SSSSSS";
 
     public static toMoment(date?: MomentInput, format?: moment.MomentFormatSpecification, language = LinguagemEnum.PT): moment.Moment {
+        if (moment.isMoment(date)) {
+            return date;
+        }
+
         if (date && format && language) {
             return moment(date, format, language);
         }
@@ -28,10 +32,18 @@ export class DateUtils {
     }
 
     public static format(date: MomentInput, format: moment.MomentFormatSpecification): string {
+        if (moment.isMoment(date)) {
+            return date.format(format.toString());
+        }
+
         return this.toMoment(date).format(format.toString());
     }
 
     public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
+        if (moment.isMoment(date)) {
+            return date.toDate();
+        }
+
         return this.toMoment(date, format).toDate();
     }
 

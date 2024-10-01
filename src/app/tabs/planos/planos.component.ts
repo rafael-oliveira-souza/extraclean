@@ -53,10 +53,10 @@ export class PlanosComponent {
   public getUrl: EventEmitter<string> = new EventEmitter();
 
   public static readonly PLANOS: PlanoDTO[] = [
-    new PlanoDTO(TipoPlanoEnum.SEMANAL, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 3, 2, 2),
-    new PlanoDTO(TipoPlanoEnum.MENSAL, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 6, 4, 4),
-    new PlanoDTO(TipoPlanoEnum.TRIMESTAL, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 9, 12, 6),
-    new PlanoDTO(TipoPlanoEnum.SEMESTRAL, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 12, 24, 6),
+    new PlanoDTO(TipoPlanoEnum.SEMANAL, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 5, 2, 2),
+    new PlanoDTO(TipoPlanoEnum.MENSAL, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 10, 4, 4),
+    new PlanoDTO(TipoPlanoEnum.TRIMESTAL, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 15, 12, 6),
+    new PlanoDTO(TipoPlanoEnum.SEMESTRAL, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 15, 24, 6),
     new PlanoDTO(TipoPlanoEnum.ANUAL, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 15, 48, 12)
   ];
 
@@ -133,7 +133,6 @@ export class PlanosComponent {
     dadosAgendamento.origem = OrigemPagamentoEnum.AGENDAMENTO;
     dadosAgendamento.quantidadeItens = 1;
     dadosAgendamento.profissionais = this.agendamento.profissionais;
-    dadosAgendamento.isDetalhada = this.pagamento.isDetalhada;
     dadosAgendamento.qtdParcelas = plano.qtdParcelas;
     dadosAgendamento.turno = this.agendamento.turno;
     dadosAgendamento.tipoLimpeza = this.pagamento.isDetalhada ? TipoLimpezaEnum.DETALHADA : TipoLimpezaEnum.EXPRESSA;

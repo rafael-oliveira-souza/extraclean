@@ -3,7 +3,7 @@
         <mat-grid-list cols="7" rowHeight="50px">
             <div *ngIf="isXs()">
                 <div>
-                    <div *ngIf="!isDetalhada" id="profissionalCalendario">
+                    <div *ngIf="!isDetalhada()" id="profissionalCalendario">
                         <mat-grid-tile colspan="7" rowspan="1">
                             <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
                                 style="margin-top: 20px;">
@@ -25,10 +25,9 @@
                                 style="margin-top: 20px;">
                                 <mat-label>Escolha um Período</mat-label>
                                 <select matNativeControl [(ngModel)]="turno" (change)="atualizarDiasDisponiveis()">
-                                    <option value="0">Sem preferência</option>
-                                    <option value="1">Matutino</option>
-                                    <option value="2">Vespertino</option>
-                                    <option value="3">Integral</option>
+                                    <option [value]="0">Sem preferência</option>
+                                    <option [value]="1">Matutino</option>
+                                    <option [value]="2">Vespertino</option>
                                 </select>
                             </mat-form-field>
                         </mat-grid-tile>
@@ -73,7 +72,7 @@
                             </mat-datepicker>
                         </mat-form-field>
                     </mat-grid-tile>
-                    <div *ngIf="!isDetalhada">
+                    <div *ngIf="!isDetalhada()">
                         <mat-grid-tile colspan="2" rowspan="1">
                             <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
                                 style="margin-top: 20px;">
@@ -101,7 +100,7 @@
                         </mat-grid-tile>
 
                     </div>
-                    <div *ngIf="isDetalhada">
+                    <div *ngIf="isDetalhada()">
                         <mat-grid-tile colspan="2" rowspan="1">
                             <mat-form-field class=" col-xl-11 col-lg-11 col-md-11 col-sm-12 col-12"
                                 style="margin-top: 20px;">
@@ -134,7 +133,7 @@
                     </p>
                 </mat-grid-tile>
             </div>
-            <div id="valorCalendario">
+            <div id="valorCalendario" class="text-center">
                 <mat-grid-tile colspan="2"></mat-grid-tile>
                 <mat-grid-tile colspan="3">
                     <div class="col-12"><strong>Valor:</strong> {{valorTotal | moeda}}</div>

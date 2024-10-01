@@ -29,6 +29,7 @@ import { ProfissionalComponent } from '../profissional/profissional.component';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
 import { DiariaService } from '../../services/diaria.service';
+import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
 
 export const MY_FORMATS = {
   parse: {
@@ -83,8 +84,8 @@ export class CalendarioComponent implements OnInit {
   @Input('profissionais')
   public profissionais: Array<ProfissionalDTO> = [];
 
-  @Input('isDetalhada')
-  public isDetalhada: boolean = false;
+  @Input('tipoLimpeza')
+  public tipoLimpeza: TipoLimpezaEnum = TipoLimpezaEnum.EXPRESSA;
 
   @Output()
   public getDiasAgendados: EventEmitter<Array<MomentInput>> = new EventEmitter();
@@ -98,7 +99,7 @@ export class CalendarioComponent implements OnInit {
 
 
   public hoje: MomentInput = DateUtils.newDate();
-  public diaSelecionado = new FormControl(DateUtils.toMoment(this.hoje));
+  public diaSelecionado = new FormControl(DateUtils.add(this.hoje, 1, 'day'));
   public maxDate: MomentInput = DateUtils.add(this.hoje, 1, 'year');
   public diasCalendario: Array<MomentInput> = this.getDiasMes();
   public diasAgendados: Map<string, MomentInput> = new Map<string, Date>();
@@ -106,7 +107,7 @@ export class CalendarioComponent implements OnInit {
   public profissional: ProfissionalDTO | null = null;
   public profissionalSelecionado: number = 0;
   public diasAgendadosProfissional: AgendamentoDiariaDTO[] = [];
-  public turno: number = 0;
+  public turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO;
   public valorTotal: number = 0;
   public desconto: number = 0;
   public corVerde: CorEnum = CorEnum.verde;
@@ -115,13 +116,22 @@ export class CalendarioComponent implements OnInit {
   public corPrincipal: CorEnum = CorEnum.primary;
 
   constructor(private _changes: ChangeDetectorRef,
-    private _diaristaService: ProfissionalService,
     private _diariaService: DiariaService) {
     this.calcular();
   }
 
   ngOnInit(): void {
-    this.atualizarDiasDisponiveis(DateUtils.toMoment());
+    this.recuperarDiariasAgendadasMes(this.diaSelecionado.value);
+  }
+
+  private recuperarDiariasAgendadasMes(data: Moment | null) {
+    this._diariaService.recuperarDiariasAgendadasMes(this.turno, DateUtils.toDate(data))
+      .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
+        if (typeof document !== 'undefined') {
+          this.diasAgendadosProfissional = agendamentos;
+          this.atualizarDiasDisponiveis();
+        }
+      });
   }
 
   public adicionarAgendamento(diaSelecionado: MomentInput): void {
@@ -148,7 +158,7 @@ export class CalendarioComponent implements OnInit {
   }
 
   public atualizarDias() {
-    const diasMes = DateUtils.datesInMonth(this.diaSelecionado.value);
+    const diasMes: Array<Date> = DateUtils.datesInMonth(this.diaSelecionado.value);
     diasMes.forEach(dia => {
       const diaFormatado = this.getDiaFormatado(dia);
       const diaAgendado = this.diasAgendados.get(diaFormatado);
@@ -163,38 +173,22 @@ export class CalendarioComponent implements OnInit {
     });
   }
 
-  public atualizarDiasDisponiveis(data = this.diaSelecionado.value) {
-    this._diariaService.recuperarDiariasAgendadasMes(this.turno, DateUtils.toDate(data))
-      .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
-        if (typeof document !== 'undefined') {
-          this.atualizarProfissional();
-          if (agendamentos) {
-            agendamentos.map(agend =>
-              new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME), agend.turno))
-              .forEach(agend => {
-                const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
-                let inputData: HTMLElement | null = document.getElementById(idDia);
-                if (inputData) {
-                  inputData.setAttribute(this.ATTR_INDISPONIBLE, "true");
-                }
-              });
-          }
-        }
-      });
+  public atualizarDiasDisponiveis() {
+    let filtrado: AgendamentoDiariaDTO[] = this.diasAgendadosProfissional;
+    filtrado = this.atualizarProfissional(filtrado);
+    filtrado = this.atualizarTurno(filtrado);
   }
 
-  public atualizarDiasDisponiveisProfissional() {
-    if (this.profissionalSelecionado != 0) {
-      this.diasAgendadosProfissional.forEach(agend => {
-        if (typeof document !== 'undefined') {
-          const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
-          let inputData: HTMLElement | null = document.getElementById(idDia);
-          if (inputData) {
-            inputData.setAttribute(this.ATTR_INDISPONIBLE, "true");
-          }
+  private atualizarDiasIndisponiveisCalendario(diasIndisponiveis: AgendamentoDiariaDTO[]) {
+    diasIndisponiveis.forEach(agend => {
+      if (typeof document !== 'undefined') {
+        const idDia = this.gerarIdElementoCalendarioDiario(agend.dataHora);
+        let inputData: HTMLElement | null = document.getElementById(idDia);
+        if (inputData) {
+          inputData.setAttribute(this.ATTR_INDISPONIBLE, "true");
         }
-      });
-    }
+      }
+    });
   }
 
   public selecionarData(inputData: HTMLElement, dia: MomentInput) {
@@ -239,7 +233,6 @@ export class CalendarioComponent implements OnInit {
   }
 
   public habilitarData(inputData: HTMLElement, dia: MomentInput) {
-
     if (dia) {
       if (DateUtils.isSameOrBefore(dia, new Date())) {
         inputData.setAttribute(this.ATTR_DISABLED, "true");
@@ -276,7 +269,7 @@ export class CalendarioComponent implements OnInit {
       primeiroDia--;
     }
 
-    while (6 > ultimoDia) {
+    while (5 > ultimoDia) {
       this.diasCalendario.push(null);
       ultimoDia++;
     }
@@ -288,7 +281,7 @@ export class CalendarioComponent implements OnInit {
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
       this.atualizarDiasSelecionados(false);
-      this.atualizarDiasDisponiveis(newDate);
+      this.recuperarDiariasAgendadasMes(newDate);
     }
   }
 
@@ -298,7 +291,7 @@ export class CalendarioComponent implements OnInit {
       this.diaSelecionado.setValue(newDate);
       this.atualizarAgendamento();
       this.atualizarDiasSelecionados(false);
-      this.atualizarDiasDisponiveis(newDate);
+      this.recuperarDiariasAgendadasMes(newDate);
     }
   }
 
@@ -321,7 +314,7 @@ export class CalendarioComponent implements OnInit {
 
     const qtdDias = this.getQtdDias();
     const porcentagemDesconto = AgendamentoConstantes.calcularPorcentagemDias(qtdDias);
-    let agendamento: AgendamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada, qtdDias,
+    let agendamento: AgendamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada(), qtdDias,
       porcentagemDesconto, this.profissionalSelecionado != 0, this.turno);
 
     this.desconto = agendamento.desconto;
@@ -331,34 +324,47 @@ export class CalendarioComponent implements OnInit {
     return this.valorTotal;
   }
 
-  public atualizarProfissional() {
+  private atualizarProfissional(filtrados: AgendamentoDiariaDTO[]): AgendamentoDiariaDTO[] {
     this.profissional = null;
-    this.diasAgendadosProfissional = [];
-    const indisponibleAttrs = document.querySelectorAll("[" + this.ATTR_INDISPONIBLE + "]");
-    indisponibleAttrs.forEach(element => {
-      element.removeAttribute(this.ATTR_INDISPONIBLE);
-    });
+    this.removerIndisponiveis();
 
     if (this.profissionalSelecionado != 0) {
       this.profissionais.forEach(prof => {
         if (this.profissionalSelecionado == prof.id) {
           this.profissional = prof;
-          const data = DateUtils.toMoment(this.diaSelecionado.value).toDate();
-          this._diaristaService.recuperarDiariasPorProfissional(prof.id, this.turno, data)
-            .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
-              this.diasAgendadosProfissional = agendamentos.map(agend =>
-                new AgendamentoDiariaDTO(DateUtils.toDate(agend.dataHora, DateUtils.ES_LOCALDATETIME), agend.turno));
-              this.atualizarDiasDisponiveisProfissional();
-            });
+          filtrados = this.diasAgendadosProfissional
+            .filter(agend => agend.profissionais.includes(prof.id));
         }
       });
     }
+
     // this.limparDiasSelecionados();
+    this.atualizarDiasIndisponiveisCalendario(filtrados);
     this.calcular();
+    return filtrados;
+  }
+
+  private atualizarTurno(filtrados: AgendamentoDiariaDTO[]): AgendamentoDiariaDTO[] {
+    this.removerIndisponiveis();
+    const turnoFiltrado: AgendamentoDiariaDTO[] = filtrados
+      .filter(agend => this.turno == TurnoEnum.NAO_DEFINIDO
+        || agend.turno == TurnoEnum.INTEGRAL
+        || agend.turno == this.turno);
+
+    this.atualizarDiasIndisponiveisCalendario(turnoFiltrado);
+    return turnoFiltrado;
+  }
+
+  private removerIndisponiveis() {
+    const indisponibleAttrs = document.querySelectorAll("[" + this.ATTR_INDISPONIBLE + "]");
+    indisponibleAttrs.forEach(element => {
+      element.removeAttribute(this.ATTR_INDISPONIBLE);
+    });
   }
 
   public gerarIdElementoCalendarioDiario(dia: MomentInput) {
-    return "id" + DateUtils.format(dia, "YYYYMMDD");
+    const dataHora = DateUtils.toDate(dia, DateUtils.ES_LOCALDATETIME);
+    return "id" + DateUtils.format(dataHora, "YYYYMMDD");
   }
 
   public limparDiasSelecionados() {
@@ -377,5 +383,9 @@ export class CalendarioComponent implements OnInit {
     }
 
     return false;
+  }
+
+  public isDetalhada(): boolean {
+    return this.tipoLimpeza == TipoLimpezaEnum.DETALHADA;
   }
 }

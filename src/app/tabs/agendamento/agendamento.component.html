@@ -126,8 +126,10 @@
                 <div class="mt-4 text-center">
                     <ng-template matStepLabel>Agendamento</ng-template>
                     <div id="calendarioIdAgd390">
-                        <app-calendario [valorMetro]="valorMetro" [profissionais]="profissionais"
-                            [metragem]="formArea.controls['valor'].value" [isDetalhada]="isLimpezaDetalhada()"
+                        <app-calendario *ngIf="formArea.controls['valor'].valid && profissionais.length > 0"
+                            [valorMetro]="valorMetro" [profissionais]="profissionais"
+                            [metragem]="formArea.controls['valor'].value"
+                            [tipoLimpeza]="formTipoLimpeza.controls['valor'].value"
                             (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
                         <div class="row justify-content-end">
                             <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="true"
@@ -145,10 +147,10 @@
                 <div class="mt-4 text-center">
                     <ng-template matStepLabel>Finalização</ng-template>
                     <div class="row justify-content-center">
-                        <div class="col-10 payment-card">
-                            <div class="payment-header">
+                        <div class="col-10 ">
+                            <!-- <div class="payment-header">
                                 <h2>Detalhes do Pagamento</h2>
-                            </div>
+                            </div> -->
                             <app-pagamento [agendamento]="dadosAgendamento"></app-pagamento>
                         </div>
                     </div>
@@ -287,7 +289,8 @@
                     <ng-template matStepLabel>Agendamento</ng-template>
                     <div id="calendarioIdAgd390">
                         <app-calendario [valorMetro]="valorMetro" [profissionais]="profissionais"
-                            [metragem]="formArea.controls['valor'].value" [isDetalhada]="isLimpezaDetalhada()"
+                            [metragem]="formArea.controls['valor'].value"
+                            [tipoLimpeza]="formTipoLimpeza.controls['valor'].value"
                             (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
                         <div class="row justify-content-end">
                             <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="true"
@@ -305,10 +308,7 @@
                 <div class="mt-4 text-center">
                     <ng-template matStepLabel>Finalização</ng-template>
                     <div class="row justify-content-center">
-                        <div class="col-10 payment-card">
-                            <div class="payment-header">
-                                <h2>Detalhes do Pagamento</h2>
-                            </div>
+                        <div class="col-10 ">
                             <app-pagamento [agendamento]="dadosAgendamento"></app-pagamento>
                         </div>
                     </div>

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
@@ -18,6 +18,8 @@ import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum
 import { ScrollComponent } from '../scroll/scroll.component';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { NotificacaoService } from '../../services/notificacao.service';
+import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
+import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -38,8 +40,13 @@ import { NotificacaoService } from '../../services/notificacao.service';
   styleUrls: ['./calendario-agendamento.component.scss']
 })
 export class CalendarioAgendamentoComponent implements OnInit {
+
+  @Input('isAdm')
+  public isAdm: boolean = false;
+
   public mapMat: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public mapVesp: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
+  public map: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public proximosPeriodos: Date[] = [];
   public ultimosPeriodos: Date[] = [];
   public proximoPeriodoSelecionado: Date[] = [];
@@ -56,21 +63,23 @@ export class CalendarioAgendamentoComponent implements OnInit {
     private _notificacaoService: NotificacaoService,
     private _changes: ChangeDetectorRef) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getProximosPeriodos();
     this.atualizarPeriodo();
   }
 
   public atualizarPeriodo() {
     this.proximoPeriodoSelecionado = [];
-    this.ultimosPeriodos = DateUtils.getNextDays(new Date(), 7);
-    this.periodoUnico = this.ultimosPeriodos[this.periodo];
     const dataAtual: Date = this.proximosPeriodos[this.periodo];
-    const ultimaSegunda: moment.Moment = DateUtils.toMoment(dataAtual).day(1);
-    this.proximoPeriodoSelecionado.push(ultimaSegunda.toDate());
-    for (let i = 0; i < 5; i++) {
-      ultimaSegunda.add(1, 'day');
+    if (!this.isXs()) {
+      const ultimaSegunda: moment.Moment = DateUtils.toMoment(dataAtual).day(1);
       this.proximoPeriodoSelecionado.push(ultimaSegunda.toDate());
+      for (let i = 0; i < 5; i++) {
+        ultimaSegunda.add(1, 'day');
+        this.proximoPeriodoSelecionado.push(ultimaSegunda.toDate());
+      }
+    } else {
+      this.proximoPeriodoSelecionado.push(dataAtual);
     }
 
     this.mapMat = new Map();
@@ -125,6 +134,25 @@ export class CalendarioAgendamentoComponent implements OnInit {
     this.atualizarCalendario(infos);
   }
 
+  public existeRegistro() {
+    if (this.isXs()) {
+      const dataAtual: string = this.formatarData(this.proximosPeriodos[this.periodo]);
+      const vesp = this.mapVesp.get(dataAtual);
+      const mat = this.mapMat.get(dataAtual);
+      return (mat != null && mat.length > 1) || (vesp != null && vesp.length > 1);
+    } else {
+      const dataAtual: Date = (this.proximosPeriodos[this.periodo]);
+      const filtro = DateUtils.getNextDays(dataAtual, 5).filter(per => {
+        const dataAtual: string = this.formatarData(per);
+        const vesp = this.mapVesp.get(dataAtual);
+        const mat = this.mapMat.get(dataAtual);
+        return (mat != null && mat.length > 1) || (vesp != null && vesp.length > 1);
+      });
+
+      return filtro != null && filtro.length > 0;
+    }
+  }
+
   public formatarData(data: MomentInput) {
     return DateUtils.format(data, "YYYY-MM-DD");
   }
@@ -153,11 +181,17 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public getProximosPeriodos() {
     this.proximosPeriodos = [];
 
-    const ultimaSegunda: moment.Moment = DateUtils.toMoment(new Date()).day(1);
-    this.proximosPeriodos.push(ultimaSegunda.toDate());
-    for (let i = 0; i < 4; i++) {
-      ultimaSegunda.add(7, 'day');
+    if (this.isXs()) {
+      DateUtils.getNextDays(new Date(), 7).forEach(data => {
+        this.proximosPeriodos.push(data);
+      });
+    } else {
+      const ultimaSegunda: moment.Moment = DateUtils.toMoment(new Date()).day(1);
       this.proximosPeriodos.push(ultimaSegunda.toDate());
+      for (let i = 0; i < 4; i++) {
+        ultimaSegunda.add(7, 'day');
+        this.proximosPeriodos.push(ultimaSegunda.toDate());
+      }
     }
   }
 
@@ -166,13 +200,17 @@ export class CalendarioAgendamentoComponent implements OnInit {
       return "";
     }
 
-    return DateUtils.format(data, 'DD/MM/YYYY') + " - " + DateUtils.format(DateUtils.toMoment(data).add(5, 'day'), 'DD/MM/YYYY');
+    if (this.isXs()) {
+      return DateUtils.format(data, 'DD/MM/YYYY');
+    } else {
+      return DateUtils.format(data, 'DD/MM/YYYY') + " - " + DateUtils.format(DateUtils.toMoment(data).add(5, 'day'), 'DD/MM/YYYY');
+    }
+
   }
 
   public isXs() {
     if (typeof window !== 'undefined') {
-      const documentWidth = window.document.documentElement.clientWidth;
-      return CalculoUtils.isXs(documentWidth);
+      return CalculoUtils.isXs(window.innerWidth);
     }
 
     return false;
@@ -180,6 +218,10 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
   public getDiasSemana(date: MomentInput) {
     return DateUtils.getDiasSemana(date);
+  }
+
+  public exibeBotoes(diaria: InfoAgendamentoDTO) {
+    return this.isAdm && this.isPagamentoEmAberto(diaria);
   }
 
   public isPagamentoEmAberto(diaria: InfoAgendamentoDTO) {
@@ -231,9 +273,25 @@ export class CalendarioAgendamentoComponent implements OnInit {
         diaria.dataReagendamento = null;
         diaria.situacao = SituacaoDiariaEnum.REAGENDADA;
         diaria.situacaoPagamento = SituacaoPagamentoEnum.EM_ANALISE;
+        this.getProximosPeriodos();
+        this.atualizarPeriodo();
         this._changes.detectChanges();
         this._notificacaoService.alerta(MensagemEnum.REAGENDAMENTO_CONCLUIDO_SUCESSO);
       }, (error) => this._notificacaoService.erro(error));
+  }
+
+  public marcarHorarioAtendimento(diaria: InfoAgendamentoDTO, entrada: boolean) {
+    let registro = new RegistroAgendamentoDTO();
+    registro.horario = new Date();
+    registro.idCliente = diaria.idCliente;
+    registro.dataDiaria = diaria.dataDiaria;
+
+    this._agendService.registrarHorarioAtendimento(registro)
+      .subscribe((result: any) => {
+        this._notificacaoService.alerta(entrada ? "Entrada Registrada!" : "Saída Registrada!");
+      }, (error: any) => {
+        this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
+      });
   }
 
 }
