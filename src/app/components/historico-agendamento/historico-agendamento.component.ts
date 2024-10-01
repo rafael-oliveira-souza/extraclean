@@ -12,6 +12,7 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
 import { DateUtils } from '../../utils/DateUtils';
+import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
 
 @Component({
   selector: 'app-historico-agendamento',
@@ -22,7 +23,8 @@ import { DateUtils } from '../../utils/DateUtils';
     CommonModule,
     MatIconModule,
     MatButtonModule,
-    PipeModule
+    PipeModule,
+    CalendarioAgendamentoComponent,
   ],
   templateUrl: './historico-agendamento.component.html',
   styleUrls: ['./historico-agendamento.component.scss']

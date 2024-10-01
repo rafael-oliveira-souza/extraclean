@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormField, MatFormFieldModule } from '@angular/material/form-field';
@@ -12,11 +12,14 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { InfoAgendamentoDTO } from '../../domains/dtos/InfoAgendamentoDTO';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 import { CalculoUtils } from '../../utils/CalculoUtils';
-import { DiaSemanaEnum } from '../../domains/enums/DiaSemanaEnum';
 import { FinalizacaoAgendamentoDTO } from '../../domains/dtos/FinalizacaoAgendamentoDTO';
 import { SituacaoDiariaEnum } from '../../domains/enums/SituacaoDiariaEnum';
 import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
 import { ScrollComponent } from '../scroll/scroll.component';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
+import { NotificacaoService } from '../../services/notificacao.service';
+import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
+import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -28,6 +31,8 @@ import { ScrollComponent } from '../scroll/scroll.component';
     MatInputModule,
     MatGridListModule,
     MatFormFieldModule,
+    FormsModule,
+    CommonModule,
     PipeModule,
     ScrollComponent
   ],
@@ -35,8 +40,13 @@ import { ScrollComponent } from '../scroll/scroll.component';
   styleUrls: ['./calendario-agendamento.component.scss']
 })
 export class CalendarioAgendamentoComponent implements OnInit {
+
+  @Input('isAdm')
+  public isAdm: boolean = false;
+
   public mapMat: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public mapVesp: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
+  public map: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public proximosPeriodos: Date[] = [];
   public ultimosPeriodos: Date[] = [];
   public proximoPeriodoSelecionado: Date[] = [];
@@ -47,24 +57,29 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public profissional!: string;
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = new Date();
+  public hoje: Date = new Date();
 
-  constructor(private _agendService: AgendamentoService, private _changes: ChangeDetectorRef) { }
+  constructor(private _agendService: AgendamentoService,
+    private _notificacaoService: NotificacaoService,
+    private _changes: ChangeDetectorRef) { }
 
-  ngOnInit() {
+  ngOnInit(): void {
     this.getProximosPeriodos();
     this.atualizarPeriodo();
   }
 
   public atualizarPeriodo() {
     this.proximoPeriodoSelecionado = [];
-    this.ultimosPeriodos = DateUtils.getNextDays(new Date(), 7);
-    this.periodoUnico = this.ultimosPeriodos[this.periodo];
     const dataAtual: Date = this.proximosPeriodos[this.periodo];
-    const ultimaSegunda: moment.Moment = DateUtils.toMoment(dataAtual).day(1);
-    this.proximoPeriodoSelecionado.push(ultimaSegunda.toDate());
-    for (let i = 0; i < 5; i++) {
-      ultimaSegunda.add(1, 'day');
+    if (!this.isXs()) {
+      const ultimaSegunda: moment.Moment = DateUtils.toMoment(dataAtual).day(1);
       this.proximoPeriodoSelecionado.push(ultimaSegunda.toDate());
+      for (let i = 0; i < 5; i++) {
+        ultimaSegunda.add(1, 'day');
+        this.proximoPeriodoSelecionado.push(ultimaSegunda.toDate());
+      }
+    } else {
+      this.proximoPeriodoSelecionado.push(dataAtual);
     }
 
     this.mapMat = new Map();
@@ -115,8 +130,27 @@ export class CalendarioAgendamentoComponent implements OnInit {
       this.mapVesp.set(dataDiaria, [null]);
       this.mapMat.set(dataDiaria, [null]);
     });
-    const infos = this.infos.filter(info => !this.profissional || info.nomeDiarista == this.profissional);
+    const infos = this.infos.filter(info => !this.profissional || info.nomeDiarista.trim().toLowerCase() == this.profissional.trim().toLowerCase());
     this.atualizarCalendario(infos);
+  }
+
+  public existeRegistro() {
+    if (this.isXs()) {
+      const dataAtual: string = this.formatarData(this.proximosPeriodos[this.periodo]);
+      const vesp = this.mapVesp.get(dataAtual);
+      const mat = this.mapMat.get(dataAtual);
+      return (mat != null && mat.length > 1) || (vesp != null && vesp.length > 1);
+    } else {
+      const dataAtual: Date = (this.proximosPeriodos[this.periodo]);
+      const filtro = DateUtils.getNextDays(dataAtual, 5).filter(per => {
+        const dataAtual: string = this.formatarData(per);
+        const vesp = this.mapVesp.get(dataAtual);
+        const mat = this.mapMat.get(dataAtual);
+        return (mat != null && mat.length > 1) || (vesp != null && vesp.length > 1);
+      });
+
+      return filtro != null && filtro.length > 0;
+    }
   }
 
   public formatarData(data: MomentInput) {
@@ -147,11 +181,17 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public getProximosPeriodos() {
     this.proximosPeriodos = [];
 
-    const ultimaSegunda: moment.Moment = DateUtils.toMoment(new Date()).day(1);
-    this.proximosPeriodos.push(ultimaSegunda.toDate());
-    for (let i = 0; i < 4; i++) {
-      ultimaSegunda.add(7, 'day');
+    if (this.isXs()) {
+      DateUtils.getNextDays(new Date(), 7).forEach(data => {
+        this.proximosPeriodos.push(data);
+      });
+    } else {
+      const ultimaSegunda: moment.Moment = DateUtils.toMoment(new Date()).day(1);
       this.proximosPeriodos.push(ultimaSegunda.toDate());
+      for (let i = 0; i < 4; i++) {
+        ultimaSegunda.add(7, 'day');
+        this.proximosPeriodos.push(ultimaSegunda.toDate());
+      }
     }
   }
 
@@ -160,13 +200,17 @@ export class CalendarioAgendamentoComponent implements OnInit {
       return "";
     }
 
-    return DateUtils.format(data, 'DD/MM/YYYY') + " - " + DateUtils.format(DateUtils.toMoment(data).add(5, 'day'), 'DD/MM/YYYY');
+    if (this.isXs()) {
+      return DateUtils.format(data, 'DD/MM/YYYY');
+    } else {
+      return DateUtils.format(data, 'DD/MM/YYYY') + " - " + DateUtils.format(DateUtils.toMoment(data).add(5, 'day'), 'DD/MM/YYYY');
+    }
+
   }
 
   public isXs() {
     if (typeof window !== 'undefined') {
-      const documentWidth = window.document.documentElement.clientWidth;
-      return CalculoUtils.isXs(documentWidth);
+      return CalculoUtils.isXs(window.innerWidth);
     }
 
     return false;
@@ -176,8 +220,12 @@ export class CalendarioAgendamentoComponent implements OnInit {
     return DateUtils.getDiasSemana(date);
   }
 
+  public exibeBotoes(diaria: InfoAgendamentoDTO) {
+    return this.isAdm && this.isPagamentoEmAberto(diaria);
+  }
+
   public isPagamentoEmAberto(diaria: InfoAgendamentoDTO) {
-    return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 2;
+    return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 0 || diaria.situacaoPagamento == 2;
   }
 
   public finalizarAgendamento(diaria: InfoAgendamentoDTO) {
@@ -192,7 +240,58 @@ export class CalendarioAgendamentoComponent implements OnInit {
         diaria.situacao = SituacaoDiariaEnum.FINALIZADA;
         diaria.situacaoPagamento = SituacaoPagamentoEnum.APROVADO;
         this._changes.detectChanges();
-      });
-
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_FINALIZADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
   }
+
+  public cancelarAgendamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+
+    this._agendService
+      .cancelarAgendamento(agend)
+      .subscribe((info: any) => {
+        diaria.situacao = SituacaoDiariaEnum.CANCELADA;
+        diaria.situacaoPagamento = SituacaoPagamentoEnum.CANCELADO;
+        this._changes.detectChanges();
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CANCELADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
+  }
+
+  public reagendarAgendamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+    agend.dataReagendamento = diaria.dataReagendamento;
+
+    this._agendService
+      .reagendarAgendamento(agend)
+      .subscribe((info: any) => {
+        diaria.dataReagendamento = null;
+        diaria.situacao = SituacaoDiariaEnum.REAGENDADA;
+        diaria.situacaoPagamento = SituacaoPagamentoEnum.EM_ANALISE;
+        this.getProximosPeriodos();
+        this.atualizarPeriodo();
+        this._changes.detectChanges();
+        this._notificacaoService.alerta(MensagemEnum.REAGENDAMENTO_CONCLUIDO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
+  }
+
+  public marcarHorarioAtendimento(diaria: InfoAgendamentoDTO, entrada: boolean) {
+    let registro = new RegistroAgendamentoDTO();
+    registro.horario = new Date();
+    registro.idCliente = diaria.idCliente;
+    registro.dataDiaria = diaria.dataDiaria;
+
+    this._agendService.registrarHorarioAtendimento(registro)
+      .subscribe((result: any) => {
+        this._notificacaoService.alerta(entrada ? "Entrada Registrada!" : "Saída Registrada!");
+      }, (error: any) => {
+        this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
+      });
+  }
+
 }

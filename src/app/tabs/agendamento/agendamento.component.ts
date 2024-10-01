@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { AfterContentInit, AfterViewChecked, AfterViewInit, ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { CalendarioComponent } from '../../components/calendario/calendario.component';
 import { MatIconModule } from '@angular/material/icon';
 import { MatProgressBarModule } from '@angular/material/progress-bar';
@@ -69,7 +69,7 @@ import { ItensLimpezaComponent } from '../../components/itens-limpeza/itens-limp
   templateUrl: './agendamento.component.html',
   styleUrl: './agendamento.component.scss'
 })
-export class AgendamentoComponent implements OnInit {
+export class AgendamentoComponent implements OnInit  {
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly METRAGEM_MAX = AgendamentoConstantes.METRAGEM_MAX;
@@ -99,7 +99,7 @@ export class AgendamentoComponent implements OnInit {
     private _notificacaoService: NotificacaoService, private _profissionalService: ProfissionalService,
     private _agendamentoService: AgendamentoService, private dialog: MatDialog) {
   }
-
+  
   ngOnInit(): void {
     this.buildForm();
     this.montarAgendamentoEmCache();

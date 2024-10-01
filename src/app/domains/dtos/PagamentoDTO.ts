@@ -20,6 +20,7 @@ export class PagamentoDTO {
     origem!: OrigemPagamentoEnum;
     tipoPlano!: TipoPlanoEnum;
     extraPlus: boolean = false;
-    isDetalhada: boolean = false;
     dataExpiracaoPagamento!: Date;
+    isDetalhada: boolean = this.tipoLimpeza == TipoLimpezaEnum.DETALHADA;
+    
 }

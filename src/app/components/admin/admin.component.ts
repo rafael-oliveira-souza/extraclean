@@ -144,7 +144,7 @@ export class AdminComponent implements OnInit {
     this.agendamento.diasSelecionados = [this.agendamento.dataHora];
     this.agendamento.dataHora = new Date();
     this.agendamento.ignoreQtdProfissionais = true;
-    this.agendamento.isDetalhada = this.agendamento.tipoLimpeza == TipoLimpezaEnum.DETALHADA;
+    this.agendamento.tipoLimpeza = this.agendamento.tipoLimpeza;
     this._agendamentoService.agendar(this.agendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.url = result.url;

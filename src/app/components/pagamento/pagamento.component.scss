@@ -2,25 +2,29 @@
 
 small {
     text-align: justify;
-    color: $white;
-    font-size: 17px;
+    // color: $azul;
+    font-size: 15px;
 }
 
-::ng-deep mat-icon {
-    text-align: justify;
-    color: $white;
+.borda {
+    border: 1px solid $primary;
 }
 
-::ng-deep mat-checkbox {
-    .mdc-label {
-        color: $white !important;
-    }
+// ::ng-deep mat-icon {
+//     text-align: justify;
+//     color: $white;
+// }
 
-    input {
-        color: $white !important;
-    }
-}
+// ::ng-deep mat-checkbox {
+//     .mdc-label {
+//         color: $white !important;
+//     }
 
-::ng-deep .mdc-checkbox__background {
-    border: 1px solid $white !important;
-}
+//     input {
+//         color: $white !important;
+//     }
+// }
+
+// ::ng-deep .mdc-checkbox__background {
+//     border: 1px solid $white !important;
+// }
