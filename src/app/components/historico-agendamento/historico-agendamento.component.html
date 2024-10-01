@@ -50,7 +50,7 @@
         </mat-paginator>
       </div>
       <div *ngIf="isDiarista()" class=" row justify-content-center">
-        <app-calendario-agendamento [isAdm]="false"></app-calendario-agendamento>
+        <app-calendario-agendamento [isAdm]="false" [profissional]="nomeProfissional"></app-calendario-agendamento>
         <!-- <div *ngIf="agendamentoSelecionado" class="col-12 text-start row justify-content-center mt-5">
           <div class=" col-6 col-xl-3 col-lg-4 col-md-4 col-sm-6">
             <h5> Tipo de Limpeza</h5>

@@ -104,7 +104,7 @@ export class PerfilComponent {
     this._clienteService.salvar(this.cliente)
       .subscribe(
         (cliente: ClienteDTO) => {
-          LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, cliente);
+          LocalStorageUtils.setCliente(cliente);
           this.cliente = cliente;
           this.exibePerfil = true;
           this._notificacaoService.alerta("Cliente atualizado com sucesso.");

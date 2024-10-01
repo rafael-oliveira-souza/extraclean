@@ -22,6 +22,7 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { HistoricoAgendamentoComponent } from '../../components/historico-agendamento/historico-agendamento.component';
 import { HistoricoAgendamentoDTO } from '../../domains/dtos/HistoricoAgendamentoDTO';
 import { NotificacaoService } from '../../services/notificacao.service';
+import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 
 @Component({
   selector: 'app-menu',
@@ -153,7 +154,10 @@ export class MenuComponent {
 
     this._agendamentoService.recuperarHistorico(email)
       .subscribe((agendamentos: HistoricoAgendamentoDTO[]) => {
-        this.abrirPagina(HistoricoAgendamentoComponent, agendamentos, email);
+        LocalStorageUtils.getAuth()
+
+        let cliente: any = LocalStorageUtils.getCliente();
+        this.abrirPagina(HistoricoAgendamentoComponent, agendamentos, email, cliente['nome']);
       }, (error: any) => {
         this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
       });
@@ -169,7 +173,7 @@ export class MenuComponent {
     this.authService.validarUsuario(true, true);
   }
 
-  public abrirPagina(component: ComponentType<any>, data: any, email: string) {
+  public abrirPagina(component: ComponentType<any>, data: any, email: string, nomeProfissional: string | null) {
     let dialogRef;
     if (typeof document !== 'undefined') {
       const documentWidth = document.documentElement.clientWidth;
@@ -181,7 +185,8 @@ export class MenuComponent {
         maxHeight: `${documentHeigth * 0.95}px`,
         data: {
           email: email,
-          data: data
+          data: data,
+          nomeProfissional: nomeProfissional
         }
       });
     } else {

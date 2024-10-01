@@ -44,6 +44,9 @@ export class CalendarioAgendamentoComponent implements OnInit {
   @Input('isAdm')
   public isAdm: boolean = false;
 
+  @Input('profissional')
+  public profissional: string = "";
+
   public mapMat: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public mapVesp: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public map: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
@@ -54,7 +57,6 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public qtdInfo: string = "1:1";
   public infos: InfoAgendamentoDTO[] = [];
   public profissionais: Set<string> = new Set<string>();
-  public profissional!: string;
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = new Date();
   public hoje: Date = new Date();

@@ -97,7 +97,7 @@ export class AutenticacaoService {
     }
 
     LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_EMAIL, email);
-    let clienteRecuperado: ClienteDTO | null = LocalStorageUtils.getItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE);
+    let clienteRecuperado: ClienteDTO | null = LocalStorageUtils.getCliente();
     if (abrePerfilCliente) {
       if (!clienteRecuperado) {
         this._clienteService.recuperarCliente(email)
@@ -106,7 +106,7 @@ export class AutenticacaoService {
             if (abreMensagem) {
               this.enviarNotificacaoPerfil(cliente);
             }
-            LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, cliente);
+            LocalStorageUtils.setCliente(cliente);
             this.abrirPagina(PerfilComponent, cliente, email);
           });
       } else {
@@ -114,20 +114,20 @@ export class AutenticacaoService {
           this.enviarNotificacaoPerfil(clienteRecuperado);
         }
         this.abrirPagina(PerfilComponent, clienteRecuperado, email);
-        LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, clienteRecuperado);
+        LocalStorageUtils.setCliente(clienteRecuperado);
       }
     } else if (abreMensagem) {
       if (!clienteRecuperado) {
         this._clienteService.recuperarCliente(email)
           .subscribe((cliente: ClienteDTO) => {
             clienteRecuperado = cliente;
-            LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, clienteRecuperado);
+            LocalStorageUtils.setCliente(clienteRecuperado);
             if (this.enviarNotificacaoPerfil(clienteRecuperado)) {
               this.abrirPagina(PerfilComponent, clienteRecuperado, email);
             }
           });
       } else {
-        LocalStorageUtils.setItem(LocalStorageUtils.USUARIO_CACHE_CLIENTE, clienteRecuperado);
+        LocalStorageUtils.setCliente(clienteRecuperado);
         if (this.enviarNotificacaoPerfil(clienteRecuperado)) {
           this.abrirPagina(PerfilComponent, clienteRecuperado, email);
         }

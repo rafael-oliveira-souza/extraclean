@@ -35,6 +35,7 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
 
   readonly data: any = inject<HistoricoAgendamentoDTO[]>(MAT_DIALOG_DATA);
   public agendamentos: HistoricoAgendamentoDTO[] = this.data['data'];
+  public nomeProfissional: string = this.data['nomeProfissional'];
   public email: string = this.data['email'];
 
   public indice: number = 0;
