@@ -93,7 +93,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     });
 
     this._agendService
-      .recuperarInfoAgendamentos(this.formatarData(dataAtual))
+      .recuperarInfoAgendamentos(this.formatarData(dataAtual), null, null)
       .subscribe((infos: InfoAgendamentoDTO[]) => {
         this.infos = infos;
         if (this.profissional) {

@@ -27,7 +27,7 @@ import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { ProfissionalComponent } from '../profissional/profissional.component';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
+import { AgendamentoPagamentoInfoDTO } from '../../domains/dtos/AgendamentoPagamentoInfoDTO';
 import { DiariaService } from '../../services/diaria.service';
 import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
 
@@ -314,7 +314,7 @@ export class CalendarioComponent implements OnInit {
 
     const qtdDias = this.getQtdDias();
     const porcentagemDesconto = AgendamentoConstantes.calcularPorcentagemDias(qtdDias);
-    let agendamento: AgendamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada(), qtdDias,
+    let agendamento: AgendamentoPagamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada(), qtdDias,
       porcentagemDesconto, this.profissionalSelecionado != 0, this.turno);
 
     this.desconto = agendamento.desconto;

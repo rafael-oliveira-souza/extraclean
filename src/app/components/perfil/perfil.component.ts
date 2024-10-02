@@ -18,6 +18,7 @@ import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
 import { AutenticacaoService } from '../../services/autenticacao.service';
 import { NgxMaskDirective, NgxMaskPipe } from 'ngx-mask';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
+import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'app-perfil',
@@ -31,7 +32,9 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
     NgxMaskDirective,
     NgxMaskPipe,
     MatButtonToggleModule,
-    MatButtonModule],
+    MatButtonModule,
+    TituloComponent
+  ],
   templateUrl: './perfil.component.html',
   styleUrl: './perfil.component.scss'
 })

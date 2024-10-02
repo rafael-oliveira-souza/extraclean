@@ -108,7 +108,7 @@ export class AutenticacaoService {
             }
             LocalStorageUtils.setCliente(cliente);
             this.abrirPagina(PerfilComponent, cliente, email);
-          });
+          }, (error) => this._router.navigate([Rota.LOGIN]));
       } else {
         if (abreMensagem) {
           this.enviarNotificacaoPerfil(clienteRecuperado);
@@ -125,7 +125,7 @@ export class AutenticacaoService {
             if (this.enviarNotificacaoPerfil(clienteRecuperado)) {
               this.abrirPagina(PerfilComponent, clienteRecuperado, email);
             }
-          });
+          }, (error) => this._router.navigate([Rota.LOGIN]));
       } else {
         LocalStorageUtils.setCliente(clienteRecuperado);
         if (this.enviarNotificacaoPerfil(clienteRecuperado)) {

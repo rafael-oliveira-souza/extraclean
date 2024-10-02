@@ -11,7 +11,7 @@ import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { SafeResourceUrl, DomSanitizer } from '@angular/platform-browser';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
-import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
+import { AgendamentoPagamentoInfoDTO } from '../../domains/dtos/AgendamentoPagamentoInfoDTO';
 import { PagamentoDTO } from '../../domains/dtos/PagamentoDTO';
 import { DialogModule } from '@angular/cdk/dialog';
 import { MatButtonModule } from '@angular/material/button';

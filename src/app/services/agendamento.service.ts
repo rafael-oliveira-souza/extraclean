@@ -35,24 +35,26 @@ export class AgendamentoService {
     return this._http.patch<any>(url, registro);
   }
 
-  public recuperarInfoAgendamentos(dataInicio: string): Observable<Array<InfoAgendamentoDTO>> {
+  public recuperarInfoAgendamentos(dataInicio: string, dataFim: string | null, email: string | null): Observable<Array<InfoAgendamentoDTO>> {
     const url = `${this.HOST_URL}/info/periodo`;
     let params = new HttpParams()
+      .set('dataFim', dataFim ? dataFim : "")
+      .set('email', email ? email : "")
       .set('dataInicio', dataInicio);
 
     return this._http.get<Array<InfoAgendamentoDTO>>(url, { params });
   }
-  
+
   public finalizarAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
     const url = `${this.HOST_URL}/finalizar`;
     return this._http.post<any>(url, obj);
   }
-  
+
   public cancelarAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
     const url = `${this.HOST_URL}/cancelar`;
     return this._http.post<any>(url, obj);
   }
-  
+
   public reagendarAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
     const url = `${this.HOST_URL}/reagendar`;
     return this._http.post<any>(url, obj);

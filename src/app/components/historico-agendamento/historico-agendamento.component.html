@@ -2,11 +2,7 @@
   <div class="row justify-content-center align-items-center text-center ">
     <div class="col-12 mt-4">
       <div class="container">
-        <div class="d-flex justify-content-between">
-          <div></div>
-          <h2>Meus Agendamentos</h2>
-          <mat-icon (click)="fechar()" matSuffix [fontIcon]="'close'"></mat-icon>
-        </div>
+        <app-titulo titulo="Meus Agendamentos"></app-titulo>
       </div>
     </div>
     <div *ngIf="isCliente(); else not_client">

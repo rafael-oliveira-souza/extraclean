@@ -14,6 +14,7 @@ import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDT
 import { DateUtils } from '../../utils/DateUtils';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
 import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
+import { TituloComponent } from '../titulo/titulo.component';
 
 @Component({
   selector: 'app-historico-agendamento',
@@ -26,6 +27,7 @@ import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
     MatButtonModule,
     PipeModule,
     CalendarioAgendamentoComponent,
+    TituloComponent
   ],
   templateUrl: './historico-agendamento.component.html',
   styleUrls: ['./historico-agendamento.component.scss']

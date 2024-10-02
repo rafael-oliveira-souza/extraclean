@@ -25,6 +25,9 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { AutenticacaoDTO } from '../../domains/dtos/AutenticacaoDTO';
 import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
+import { InfoAgendamentoDTO } from '../../domains/dtos/InfoAgendamentoDTO';
+import { HistoricoProfissionalComponent } from '../../components/historico-profissional/historico-profissional.component';
+import { DateUtils } from '../../utils/DateUtils';
 
 @Component({
   selector: 'app-menu',
@@ -93,8 +96,12 @@ export class MenuComponent {
     if (this.authService.isLoggedIn()) {
       this.menusHamb = [];
       const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
-      if (auth != null && auth.tipoUsuario == TipoClienteEnum.ADMIN) {
-        this.menusHamb.push({ label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() });
+      if (auth != null) {
+        if (auth.tipoUsuario == TipoClienteEnum.ADMIN) {
+          this.menusHamb.push({ label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() });
+        } else if (auth.tipoUsuario == TipoClienteEnum.DIARISTA) {
+          this.menusHamb.push({ label: "Historico de Limpezas", icon: "admin_panel_settings", method: () => this.abrirHistoricoLimpeza() });
+        }
       }
 
       this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
@@ -173,6 +180,19 @@ export class MenuComponent {
   public abrirAdministrador() {
     if (this.authService.isAdminLoggedIn()) {
       this._router.navigate([Rota.ADMIN]);
+    }
+  }
+
+  public abrirHistoricoLimpeza() {
+    if (this.authService.isLoggedIn()) {
+      const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+      if (auth == null) {
+        return;
+      }
+
+      this.abrirPagina(HistoricoProfissionalComponent, [], auth.username, auth.nome, auth.tipoUsuario);
+    } else {
+      this._router.navigate([Rota.LOGIN]);
     }
   }
 

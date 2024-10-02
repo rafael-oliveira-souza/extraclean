@@ -59,13 +59,15 @@
           <div class="col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(mat, true)">
             <div class="p-1" *ngIf="diaria">
               <hr>
-              <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
-                <mat-label>Reagendar</mat-label>
-                <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker>
-                </mat-datepicker>
-              </mat-form-field>
+              <div class="row justify-content-center">
+                <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
+                  <mat-label>Reagendar</mat-label>
+                  <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
+                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                  <mat-datepicker #picker>
+                  </mat-datepicker>
+                </mat-form-field>
+              </div>
               <div class="row justify-content-center">
                 <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
                 <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>

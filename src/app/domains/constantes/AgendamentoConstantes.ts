@@ -1,5 +1,5 @@
 import { PlanosComponent } from "../../tabs/planos/planos.component";
-import { AgendamentoInfoDTO } from "../dtos/AgendamentoInfoDTO";
+import { AgendamentoPagamentoInfoDTO } from "../dtos/AgendamentoPagamentoInfoDTO";
 import { PlanoDTO } from "../dtos/PlanoDTO";
 import { TurnoEnum } from "../enums/TurnoEnum";
 
@@ -38,7 +38,7 @@ export class AgendamentoConstantes {
     }
 
     public static calcularTotal(metragem: number, isDetalhada: boolean, qtdDias: number = 1, porcentagemDesconto: number = 0,
-        profissionalSelecionado: boolean = false, turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO): AgendamentoInfoDTO {
+        profissionalSelecionado: boolean = false, turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO): AgendamentoPagamentoInfoDTO {
         const metragemInicial = 60;
         const valorInicial = 120;
         const maxMetroPorProf = 140;
@@ -47,7 +47,7 @@ export class AgendamentoConstantes {
         const valorMinimoPagoProfissional = 60;
         const porcentagemProfissionalInicial = 65;
 
-        let info: AgendamentoInfoDTO = new AgendamentoInfoDTO();
+        let info: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
         info.metragem = metragem;
         info.valor = valorInicial;
         info.numProfissionais = 1;

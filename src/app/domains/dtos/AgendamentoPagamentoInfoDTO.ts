@@ -1,6 +1,6 @@
 import { TurnoEnum } from "../enums/TurnoEnum";
 
-export class AgendamentoInfoDTO {
+export class AgendamentoPagamentoInfoDTO {
     turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO;
     metragem: number = 0;
     valor: number = 0;
