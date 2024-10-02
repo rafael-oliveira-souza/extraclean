@@ -3,4 +3,6 @@ export class FinalizacaoAgendamentoDTO {
     dataDiaria!: Date;
     idCliente !: number;
     dataReagendamento!: Date | null;
+    idProfissional !: number;
+    idProfissionalAtualizado !: number;
 }

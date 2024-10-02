@@ -33,6 +33,12 @@ export class SituacaoDiariaPipe implements PipeTransform {
         return "Cancelada";
       case SituacaoDiariaEnum.CANCELADA:
         return "Cancelada";
+        case 4:
+          return "Reagendada";
+        case "4":
+          return "Reagendada";
+        case SituacaoDiariaEnum.REAGENDADA:
+          return "Reagendada";
       default:
         return "Não Definido";
     }

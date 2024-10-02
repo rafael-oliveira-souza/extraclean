@@ -238,6 +238,21 @@ export class CalendarioAgendamentoComponent implements OnInit {
     return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 0 || diaria.situacaoPagamento == 2;
   }
 
+  public atualizarProfissionalAgendamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idProfissional = diaria.idProfissional;
+    agend.idProfissionalAtualizado = diaria.profissionalAtualizado;
+
+    this._agendService
+      .atualizarProfissionalAgendamento(agend)
+      .subscribe((info: any) => {
+        this._notificacaoService.alerta(MensagemEnum.PROFISSIONAL_ATUALIZADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
+  }
+
   public finalizarAgendamento(diaria: InfoAgendamentoDTO) {
     let agend = new FinalizacaoAgendamentoDTO();
     agend.dataDiaria = diaria.dataDiaria;

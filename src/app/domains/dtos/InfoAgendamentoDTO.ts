@@ -20,9 +20,11 @@ export class InfoAgendamentoDTO {
     localizacao!: string;
     codigoPagamento!: string;
     idCliente!: number;
+    idProfissional!: number;
     dataReagendamento!: Date | null;
     entrada!: Date | null;
     saida!: Date | null;
     qtdProfissionais!: number;
     valorProfissional!: number;
+    profissionalAtualizado!: number;
 }

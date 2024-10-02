@@ -107,7 +107,9 @@ export class CepComponent {
 
     this.formCep.controls['naoEncontrado'].valueChanges.subscribe(val => {
       if (val) {
-        this.formCep.controls['cep'].setValue("00000000");
+        if (this.formCep.controls['cep'].invalid) {
+          this.formCep.controls['cep'].setValue("00000000");
+        }
         this.formCep.controls['logradouro'].setValue("");
         this.formCep.controls['localidade'].setValue("");
         this.formCep.controls['bairro'].setValue("");

@@ -11,32 +11,43 @@ import { PipeModule } from '../../pipes/pipe.module';
 import { CalculoUtils } from '../../utils/CalculoUtils';
 import { CommonModule } from '@angular/common';
 import { SituacaoDiariaEnum } from '../../domains/enums/SituacaoDiariaEnum';
-import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { FormsModule } from '@angular/forms';
 import { TituloComponent } from '../titulo/titulo.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
+import { Moment } from 'moment';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { LinguagemEnum } from '../../domains/enums/LinguagemEnum';
 
-const ELEMENT_DATA: any[] = [
-  { position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H' },
-  { position: 2, name: 'Helium', weight: 4.0026, symbol: 'He' },
-  { position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li' },
-  { position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be' },
-  { position: 5, name: 'Boron', weight: 10.811, symbol: 'B' },
-  { position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C' },
-  { position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N' },
-  { position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O' },
-  { position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F' },
-  { position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne' },
-];
+export const MY_FORMATS = {
+  parse: {
+    dateInput: 'MM/YYYY',
+  },
+  display: {
+    dateInput: 'MM/YYYY',
+    monthYearLabel: 'MMM YYYY',
+    dateA11yLabel: 'LL',
+    monthYearA11yLabel: 'MMMM YYYY',
+  },
+};
 
 @Component({
   selector: 'app-historico-profissional',
   standalone: true,
+  providers: [
+    { provide: MAT_DATE_LOCALE, useValue: LinguagemEnum.PT },
+    provideMomentDateAdapter(MY_FORMATS),
+  ],
   imports: [
     CommonModule,
     MatTableModule,
     FormsModule,
     MatDatepickerModule,
     MatPaginatorModule,
+    MatFormFieldModule,
+    MatInputModule,
     PipeModule,
     TituloComponent
   ],
@@ -56,7 +67,8 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
   public indice: number = 0;
   public dataSource = new MatTableDataSource<InfoAgendamentoDTO>();
   public dataInicio: Date = new Date();
-  public dataFim: Date = new Date();
+  public dataMin: Date = DateUtils.toMoment().add(-3, 'month').toDate();
+  public dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
 
   public displayedColumns: string[] = [];
 
@@ -74,12 +86,18 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.buscarAgendamentos();
+  }
+
+  private buscarAgendamentos() {
     const datas: Date[] = DateUtils.datesInMonth(this.dataInicio);
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, this.email)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {
-        this.agendamentos = agendamentos.filter(agend => (agend.situacao == SituacaoDiariaEnum.FINALIZADA || agend.situacao == SituacaoDiariaEnum.AGENDADA));
+        this.agendamentos = agendamentos.filter(agend => agend.situacao == SituacaoDiariaEnum.FINALIZADA
+           || agend.situacao == SituacaoDiariaEnum.AGENDADA
+           || agend.situacao == SituacaoDiariaEnum.REAGENDADA);
         this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
         this.dataSource.paginator = this.paginator;
       }, (error: any) => {
@@ -94,6 +112,21 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
     }
 
     return true;
+  }
+
+  public setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
+    const ctrlValue = DateUtils.toMoment(this.dataInicio);
+    ctrlValue.month(normalizedMonthAndYear.month());
+    ctrlValue.year(normalizedMonthAndYear.year());
+    this.dataInicio = ctrlValue.toDate();
+    datepicker.close();
+    this.buscarAgendamentos();
+  }
+
+  public calcularTotal() {
+    let total = 0;
+    this.agendamentos.forEach(agend => total += agend.valorProfissional);
+    return total;
   }
 
 }

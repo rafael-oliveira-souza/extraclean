@@ -1,7 +1,15 @@
 <div class="container mt-5">
   <div class="text-center mb-5 mt-2">
     <app-titulo titulo="Limpezas"></app-titulo>
+    <h5></h5>
   </div>
+  <mat-form-field class=" col-12 ">
+    <mat-label>Selecionar Periodo</mat-label>
+    <input matInput [min]="dataMin" [max]="dataMax" [matDatepicker]="picker" [(ngModel)]="dataInicio">
+    <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker startView="multi-year" (monthSelected)="setMonthAndYear($event, picker)">
+    </mat-datepicker>
+  </mat-form-field>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container *ngIf="isNotXs()" matColumnDef="nomeCliente">
       <th mat-header-cell *matHeaderCellDef> Cliente </th>
@@ -34,8 +42,9 @@
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-    <mat-paginator [hidePageSize]="true" #paginator [length]="dataSource.data.length" [pageSize]="5"
-      [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecionar Agendamento">
-    </mat-paginator>
   </table>
+  <mat-paginator [hidePageSize]="true" #paginator [length]="dataSource.data.length" [pageSize]="4"
+    [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecionar Agendamento">
+  </mat-paginator>
+  <h5 class="text-center">Total: {{calcularTotal() | moeda}}</h5>
 </div>

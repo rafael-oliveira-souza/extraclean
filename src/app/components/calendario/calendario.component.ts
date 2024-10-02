@@ -27,9 +27,11 @@ import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
 import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { ProfissionalComponent } from '../profissional/profissional.component';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
-import { AgendamentoPagamentoInfoDTO } from '../../domains/dtos/AgendamentoPagamentoInfoDTO';
 import { DiariaService } from '../../services/diaria.service';
 import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
+import { AgendamentoPagamentoInfoDTO } from '../../domains/dtos/AgendamentoPagamentoInfoDTO';
+import { MAT_DATE_LOCALE } from '@angular/material/core';
+import { LinguagemEnum } from '../../domains/enums/LinguagemEnum';
 
 export const MY_FORMATS = {
   parse: {
@@ -47,6 +49,7 @@ export const MY_FORMATS = {
   selector: 'app-calendario',
   standalone: true,
   providers: [
+    { provide: MAT_DATE_LOCALE, useValue: LinguagemEnum.PT }, 
     provideMomentDateAdapter(MY_FORMATS),
   ],
   imports: [

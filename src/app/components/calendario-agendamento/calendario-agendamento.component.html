@@ -67,6 +67,10 @@
                   <mat-datepicker #picker>
                   </mat-datepicker>
                 </mat-form-field>
+                <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
+                  <mat-label>Novo Profissional</mat-label>
+                  <input matInput [(ngModel)]="diaria.profissionalAtualizado">
+                </mat-form-field>
               </div>
               <div class="row justify-content-center">
                 <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
@@ -104,6 +108,8 @@
                 </button>
                 <button [disabled]="!diaria.dataReagendamento" (click)="reagendarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-success mt-2">Reagendar</button>
+                <button [disabled]="!diaria.profissionalAtualizado" (click)="atualizarProfissionalAgendamento(diaria)"
+                  type="button" class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
               </div>
               <hr>
             </div>
@@ -123,6 +129,10 @@
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker>
                 </mat-datepicker>
+              </mat-form-field>
+              <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
+                <mat-label>Novo Profissional</mat-label>
+                <input matInput [(ngModel)]="diaria.profissionalAtualizado">
               </mat-form-field>
               <div class="row justify-content-center">
                 <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
@@ -160,6 +170,8 @@
                 </button>
                 <button [disabled]="!diaria.dataReagendamento" (click)="reagendarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-success mt-2">Reagendar</button>
+                <button [disabled]="!diaria.profissionalAtualizado" (click)="atualizarProfissionalAgendamento(diaria)"
+                  type="button" class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
               </div>
               <hr>
             </div>
