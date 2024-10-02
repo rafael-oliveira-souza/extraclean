@@ -13,6 +13,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
 import { DateUtils } from '../../utils/DateUtils';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
+import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
 
 @Component({
   selector: 'app-historico-agendamento',
@@ -36,6 +37,7 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   readonly data: any = inject<HistoricoAgendamentoDTO[]>(MAT_DIALOG_DATA);
   public agendamentos: HistoricoAgendamentoDTO[] = this.data['data'];
   public nomeProfissional: string = this.data['nomeProfissional'];
+  public tipoCliente: number = this.data['tipoCliente'];
   public email: string = this.data['email'];
 
   public indice: number = 0;
@@ -112,11 +114,11 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   }
 
   public isCliente() {
-    return this.agendamentoSelecionado?.tipo == 1;
+    return this.tipoCliente == TipoClienteEnum.CLIENTE;
   }
 
   public isDiarista() {
-    return this.agendamentoSelecionado?.tipo == 2;
+    return this.tipoCliente == TipoClienteEnum.DIARISTA;
   }
 
   public isAdmin() {

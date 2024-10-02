@@ -3,15 +3,15 @@
     <mat-form-field class="col-12" *ngIf="isAdm">
       <mat-label>Profissional</mat-label>
       <select matNativeControl [(ngModel)]="profissional" (ngModelChange)="atualizarProfissional()">
-        <option></option>
-        <option *ngFor="let prof of profissionais;">{{prof}}
+        <option>Não Selecionado</option>
+        <option *ngFor="let prof of profissionais;" [value]="prof">{{prof}}
         </option>
       </select>
     </mat-form-field>
-    <mat-form-field class="col-12" *ngIf="isAdm">
+    <mat-form-field class="col-12">
       <mat-label>Período</mat-label>
       <select matNativeControl [(ngModel)]="turno" (ngModelChange)="atualizarProfissional()">
-        <option value="0"></option>
+        <option value="0">Não Definido</option>
         <option value="1">Matutino</option>
         <option value="2">Vespertino</option>
       </select>
@@ -73,7 +73,8 @@
                 <small class="col-6"><strong>Metragem: </strong>{{diaria.metragem}}</small><br>
                 <small class="col-6"><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
                 <small class="col-6"><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
-                <small class="col-12"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
                 <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Situação Pagamento:
                   </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
@@ -85,12 +86,12 @@
                 </small>
               </div>
               <div id="botoesMarcacao" *ngIf="!isAdm" class="col-12 row justify-content-center mt-3">
-                <button *ngIf="!diaria.entrada" (click)="marcarHorarioAtendimento(diaria, true)"
-                  class="col-8 btn btn-primary" mat-button>
+                <button *ngIf="isPagamentoEmAberto(diaria) && !diaria.entrada"
+                  (click)="marcarHorarioAtendimento(diaria, true)" class="col-8 btn btn-primary" mat-button>
                   Marcar Chegada
                 </button>
-                <button *ngIf="diaria.entrada && !diaria.saida" (click)="marcarHorarioAtendimento(diaria, false)"
-                  class="col-8 btn btn-primary" mat-button>
+                <button *ngIf="isPagamentoEmAberto(diaria) && diaria.entrada && !diaria.saida"
+                  (click)="marcarHorarioAtendimento(diaria, false)" class="col-8 btn btn-primary" mat-button>
                   Marcar Saída
                 </button>
               </div>
@@ -128,7 +129,8 @@
                 <small class="col-6"><strong>Metragem: </strong>{{diaria.metragem}}</small><br>
                 <small class="col-6"><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
                 <small class="col-6"><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
-                <small class="col-12"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
                 <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Situação Pagamento:
                   </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
@@ -138,6 +140,16 @@
                 <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Pagamento: </strong>
                   <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
                 </small>
+              </div>
+              <div id="botoesMarcacao" *ngIf="!isAdm" class="col-12 row justify-content-center mt-3">
+                <button *ngIf="isPagamentoEmAberto(diaria) && !diaria.entrada"
+                  (click)="marcarHorarioAtendimento(diaria, true)" class="col-8 btn btn-primary" mat-button>
+                  Marcar Chegada
+                </button>
+                <button *ngIf="isPagamentoEmAberto(diaria) && diaria.entrada && !diaria.saida"
+                  (click)="marcarHorarioAtendimento(diaria, false)" class="col-8 btn btn-primary" mat-button>
+                  Marcar Saída
+                </button>
               </div>
               <div *ngIf="exibeBotoes(diaria)" class="row justify-content-center mt-3">
                 <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar

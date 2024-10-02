@@ -7,5 +7,6 @@ export enum MensagemEnum {
     REAGENDAMENTO_CONCLUIDO_SUCESSO = "Reagendamento finalizado com sucesso.",
     NECESSARIO_ATUALIZAR_PERFIL = "É necessário atualizar seu perfil para utilizar todas as funcionalidades do sistema.",
     USUARIO_NAO_AUTENTICADO = "Usuário ainda não confirmou o email. Por favor, confirme o email enviado e faça novamente o login.",
+    USUARIO_CRIADO_COM_SUCESSO = "Usuário criado com sucesso.",
     EMAIL_RECUPERACAO_SENHA_ENVIADO = "O email de recuperação de senha foi enviado.",
 }

@@ -4,6 +4,7 @@ export class AutenticacaoDTO {
     autenticado: boolean = false;
     username!: string;
     token!: string;
+    nome!: string;
     tipoUsuario!: number;
 
     constructor() { }

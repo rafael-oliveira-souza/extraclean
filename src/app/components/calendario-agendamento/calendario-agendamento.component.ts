@@ -96,17 +96,21 @@ export class CalendarioAgendamentoComponent implements OnInit {
       .recuperarInfoAgendamentos(this.formatarData(dataAtual))
       .subscribe((infos: InfoAgendamentoDTO[]) => {
         this.infos = infos;
-        this.atualizarCalendario(infos);
+        if (this.profissional) {
+          this.infos = this.filtrarProfissional();
+        }
+
+        this.atualizarCalendario(this.infos);
       });
   }
 
   private atualizarCalendario(infos: InfoAgendamentoDTO[]) {
     infos.forEach(info => {
       this.profissionais.add(info.nomeDiarista);
-      if (info.turno = TurnoEnum.MATUTINO) {
+      if (info.turno == TurnoEnum.MATUTINO) {
         this.atualizarMap(info, this.mapMat);
       }
-      else if (info.turno = TurnoEnum.VESPERTINO) {
+      else if (info.turno == TurnoEnum.VESPERTINO) {
         this.atualizarMap(info, this.mapVesp);
       }
     });
@@ -132,8 +136,12 @@ export class CalendarioAgendamentoComponent implements OnInit {
       this.mapVesp.set(dataDiaria, [null]);
       this.mapMat.set(dataDiaria, [null]);
     });
-    const infos = this.infos.filter(info => !this.profissional || info.nomeDiarista.trim().toLowerCase() == this.profissional.trim().toLowerCase());
+    const infos = this.filtrarProfissional();
     this.atualizarCalendario(infos);
+  }
+
+  private filtrarProfissional(): InfoAgendamentoDTO[] {
+    return this.infos.filter(info => !this.profissional || info.nomeDiarista.trim().toLowerCase() == this.profissional.trim().toLowerCase());
   }
 
   public existeRegistro() {

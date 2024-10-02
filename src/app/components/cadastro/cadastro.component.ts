@@ -77,6 +77,7 @@ export class CadastroComponent implements OnInit {
       .subscribe(
         (usuario: UsuarioDTO) => {
           this._router.navigate([Rota.LOGIN]);
+          this._notificacaoService.alerta(MensagemEnum.USUARIO_CRIADO_COM_SUCESSO);
         },
         (error) => {
           LocalStorageUtils.removeCacheAutenticacao();
