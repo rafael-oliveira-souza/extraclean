@@ -21,6 +21,12 @@ export class TipoLimpezaPipe implements PipeTransform {
         return "Detalhada";
       case TipoLimpezaEnum.DETALHADA:
         return "Detalhada";
+        case 3:
+          return "Pré Mudança";
+        case "3":
+          return "Pré Mudança";
+        case TipoLimpezaEnum.PRE_MUDANCA:
+          return "Pré Mudança";
       default:
         return "Não Definido";
     }

@@ -22,6 +22,12 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { HistoricoAgendamentoComponent } from '../../components/historico-agendamento/historico-agendamento.component';
 import { HistoricoAgendamentoDTO } from '../../domains/dtos/HistoricoAgendamentoDTO';
 import { NotificacaoService } from '../../services/notificacao.service';
+import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
+import { AutenticacaoDTO } from '../../domains/dtos/AutenticacaoDTO';
+import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
+import { InfoAgendamentoDTO } from '../../domains/dtos/InfoAgendamentoDTO';
+import { HistoricoProfissionalComponent } from '../../components/historico-profissional/historico-profissional.component';
+import { DateUtils } from '../../utils/DateUtils';
 
 @Component({
   selector: 'app-menu',
@@ -88,12 +94,19 @@ export class MenuComponent {
 
   public exibirMenus() {
     if (this.authService.isLoggedIn()) {
-      this.menusHamb = [
-        { label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() },
-        { label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() },
-        { label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() },
-        { label: "Sair", icon: "logout", method: () => this.logout() },
-      ];
+      this.menusHamb = [];
+      const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+      if (auth != null) {
+        if (auth.tipoUsuario == TipoClienteEnum.ADMIN) {
+          this.menusHamb.push({ label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() });
+        } else if (auth.tipoUsuario == TipoClienteEnum.DIARISTA) {
+          this.menusHamb.push({ label: "Historico de Limpezas", icon: "admin_panel_settings", method: () => this.abrirHistoricoLimpeza() });
+        }
+      }
+
+      this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
+      this.menusHamb.push({ label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() });
+      this.menusHamb.push({ label: "Sair", icon: "logout", method: () => this.logout() });
     } else {
       this.menusHamb = [
         { label: "Entrar", icon: "login", method: () => this.login() },
@@ -151,12 +164,17 @@ export class MenuComponent {
       return;
     }
 
-    this._agendamentoService.recuperarHistorico(email)
-      .subscribe((agendamentos: HistoricoAgendamentoDTO[]) => {
-        this.abrirPagina(HistoricoAgendamentoComponent, agendamentos, email);
-      }, (error: any) => {
-        this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
-      });
+    const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+    if (auth == null || auth.tipoUsuario == TipoClienteEnum.CLIENTE) {
+      this._agendamentoService.recuperarHistorico(email)
+        .subscribe((agendamentos: HistoricoAgendamentoDTO[]) => {
+          this.abrirPagina(HistoricoAgendamentoComponent, agendamentos, email, null, TipoClienteEnum.CLIENTE);
+        }, (error: any) => {
+          this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
+        });
+    } else {
+      this.abrirPagina(HistoricoAgendamentoComponent, [], email, auth.nome, auth.tipoUsuario);
+    }
   }
 
   public abrirAdministrador() {
@@ -165,11 +183,25 @@ export class MenuComponent {
     }
   }
 
+  public abrirHistoricoLimpeza() {
+    if (this.authService.isLoggedIn()) {
+      const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+      if (auth == null) {
+        return;
+      }
+
+      this.abrirPagina(HistoricoProfissionalComponent, [], auth.username, auth.nome, auth.tipoUsuario);
+    } else {
+      this._router.navigate([Rota.LOGIN]);
+    }
+  }
+
   public abrirPerfil() {
     this.authService.validarUsuario(true, true);
   }
 
-  public abrirPagina(component: ComponentType<any>, data: any, email: string) {
+  public abrirPagina(component: ComponentType<any>, data: any, email: string,
+    nomeProfissional: string | null, tipoCliente: number) {
     let dialogRef;
     if (typeof document !== 'undefined') {
       const documentWidth = document.documentElement.clientWidth;
@@ -181,7 +213,9 @@ export class MenuComponent {
         maxHeight: `${documentHeigth * 0.95}px`,
         data: {
           email: email,
-          data: data
+          data: data,
+          nomeProfissional: nomeProfissional,
+          tipoCliente: tipoCliente
         }
       });
     } else {

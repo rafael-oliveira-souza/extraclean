@@ -18,7 +18,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { PlanoService } from '../../services/plano.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { AutenticacaoService } from '../../services/autenticacao.service';
-import { AgendamentoInfoDTO } from '../../domains/dtos/AgendamentoInfoDTO';
+import { AgendamentoPagamentoInfoDTO } from '../../domains/dtos/AgendamentoPagamentoInfoDTO';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
@@ -64,7 +64,7 @@ export class PlanosComponent {
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public planos: Array<PlanoDTO> = [];
   public pagamento: PagamentoDTO = new PagamentoDTO();
-  public agendamentoInfo: AgendamentoInfoDTO = new AgendamentoInfoDTO();
+  public agendamentoInfo: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
   public planoSelecionado: PlanoDTO | null = null;
   public urlPagamento: string | null = null;
   public isAdmin: boolean = false;
@@ -83,9 +83,9 @@ export class PlanosComponent {
     PlanosComponent.PLANOS.forEach(plano => this.planos.push(plano));
   }
 
-  public calcularTotal(plano: PlanoDTO): AgendamentoInfoDTO {
+  public calcularTotal(plano: PlanoDTO): AgendamentoPagamentoInfoDTO {
     if (!this.pagamento.metragem) {
-      return new AgendamentoInfoDTO();
+      return new AgendamentoPagamentoInfoDTO();
     }
 
     if (this.pagamento.metragem < 0) {
@@ -107,7 +107,7 @@ export class PlanosComponent {
 
   public atualizarValores(plano: PlanoDTO) {
     if (!this.pagamento.metragem) {
-      this.agendamentoInfo = new AgendamentoInfoDTO();
+      this.agendamentoInfo = new AgendamentoPagamentoInfoDTO();
       return;
     }
 
@@ -151,7 +151,7 @@ export class PlanosComponent {
       return;
     }
 
-    const agendamento: AgendamentoInfoDTO = this.calcularTotal(plano);
+    const agendamento: AgendamentoPagamentoInfoDTO = this.calcularTotal(plano);
     plano.dataHora = new Date();
     plano.valor = agendamento.valor;
     plano.desconto = agendamento.desconto;

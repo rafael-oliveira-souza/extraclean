@@ -44,6 +44,9 @@ export class CalendarioAgendamentoComponent implements OnInit {
   @Input('isAdm')
   public isAdm: boolean = false;
 
+  @Input('profissional')
+  public profissional: string = "";
+
   public mapMat: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public mapVesp: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public map: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
@@ -54,7 +57,6 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public qtdInfo: string = "1:1";
   public infos: InfoAgendamentoDTO[] = [];
   public profissionais: Set<string> = new Set<string>();
-  public profissional!: string;
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = new Date();
   public hoje: Date = new Date();
@@ -91,20 +93,24 @@ export class CalendarioAgendamentoComponent implements OnInit {
     });
 
     this._agendService
-      .recuperarInfoAgendamentos(this.formatarData(dataAtual))
+      .recuperarInfoAgendamentos(this.formatarData(dataAtual), null, null)
       .subscribe((infos: InfoAgendamentoDTO[]) => {
         this.infos = infos;
-        this.atualizarCalendario(infos);
+        if (this.profissional) {
+          this.infos = this.filtrarProfissional();
+        }
+
+        this.atualizarCalendario(this.infos);
       });
   }
 
   private atualizarCalendario(infos: InfoAgendamentoDTO[]) {
     infos.forEach(info => {
       this.profissionais.add(info.nomeDiarista);
-      if (info.turno = TurnoEnum.MATUTINO) {
+      if (info.turno == TurnoEnum.MATUTINO) {
         this.atualizarMap(info, this.mapMat);
       }
-      else if (info.turno = TurnoEnum.VESPERTINO) {
+      else if (info.turno == TurnoEnum.VESPERTINO) {
         this.atualizarMap(info, this.mapVesp);
       }
     });
@@ -130,8 +136,12 @@ export class CalendarioAgendamentoComponent implements OnInit {
       this.mapVesp.set(dataDiaria, [null]);
       this.mapMat.set(dataDiaria, [null]);
     });
-    const infos = this.infos.filter(info => !this.profissional || info.nomeDiarista.trim().toLowerCase() == this.profissional.trim().toLowerCase());
+    const infos = this.filtrarProfissional();
     this.atualizarCalendario(infos);
+  }
+
+  private filtrarProfissional(): InfoAgendamentoDTO[] {
+    return this.infos.filter(info => !this.profissional || info.nomeDiarista.trim().toLowerCase() == this.profissional.trim().toLowerCase());
   }
 
   public existeRegistro() {
@@ -226,6 +236,21 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
   public isPagamentoEmAberto(diaria: InfoAgendamentoDTO) {
     return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 0 || diaria.situacaoPagamento == 2;
+  }
+
+  public atualizarProfissionalAgendamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idProfissional = diaria.idProfissional;
+    agend.idProfissionalAtualizado = diaria.profissionalAtualizado;
+
+    this._agendService
+      .atualizarProfissionalAgendamento(agend)
+      .subscribe((info: any) => {
+        this._notificacaoService.alerta(MensagemEnum.PROFISSIONAL_ATUALIZADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
   }
 
   public finalizarAgendamento(diaria: InfoAgendamentoDTO) {

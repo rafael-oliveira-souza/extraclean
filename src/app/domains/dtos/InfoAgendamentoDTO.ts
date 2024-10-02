@@ -13,13 +13,18 @@ export class InfoAgendamentoDTO {
     metragem!: number;
     valor!: number;
     desconto!: number;
+    porcentagem!: number;
     endereco!: string;
     situacaoPagamento!: SituacaoPagamentoEnum;
     linkPagamento!: string;
     localizacao!: string;
     codigoPagamento!: string;
     idCliente!: number;
+    idProfissional!: number;
     dataReagendamento!: Date | null;
     entrada!: Date | null;
     saida!: Date | null;
+    qtdProfissionais!: number;
+    valorProfissional!: number;
+    profissionalAtualizado!: number;
 }

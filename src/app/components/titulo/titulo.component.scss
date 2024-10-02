@@ -1,0 +1,11 @@
+@import '../../../color.scss';
+
+p,
+h3 {
+    color: $laranja;
+}
+
+.mat-icon {
+    color: $laranja !important;
+    cursor: pointer !important;
+}

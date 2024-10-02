@@ -1,5 +1,6 @@
 import { AgendamentoDTO } from "../domains/dtos/AgendamentoDTO";
 import { AutenticacaoDTO } from "../domains/dtos/AutenticacaoDTO";
+import { ClienteDTO } from "../domains/dtos/ClienteDTO";
 
 export class LocalStorageUtils {
     // Padrao TTL de 30 minutos (1800000 ms)
@@ -22,6 +23,14 @@ export class LocalStorageUtils {
 
     static getAuth(): AutenticacaoDTO | null {
         return this.getItem(this.USUARIO_CACHE_AUTH);
+    }
+
+    static setCliente(auth: ClienteDTO, ttl: number = this.TTL): void {
+        this.setItem(this.USUARIO_CACHE_CLIENTE, auth, ttl);
+    }
+
+    static getCliente(): ClienteDTO | null {
+        return this.getItem(this.USUARIO_CACHE_CLIENTE);
     }
 
     static setAgendamento(agend: AgendamentoDTO, ttl: number = this.TTL): void {

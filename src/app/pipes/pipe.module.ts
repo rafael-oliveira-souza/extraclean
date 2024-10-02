@@ -1,6 +1,6 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { DatePipe } from './date.pipe';
+import { DataPipe } from './data.pipe';
 import { MoedaPipe } from './moeda.pipe';
 import { CepPipe } from './cep.pipe';
 import { TurnoPipe } from './turno.pipe';
@@ -20,7 +20,7 @@ import { SituacaoPagamentoPipe } from './situacaoPagamento.pipe';
     CommonModule,
     MoedaPipe,
     CepPipe,
-    DatePipe,
+    DataPipe,
     TurnoPipe,
     MetragemPipe,
     PontoPipe,
@@ -33,7 +33,7 @@ import { SituacaoPagamentoPipe } from './situacaoPagamento.pipe';
     SituacaoPagamentoPipe,
   ],
   exports: [
-    DatePipe,
+    DataPipe,
     MoedaPipe,
     CepPipe,
     TurnoPipe,

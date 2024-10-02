@@ -11,19 +11,29 @@ h2 {
     border-radius: 50%;
 }
 
-::ng-deep .mdc-button:hover {
-    color: $primary !important;
-    background-color: $white !important;
-    border: 1px solid $primary ;
-}
+// ::ng-deep .mdc-button:hover {
+//     color: $primary !important;
+//     background-color: $white !important;
+//     border: 1px solid $primary ;
+// }
 
-::ng-deep .mdc-button {
-    cursor: pointer;
-    color: $white !important;
-    background-color: $primary !important;
-}
+// ::ng-deep .mdc-button {
+//     cursor: pointer;
+//     color: $white !important;
+//     background-color: $primary !important;
+// }
 
 ::ng-deep .mat-icon {
     color: $primary !important;
     cursor: pointer;
+}
+
+::ng-deep .mat-form-field-disabled {
+    input:disabled {
+        color: $primary !important;
+    }
+}
+
+button {
+    color: white;
 }
