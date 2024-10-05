@@ -1,7 +1,7 @@
 export enum HorasEnum {
     NAO_DEFINIDO = 0,
-    HORAS_4 = 145,
-    HORAS_8 = 195,
-    HORAS_16 = 360,
-    HORAS_24 = 495,
+    HORAS_4 = 1,
+    HORAS_8 = 2,
+    HORAS_16 = 3,
+    HORAS_24 = 4
 }

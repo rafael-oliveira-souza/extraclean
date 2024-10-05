@@ -3,10 +3,10 @@
     <div class="col-12">
       <!-- <h4 class="text-center text-primary"> Pagamento</h4> -->
       <div class="text-center ">
-        <div *ngIf="agendamento.metragem">
+        <div *ngIf="agendamento.metragem || agendamento.dataHora">
           <small class="">Período: {{agendamento.turno | turno}}</small><br>
-          <small class="">Metragem (m²) : {{agendamento.metragem }}</small><br>
-          <small class="">Tipo de Limpeza : {{agendamento.tipoLimpeza| tipoLimpeza}}</small><br>
+          <small class="">Descrição : {{agendamento.horas | horasDiaria }}</small><br>
+          <small class="">Tipo de Serviço : {{agendamento.tipoLimpeza| tipoServico}}</small><br>
           <!-- <small class="">Valor de Deslocamento : {{VALOR_DESLOCAMENTO | moeda}}</small><br> -->
           <small class="">Valor Desconto : {{agendamento.desconto | moeda}}</small><br>
           <small class="">Valor Diária : {{agendamento.valor| moeda}}</small><br>

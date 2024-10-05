@@ -1,7 +1,7 @@
 import { HorasEnum } from "../enums/HorasEnum";
 import { SituacaoDiariaEnum } from "../enums/SituacaoDiariaEnum";
 import { SituacaoPagamentoEnum } from "../enums/SituacaoPagamentoEnum";
-import { TipoLimpezaEnum } from "../enums/TipoLimpezaEnum";
+import { TipoServicoEnum } from "../enums/TipoServicoEnum";
 import { TurnoEnum } from "../enums/TurnoEnum";
 
 export class InfoAgendamentoDTO {
@@ -9,7 +9,7 @@ export class InfoAgendamentoDTO {
     nomeDiarista!: string;
     dataDiaria!: Date;
     situacao!: SituacaoDiariaEnum;
-    tipoLimpeza!: TipoLimpezaEnum;
+    tipoLimpeza!: TipoServicoEnum;
     turno!: TurnoEnum;
     metragem!: number;
     valor!: number;

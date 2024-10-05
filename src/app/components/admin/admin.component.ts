@@ -35,7 +35,7 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
-import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
+import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
 
 @Component({
   selector: 'app-admin',

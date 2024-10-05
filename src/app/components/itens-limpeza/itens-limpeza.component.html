@@ -1,6 +1,6 @@
 <div class="definicao-items">
   <div *ngIf="exibeTipoLimpeza">
-    <small *ngIf="isLimpezaDetalhada">
+    <small *ngIf="tipoServico == 1">
       <div class="">
         <p>A <strong>limpeza detalhada</strong> é um processo mais minucioso que se
           concentra em
@@ -33,7 +33,7 @@
         </ul>
       </div>
     </small>
-    <small *ngIf="!isLimpezaDetalhada">
+    <small *ngIf="tipoServico == 2">
       <div class="">
         <p>A <strong>limpeza expressa</strong> é um tipo de limpeza rápida e superficial
           que
@@ -61,6 +61,65 @@
           <li>Esvaziamento de lixeiras.</li>
           <li>Limpeza de pisos com um mop ou aspirador.</li>
           <li>Limpeza básica de banheiros.</li>
+        </ul>
+      </div>
+    </small>
+    <small *ngIf="tipoServico == 3">
+      <div class="">
+        <p>A <strong>limpeza de pré mudança</strong> é um serviço focado em locais vazios, projetado para proporcionar
+          uma limpeza profunda em cada canto do seu novo
+          espaço.
+        <ul>
+          <li>Limpeza de pisos</li>
+          <li>Remoção de pó </li>
+          <li>Limpeza externa de eletrodomésticos </li>
+          <li>Limpeza interna de janelas </li>
+          <li>Lavagem de louça</li>
+          <li>Limpeza de banheiros</li>
+        </ul>
+      </div>
+    </small>
+    <small *ngIf="tipoServico == 4">
+      <div class="">
+        <p>A <strong>limpeza residencial</strong> é um serviço rápido e eficiente que oferece uma solução prática para a
+          manutenção da sua casa ou escritório.
+        <ul>
+          <li>Limpeza dos móveis</li>
+          <li> Limpeza com água</li>
+          <li>Troca de lençóis </li>
+          <li>Arraste de móveis e tapetes para limpeza completa </li>
+          <li>Remoção de pó </li>
+          <li>Limpeza externa de eletrodomésticos </li>
+          <li>Limpeza interna de janelas </li>
+          <li>Lavagem de louça</li>
+          <li>Limpeza de banheiros</li>
+        </ul>
+      </div>
+    </small>
+    <small *ngIf="tipoServico == 5">
+      <div class="">
+        <p>A <strong>limpeza empresarial</strong> é um serviço profissional projetado para manter a higiene e a
+          apresentação impecável de ambientes de trabalho.
+        <ul>
+          <li>Limpeza de mesas</li>
+          <li>Remoção de pó </li>
+          <li>Limpeza externa de eletrodomésticos </li>
+          <li>Limpeza interna de janelas </li>
+          <li>Lavagem de louça</li>
+          <li>Limpeza de banheiros</li>
+        </ul>
+      </div>
+    </small>
+    <small *ngIf="tipoServico == 6">
+      <div class="">
+        <p>A <strong>passadoria</strong> é um serviço especializado em cuidados com roupas, focado em garantir que suas
+          peças estejam sempre apresentáveis e em perfeito estado.
+        <ul>
+          <li>Cuidado com Tecidos Delicados</li>
+          <li>Eliminação de Rugas</li>
+          <li>Passagem de Várias Peças</li>
+          <li>Acabamento Profissional</li>
+          <li>Preparação para Eventos Especiais</li>
         </ul>
       </div>
     </small>

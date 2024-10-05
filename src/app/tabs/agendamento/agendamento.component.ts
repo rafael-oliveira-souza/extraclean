@@ -69,7 +69,7 @@ import { ItensLimpezaComponent } from '../../components/itens-limpeza/itens-limp
   templateUrl: './agendamento.component.html',
   styleUrl: './agendamento.component.scss'
 })
-export class AgendamentoComponent implements OnInit  {
+export class AgendamentoComponent implements OnInit {
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly METRAGEM_MAX = AgendamentoConstantes.METRAGEM_MAX;
@@ -91,7 +91,7 @@ export class AgendamentoComponent implements OnInit  {
   public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
   public profissional = null;
-  public habilitaStep: boolean[] = [false, false, false, false, false, true];
+  public habilitaStep: boolean[] = [false, false, false, true, false, true];
   public endereco = new EnderecoDTO();
 
   constructor(private _authService: AutenticacaoService, private _router: Router,
@@ -99,7 +99,7 @@ export class AgendamentoComponent implements OnInit  {
     private _notificacaoService: NotificacaoService, private _profissionalService: ProfissionalService,
     private _agendamentoService: AgendamentoService, private dialog: MatDialog) {
   }
-  
+
   ngOnInit(): void {
     this.buildForm();
     this.montarAgendamentoEmCache();
@@ -126,15 +126,6 @@ export class AgendamentoComponent implements OnInit  {
         LocalStorageUtils.removeItem(LocalStorageUtils.USUARIO_CACHE_CARRINHO_AGENDAMENTO);
         this.dadosAgendamento = new AgendamentoDTO();
         this._router.navigate([Rota.HOME], { queryParams: { tab: 1 } });
-        // const documentWidth = document.documentElement.clientWidth;
-        // const documentHeight = document.documentElement.clientHeight;
-        // let dialogRef = this.dialog.open(PagamentoComponent, {
-        //   minWidth: `${documentWidth * 0.8}px`,
-        //   maxWidth: `${documentWidth * 0.9}px`,
-        //   minHeight: `90vh`,
-        //   maxHeight: `95vh`,
-        //   data: { pagamento: null, url: result.url }
-        // });
       },
         (error) => this._notificacaoService.erro(error));
   }
@@ -213,14 +204,14 @@ export class AgendamentoComponent implements OnInit  {
       valor: ['', Validators.required]
     });
     this.formTipoLimpeza = this._formBuilder.group({
-      valor: ['1', Validators.required]
+      valor: ['4', Validators.required]
     });
 
     this.formTipoLimpeza.valueChanges.subscribe(value => {
-      const tipoLimpezaControl = this.formTipoLimpeza.controls['valor'];
-      if (tipoLimpezaControl.valid && tipoLimpezaControl.value == '1' && this.profissionais.length == 0) {
-        this.recuperarProfissionais();
-      }
+      this.dadosAgendamento.tipoLimpeza = this.formTipoLimpeza.controls['valor'].value;
+      // if (tipoLimpezaControl.valid && tipoLimpezaControl.value == '1' && this.profissionais.length == 0) {
+      //   this.recuperarProfissionais();
+      // }
     });
   }
 

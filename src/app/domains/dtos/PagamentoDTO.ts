@@ -1,7 +1,7 @@
 import { FormaPagamentoEnum } from "../enums/FormaPagamentoEnum";
 import { HorasEnum } from "../enums/HorasEnum";
 import { OrigemPagamentoEnum } from "../enums/OrigemPagamentoEnum";
-import { TipoLimpezaEnum } from "../enums/TipoLimpezaEnum";
+import { TipoServicoEnum } from "../enums/TipoServicoEnum";
 import { TipoPlanoEnum } from "../enums/TipoPlanoEnum";
 
 export class PagamentoDTO {
@@ -17,12 +17,12 @@ export class PagamentoDTO {
     email: string | null | undefined = "";
     quantidadeItens!: number;
     formaPagamento!: FormaPagamentoEnum;
-    tipoLimpeza!: TipoLimpezaEnum;
+    tipoLimpeza!: TipoServicoEnum;
     tipoPagamento!: string;
     origem!: OrigemPagamentoEnum;
     tipoPlano!: TipoPlanoEnum;
     extraPlus: boolean = false;
     dataExpiracaoPagamento!: Date;
-    isDetalhada: boolean = this.tipoLimpeza == TipoLimpezaEnum.DETALHADA;
+    isDetalhada: boolean = this.tipoLimpeza == TipoServicoEnum.DETALHADA;
     
 }

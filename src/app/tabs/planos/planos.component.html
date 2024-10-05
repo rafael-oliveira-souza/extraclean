@@ -28,10 +28,8 @@
                     <mat-label>Escolha a Quantidade de Horas</mat-label>
                     <select matNativeControl [(ngModel)]="pagamento.horas"
                         (change)="atualizarValores(planoSelecionado)">
-                        <option [value]="145">4 Horas - 1 profissional</option>
-                        <option [value]="195">8 Horas - 1 profissional</option>
-                        <option [value]="360">8 Horas - 2 profissionais</option>
-                        <option [value]="495">8 Horas - 3 profissionais</option>
+                        <option *ngFor="let horaEnum of VALORES_HORAS" [value]="horaEnum.valor">
+                            {{horaEnum.descricao}}</option>
                     </select>
                 </mat-form-field>
                 <!-- <section class="example-section">
