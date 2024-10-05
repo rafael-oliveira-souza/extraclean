@@ -7,8 +7,18 @@ small {
 
 
 .clip-path-rectangle:hover {
-    cursor:  default;
+    cursor: default;
     border: 2px solid $primary10;
     text-align: start;
     /* Cor e largura da borda ao passar o mouse */
-  }
+}
+
+
+::ng-deep #acord .mat-accordion {
+    background: $primary !important;
+    color: $white !important;
+}
+
+::ng-deep #acord .mat-expansion-panel-body {
+    background: $primary !important;
+}

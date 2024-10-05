@@ -1,14 +1,15 @@
 import { PlanosComponent } from "../../tabs/planos/planos.component";
 import { AgendamentoPagamentoInfoDTO } from "../dtos/AgendamentoPagamentoInfoDTO";
 import { PlanoDTO } from "../dtos/PlanoDTO";
+import { HorasEnum } from "../enums/HorasEnum";
 import { TurnoEnum } from "../enums/TurnoEnum";
 
 export class AgendamentoConstantes {
     public static VALOR_PROFISSIONAL_SELECIONADO = 20;
-    public static VALOR_DESLOCAMENTO = 15;
     public static VALOR_DIARIA_DETALHADA = 1.5;
+    public static VALOR_DESLOCAMENTO = 15;
     public static VALOR_PADRAO_METRO = 2.0;
-    public static MAX_PERCENTUAL = 15;
+    public static MAX_PERCENTUAL = 18;
     public static PERCENTUAL_DESCONTO = 2;
     public static METRAGEM_MIN = 15;
     public static METRAGEM_MAX = 1000;
@@ -35,6 +36,49 @@ export class AgendamentoConstantes {
         }
 
         return desconto;
+    }
+
+    public static calcularTotalPorHora(valorHoras: HorasEnum, qtdDias: number = 1, extraPlus: boolean = false,
+        porcentagemDesconto: number = 0, turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO): AgendamentoPagamentoInfoDTO {
+        const porcentagemProfissionalInicial = 65;
+
+        // if (qtdDias == 0) {
+        //     qtdDias = 1;
+        // }
+        let info: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
+        info.turno = turno;
+        info.valor = Number(valorHoras);
+
+        if (extraPlus) {
+            info.valor += this.VALOR_PROFISSIONAL_SELECIONADO;
+            info.valor *= qtdDias;
+        } else {
+            info.valor *= qtdDias;
+        }
+
+        info.desconto = this.aplicarDesconto(info.valor, porcentagemDesconto);
+        info.total = info.valor - info.desconto;
+        info.horas = valorHoras;
+
+        if (valorHoras == HorasEnum.HORAS_4) {
+            info.metragem = 50;
+            info.numProfissionais = 1;
+        } else if (valorHoras == HorasEnum.HORAS_8) {
+            info.metragem = 120;
+            info.numProfissionais = 1;
+        } else if (valorHoras == HorasEnum.HORAS_16) {
+            info.metragem = 200;
+            info.numProfissionais = 2;
+        } else if (valorHoras == HorasEnum.HORAS_24) {
+            info.metragem = 270;
+            info.numProfissionais = 3;
+        }
+
+        info.porcentagemProfissionais = porcentagemProfissionalInicial;
+        let ajusteValorPorcentagem = this.calcularValorPago(info.total, info.numProfissionais, info.porcentagemProfissionais);
+
+        info.valorProfissionais = ajusteValorPorcentagem;
+        return info;
     }
 
     public static calcularTotal(metragem: number, isDetalhada: boolean, qtdDias: number = 1, porcentagemDesconto: number = 0,

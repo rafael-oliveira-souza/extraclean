@@ -127,8 +127,7 @@
                     <ng-template matStepLabel>Agendamento</ng-template>
                     <div id="calendarioIdAgd390">
                         <app-calendario *ngIf="formArea.controls['valor'].valid && profissionais.length > 0"
-                            [valorMetro]="valorMetro" [profissionais]="profissionais"
-                            [metragem]="formArea.controls['valor'].value"
+                            [profissionais]="profissionais" [metragem]="formArea.controls['valor'].value"
                             [tipoLimpeza]="formTipoLimpeza.controls['valor'].value"
                             (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
                         <div class="row justify-content-end">
@@ -288,8 +287,7 @@
                 <div class="mt-4 text-center">
                     <ng-template matStepLabel>Agendamento</ng-template>
                     <div id="calendarioIdAgd390">
-                        <app-calendario [valorMetro]="valorMetro" [profissionais]="profissionais"
-                            [metragem]="formArea.controls['valor'].value"
+                        <app-calendario [profissionais]="profissionais" [metragem]="formArea.controls['valor'].value"
                             [tipoLimpeza]="formTipoLimpeza.controls['valor'].value"
                             (getDadosAgendamento)="getDadosAgendamento($event)"></app-calendario>
                         <div class="row justify-content-end">

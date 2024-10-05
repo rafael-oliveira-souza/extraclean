@@ -1,5 +1,5 @@
 <div class="container mb-5">
-    <div class="mt-3  row justify-content-start">
+    <div class="mt-3 row justify-content-start">
         <div class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-6  mt-2" *ngFor="let servico of servicos;">
             <div class="p-4 clip-path-rectangle">
                 <mat-icon class="cor-branca" aria-hidden="false" aria-label="Servicos"
@@ -7,7 +7,51 @@
                 <h4 class="cor-azul">{{servico.nome}}</h4>
                 <small [innerHTML]="servico.titulo"></small>
                 <br><br>
-                <small [innerHTML]="servico.descricao"></small>
+                <mat-accordion id="acord">
+                    <mat-expansion-panel hideToggle (opened)="servico.marcadoFeito = true"
+                        (closed)="servico.marcadoFeito = false">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="cor-branca">
+                                <mat-icon *ngIf="!servico.marcadoFeito" aria-hidden="false" aria-label="Servicos"
+                                    [fontIcon]="'arrow_right'"></mat-icon>
+                                <mat-icon *ngIf="servico.marcadoFeito" aria-hidden="false" aria-label="Servicos"
+                                    [fontIcon]="'arrow_drop_down'"></mat-icon>
+                                O que sempre fazemos
+                            </mat-panel-title>
+                        </mat-expansion-panel-header><br>
+                        <small [innerHTML]="servico.descricao"></small>
+                    </mat-expansion-panel>
+                    <mat-expansion-panel hideToggle (opened)="servico.marcadoNaoFeito = true"
+                        (closed)="servico.marcadoNaoFeito = false">
+                        <mat-expansion-panel-header>
+                            <mat-panel-title class="cor-branca">
+                                <mat-icon *ngIf="!servico.marcadoNaoFeito" aria-hidden="false" aria-label="Servicos"
+                                    [fontIcon]="'arrow_right'"></mat-icon>
+                                <mat-icon *ngIf="servico.marcadoNaoFeito" aria-hidden="false" aria-label="Servicos"
+                                    [fontIcon]="'arrow_drop_down'"></mat-icon>
+                                O que nunca fazemos
+                            </mat-panel-title>
+                        </mat-expansion-panel-header><br>
+
+                        <small *ngIf="servico.nome != 'Passadoria'">
+                            <ul>
+                                <li> Limpeza externa de janelas em andares elevados. </li>
+                                <li> Limpeza de paredes altas que necessitam de uso de escadas </li>
+                                <li> Limpeza interna de locais que possam conter itens pessoais e de valor (Guarda
+                                    roupas, cofres..) </li>
+                                <li> Remoção de objetos pesados ou que possam causar lesões. </li>
+                                <li> Limpeza de áreas com produtos químicos perigosos. </li>
+                                <li> Uso de escadas ou equipamentos que não sejam seguros </li>
+                            </ul>
+                        </small>
+                        <small *ngIf="servico.nome == 'Passadoria'">
+                            <ul>
+                                <li> Guardar as peças em locais que possam conter itens pessoais e de valor (Guarda
+                                    roupas) </li>
+                            </ul>
+                        </small>
+                    </mat-expansion-panel>
+                </mat-accordion>
             </div>
             <!-- <img width="60%" height="60%" [src]="servico.imagem"> -->
         </div>

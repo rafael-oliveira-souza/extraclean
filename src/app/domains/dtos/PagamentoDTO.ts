@@ -1,4 +1,5 @@
 import { FormaPagamentoEnum } from "../enums/FormaPagamentoEnum";
+import { HorasEnum } from "../enums/HorasEnum";
 import { OrigemPagamentoEnum } from "../enums/OrigemPagamentoEnum";
 import { TipoLimpezaEnum } from "../enums/TipoLimpezaEnum";
 import { TipoPlanoEnum } from "../enums/TipoPlanoEnum";
@@ -8,6 +9,7 @@ export class PagamentoDTO {
     titulo!: string;
     qtdParcelas!: number | undefined;
     codigoPagamento!: string;
+    horas: HorasEnum = HorasEnum.NAO_DEFINIDO;
     metragem!: number;
     desconto: number = 0;
     valor: number = 0;

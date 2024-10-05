@@ -91,7 +91,7 @@ export class AgendamentoComponent implements OnInit  {
   public valorMetro = AgendamentoConstantes.VALOR_PADRAO_METRO;
   public profissionais: Array<ProfissionalDTO> = [];
   public profissional = null;
-  public habilitaStep: boolean[] = [true, true, true, true, true, true];
+  public habilitaStep: boolean[] = [false, false, false, false, false, true];
   public endereco = new EnderecoDTO();
 
   constructor(private _authService: AutenticacaoService, private _router: Router,

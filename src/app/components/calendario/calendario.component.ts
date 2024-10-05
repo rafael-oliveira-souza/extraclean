@@ -32,6 +32,7 @@ import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
 import { AgendamentoPagamentoInfoDTO } from '../../domains/dtos/AgendamentoPagamentoInfoDTO';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { LinguagemEnum } from '../../domains/enums/LinguagemEnum';
+import { HorasEnum } from '../../domains/enums/HorasEnum';
 
 export const MY_FORMATS = {
   parse: {
@@ -49,7 +50,7 @@ export const MY_FORMATS = {
   selector: 'app-calendario',
   standalone: true,
   providers: [
-    { provide: MAT_DATE_LOCALE, useValue: LinguagemEnum.PT }, 
+    { provide: MAT_DATE_LOCALE, useValue: LinguagemEnum.PT },
     provideMomentDateAdapter(MY_FORMATS),
   ],
   imports: [
@@ -81,9 +82,6 @@ export class CalendarioComponent implements OnInit {
   @Input('metragem')
   public metragem: number = 0;
 
-  @Input('valorMetro')
-  public valorMetro: number = 2;
-
   @Input('profissionais')
   public profissionais: Array<ProfissionalDTO> = [];
 
@@ -100,7 +98,8 @@ export class CalendarioComponent implements OnInit {
   public readonly ATTR_SELECTED: string = "selected";
   public readonly ATTR_DISABLED: string = "disabled";
 
-
+  public valor4Horas: HorasEnum = HorasEnum.HORAS_4;
+  public qtdHoras: HorasEnum = HorasEnum.HORAS_4;
   public hoje: MomentInput = DateUtils.newDate();
   public diaSelecionado = new FormControl(DateUtils.add(this.hoje, 1, 'day'));
   public maxDate: MomentInput = DateUtils.add(this.hoje, 1, 'year');
@@ -317,8 +316,8 @@ export class CalendarioComponent implements OnInit {
 
     const qtdDias = this.getQtdDias();
     const porcentagemDesconto = AgendamentoConstantes.calcularPorcentagemDias(qtdDias);
-    let agendamento: AgendamentoPagamentoInfoDTO = AgendamentoConstantes.calcularTotal(this.metragem, this.isDetalhada(), qtdDias,
-      porcentagemDesconto, this.profissionalSelecionado != 0, this.turno);
+    let agendamento: AgendamentoPagamentoInfoDTO = AgendamentoConstantes
+      .calcularTotalPorHora(this.qtdHoras, qtdDias, false, porcentagemDesconto, this.turno);
 
     this.desconto = agendamento.desconto;
     this.valorTotal = agendamento.total;

@@ -1,3 +1,4 @@
+import { HorasEnum } from "../enums/HorasEnum";
 import { SituacaoDiariaEnum } from "../enums/SituacaoDiariaEnum";
 import { SituacaoPagamentoEnum } from "../enums/SituacaoPagamentoEnum";
 import { TipoLimpezaEnum } from "../enums/TipoLimpezaEnum";
@@ -27,4 +28,5 @@ export class InfoAgendamentoDTO {
     qtdProfissionais!: number;
     valorProfissional!: number;
     profissionalAtualizado!: number;
+    horas: HorasEnum = HorasEnum.NAO_DEFINIDO;
 }

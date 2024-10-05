@@ -1,3 +1,5 @@
+import { HorasEnum } from "../enums/HorasEnum";
+
 export class HistoricoAgendamentoDTO {
     idCliente!: number;
     nome!: string;
@@ -13,4 +15,5 @@ export class HistoricoAgendamentoDTO {
     situacao!: number;
     horaEntrada!: Date;
     horaSaida!: Date;
+    horas: HorasEnum = HorasEnum.NAO_DEFINIDO;
 }

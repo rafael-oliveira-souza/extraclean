@@ -24,6 +24,8 @@ import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { OrigemPagamentoEnum } from '../../domains/enums/OrigemPagamentoEnum';
 import { DateUtils } from '../../utils/DateUtils';
 import { TipoPlanoEnum } from '../../domains/enums/TipoPlanoEnum';
+import { HorasEnum } from '../../domains/enums/HorasEnum';
+import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 
 @Component({
   selector: 'app-planos',
@@ -53,11 +55,11 @@ export class PlanosComponent {
   public getUrl: EventEmitter<string> = new EventEmitter();
 
   public static readonly PLANOS: PlanoDTO[] = [
-    new PlanoDTO(TipoPlanoEnum.SEMANAL, "Semanal", "Consiste em 2 diárias expressas ou detalhadas em datas que o cliente definir.", 5, 2, 2),
-    new PlanoDTO(TipoPlanoEnum.MENSAL, "Mensal", "Consiste em 4 diárias expressas ou detalhadas em datas que o cliente definir", 10, 4, 4),
-    new PlanoDTO(TipoPlanoEnum.TRIMESTAL, "Trimestal", "Consiste em 12 diárias expressas ou detalhadas em datas que o cliente definir", 15, 12, 6),
-    new PlanoDTO(TipoPlanoEnum.SEMESTRAL, "Semestral", "Consiste em 24 diárias expressas ou detalhadas em datas que o cliente definir", 15, 24, 6),
-    new PlanoDTO(TipoPlanoEnum.ANUAL, "Anual", "Consiste em 48 diárias expressas ou detalhadas em datas que o cliente definir", 15, 48, 12)
+    new PlanoDTO(TipoPlanoEnum.SEMANAL, "Semanal", "Consiste em 2 diárias de 4 ou 8 horas em datas que o cliente definir.", 6, 2, 2),
+    new PlanoDTO(TipoPlanoEnum.MENSAL, "Mensal", "Consiste em 4 diárias de 4 ou 8 horas em datas que o cliente definir", 9, 4, 4),
+    new PlanoDTO(TipoPlanoEnum.TRIMESTAL, "Trimestal", "Consiste em 12 diárias de 4 ou 8 horas em datas que o cliente definir", 12, 12, 6),
+    new PlanoDTO(TipoPlanoEnum.SEMESTRAL, "Semestral", "Consiste em 24 diárias de 4 ou 8 horas em datas que o cliente definir", 15, 24, 6),
+    new PlanoDTO(TipoPlanoEnum.ANUAL, "Anual", "Consiste em 48 diárias de 4 ou 8 horas em datas que o cliente definir", 18, 48, 12)
   ];
 
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
@@ -84,7 +86,7 @@ export class PlanosComponent {
   }
 
   public calcularTotal(plano: PlanoDTO): AgendamentoPagamentoInfoDTO {
-    if (!this.pagamento.metragem) {
+    if (!this.pagamento.horas) {
       return new AgendamentoPagamentoInfoDTO();
     }
 
@@ -92,8 +94,8 @@ export class PlanosComponent {
       this.pagamento.metragem = 0;
     }
 
-    return AgendamentoConstantes.calcularTotal(
-      this.pagamento.metragem, this.pagamento.isDetalhada, plano.qtdDias, plano.desconto, this.pagamento.extraPlus);
+    return AgendamentoConstantes.calcularTotalPorHora(
+      this.pagamento.horas, plano.qtdDias, this.pagamento.extraPlus, plano.desconto, TurnoEnum.NAO_DEFINIDO);
   }
 
   public selecionarPlano() {
@@ -106,12 +108,8 @@ export class PlanosComponent {
   }
 
   public atualizarValores(plano: PlanoDTO) {
-    if (!this.pagamento.metragem) {
-      this.agendamentoInfo = new AgendamentoPagamentoInfoDTO();
-      return;
-    }
-
     this.agendamentoInfo = this.calcularTotal(plano);
+    console.log(this.agendamentoInfo)
   }
 
 
@@ -126,6 +124,7 @@ export class PlanosComponent {
     dadosAgendamento.dataHora = new Date();
     dadosAgendamento.desconto = this.agendamentoInfo.desconto;
     dadosAgendamento.valor = this.agendamentoInfo.valor;
+    dadosAgendamento.horas = this.agendamentoInfo.horas;
     dadosAgendamento.metragem = this.pagamento.metragem;
     dadosAgendamento.email = this.agendamento.email;
     dadosAgendamento.extraPlus = this.pagamento.extraPlus;
@@ -154,6 +153,7 @@ export class PlanosComponent {
     const agendamento: AgendamentoPagamentoInfoDTO = this.calcularTotal(plano);
     plano.dataHora = new Date();
     plano.valor = agendamento.valor;
+    plano.horas = agendamento.horas;
     plano.desconto = agendamento.desconto;
     plano.quantidadeItens = 1;
     plano.qtdParcelas = plano.qtdParcelas;
