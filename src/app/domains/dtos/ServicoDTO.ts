@@ -4,6 +4,8 @@ export class ServicoDTO {
     icone!: string;
     descricao!: string;
     imagem!: string;
+    marcadoFeito: boolean = false;
+    marcadoNaoFeito: boolean = false;
 
     constructor(nome: string, titulo: string, descricao: string, icone: string, imagem: string) {
         this.nome = nome;
