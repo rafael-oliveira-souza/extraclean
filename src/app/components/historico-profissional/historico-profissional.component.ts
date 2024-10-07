@@ -125,7 +125,11 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
 
   public calcularTotal() {
     let total = 0;
-    this.agendamentos.forEach(agend => total += agend.valorProfissional);
+    this.agendamentos.forEach(agend => {
+      if (!agend.contratada) {
+        total += agend.valorProfissional;
+      }
+    });
     return total;
   }
 
