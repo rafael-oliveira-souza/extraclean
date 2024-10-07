@@ -76,9 +76,12 @@
                 <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
                 <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
                 <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
-                <small class="col-6"><strong>Horas: </strong>{{diaria.horas | horasDiaria}}</small><br>
-                <small class="col-6"><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
-                <small class="col-6"><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
+                <small class="col-6"><strong>Horas: </strong>{{diaria.horas |
+                  horasDiaria}}</small><br>
+                <small class="col-6" *ngIf="!diaria.contratada"><strong>Valor: </strong>{{diaria.valor |
+                  moeda}}</small><br>
+                <small class="col-6" *ngIf="!diaria.contratada"><strong>Desconto: </strong>{{diaria.desconto |
+                  moeda}}</small><br>
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
                 <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Situação Pagamento:
@@ -139,8 +142,10 @@
                 <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
                 <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
                 <small class="col-6"><strong>Horas: </strong>{{diaria.horas | horasDiaria}}</small><br>
-                <small class="col-6"><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
-                <small class="col-6"><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
+                <small class="col-6" *ngIf="!diaria.contratada"><strong>Valor: </strong>{{diaria.valor |
+                  moeda}}</small><br>
+                <small class="col-6" *ngIf="!diaria.contratada"><strong>Desconto: </strong>{{diaria.desconto |
+                  moeda}}</small><br>
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
                 <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Situação Pagamento:
