@@ -28,7 +28,7 @@
                     <mat-label>Escolha a Quantidade de Horas</mat-label>
                     <select matNativeControl [(ngModel)]="pagamento.horas"
                         (change)="atualizarValores(planoSelecionado)">
-                        <option *ngFor="let horaEnum of VALORES_HORAS" [value]="horaEnum.valor">
+                        <option *ngFor="let horaEnum of VALORES_HORAS" [value]="horaEnum.id">
                             {{horaEnum.descricao}}</option>
                     </select>
                 </mat-form-field>

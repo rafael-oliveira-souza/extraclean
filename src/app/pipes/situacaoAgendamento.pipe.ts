@@ -27,6 +27,24 @@ export class SituacaoAgendamentoPipe implements PipeTransform {
         return "Finalizado";
       case SituacaoAgendamentoEnum.FINALIZADO:
         return "Finalizado";
+      case 3:
+        return "Cancelado";
+      case "3":
+        return "Cancelado";
+      case SituacaoAgendamentoEnum.CANCELADO:
+        return "Cancelado";
+      case 4:
+        return "Reagendado";
+      case "4":
+        return "Reagendado";
+      case SituacaoAgendamentoEnum.REAGENDADO:
+        return "Reagendado";
+      case 5:
+        return "Agendado";
+      case "5":
+        return "Agendado";
+      case SituacaoAgendamentoEnum.AGENDADO:
+        return "Agendado";
       default:
         return "";
     }

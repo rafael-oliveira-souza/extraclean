@@ -99,7 +99,7 @@ export class CalendarioComponent implements OnInit {
   public readonly ATTR_DISABLED: string = "disabled";
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 
-  public valor4Horas: HorasEnum = AgendamentoConstantes.getValorHora(HorasEnum.HORAS_4);
+  public valor4Horas: HorasEnum = HorasEnum.HORAS_4;
   public qtdHoras: HorasEnum = this.valor4Horas;
   public hoje: MomentInput = DateUtils.newDate();
   public diaSelecionado = new FormControl(DateUtils.add(this.hoje, 1, 'day'));
@@ -110,7 +110,7 @@ export class CalendarioComponent implements OnInit {
   public profissional: ProfissionalDTO | null = null;
   public profissionalSelecionado: number = 0;
   public diasAgendadosProfissional: AgendamentoDiariaDTO[] = [];
-  public turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO;
+  public turno: TurnoEnum = TurnoEnum.MATUTINO;
   public valorTotal: number = 0;
   public desconto: number = 0;
   public corVerde: CorEnum = CorEnum.verde;
@@ -127,8 +127,8 @@ export class CalendarioComponent implements OnInit {
     this.recuperarDiariasAgendadasMes(this.diaSelecionado.value);
   }
 
-  private recuperarDiariasAgendadasMes(data: Moment | null) {
-    this._diariaService.recuperarDiariasAgendadasMes(this.turno, DateUtils.toDate(data))
+  public recuperarDiariasAgendadasMes(data: Moment | null) {
+    this._diariaService.recuperarDiariasAgendadasMes(this.turno, this.qtdHoras, DateUtils.toDate(data))
       .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
         if (typeof document !== 'undefined') {
           this.diasAgendadosProfissional = agendamentos;

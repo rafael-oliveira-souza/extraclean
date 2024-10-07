@@ -26,6 +26,8 @@ import { DateUtils } from '../../utils/DateUtils';
 import { TipoPlanoEnum } from '../../domains/enums/TipoPlanoEnum';
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
+import { MoedaPipe } from '../../pipes/moeda.pipe';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 
 @Component({
   selector: 'app-planos',
@@ -37,14 +39,13 @@ import { TurnoEnum } from '../../domains/enums/TurnoEnum';
     MatInputModule,
     CommonModule,
     MatIconModule,
-    PipeModule,
+    MoedaPipe,
     MatCheckboxModule,
     DialogModule,
     MatButtonModule,
   ],
   templateUrl: './planos.component.html',
   styleUrl: './planos.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanosComponent {
 
@@ -110,7 +111,6 @@ export class PlanosComponent {
 
   public atualizarValores(plano: PlanoDTO) {
     this.agendamentoInfo = this.calcularTotal(plano);
-    console.log(this.agendamentoInfo)
   }
 
 
@@ -141,7 +141,7 @@ export class PlanosComponent {
         this.urlPagamento = result.url;
         window.open(result['url'], '_blank');
         this.getUrl.emit(result.url);
-        this.notification.alerta("Agendamento realizado com sucesso. O seu agendamento será efetivado após o pagamento!");
+        this.notification.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
       }, (error) => this.notification.erro(error));
   }
 
@@ -167,7 +167,7 @@ export class PlanosComponent {
       .subscribe((pag: PagamentoMpDTO) => {
         this.urlPagamento = pag.url;
         this.getUrl.emit(pag.url);
-        this.notification.alerta("Plano solicitado com sucesso. O seu plano será efetivado após o pagamento!");
+        this.notification.alerta(MensagemEnum.PLANO_CONCLUIDO_SUCESSO);
         const documentWidth = document.documentElement.clientWidth;
         const documentHeigth = document.documentElement.clientHeight;
         window.open(pag['url'], '_blank');

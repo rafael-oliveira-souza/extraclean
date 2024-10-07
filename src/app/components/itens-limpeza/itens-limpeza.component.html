@@ -1,6 +1,6 @@
-<div class="definicao-items">
+<div class="cor-padrao">
   <div *ngIf="exibeTipoLimpeza">
-    <small *ngIf="tipoServico == 1">
+    <div *ngIf="tipoServico == 1">
       <div class="">
         <p>A <strong>limpeza detalhada</strong> é um processo mais minucioso que se
           concentra em
@@ -32,8 +32,8 @@
           <li>Remoção de poeira acumulada em móveis e equipamentos.</li>
         </ul>
       </div>
-    </small>
-    <small *ngIf="tipoServico == 2">
+    </div>
+    <div *ngIf="tipoServico == 2">
       <div class="">
         <p>A <strong>limpeza expressa</strong> é um tipo de limpeza rápida e superficial
           que
@@ -63,57 +63,64 @@
           <li>Limpeza básica de banheiros.</li>
         </ul>
       </div>
-    </small>
-    <small *ngIf="tipoServico == 3">
+    </div>
+    <div *ngIf="tipoServico == 3">
       <div class="">
         <p>A <strong>limpeza de pré mudança</strong> é um serviço focado em locais vazios, projetado para proporcionar
-          uma limpeza profunda em cada canto do seu novo
-          espaço.
+          uma limpeza profunda em cada canto do seu novo espaço.</p>
+        <p>O que sempre fazemos:</p>
         <ul>
           <li>Limpeza de pisos</li>
           <li>Remoção de pó </li>
+          <li>Coleta e descarte de lixo</li>
           <li>Limpeza externa de eletrodomésticos </li>
           <li>Limpeza interna de janelas </li>
           <li>Lavagem de louça</li>
           <li>Limpeza de banheiros</li>
         </ul>
       </div>
-    </small>
-    <small *ngIf="tipoServico == 4">
+    </div>
+    <div *ngIf="tipoServico == 4">
       <div class="">
         <p>A <strong>limpeza residencial</strong> é um serviço rápido e eficiente que oferece uma solução prática para a
-          manutenção da sua casa ou escritório.
+          manutenção da sua casa ou escritório.</p>
+        <p>O que sempre fazemos:</p>
         <ul>
           <li>Limpeza dos móveis</li>
           <li> Limpeza com água</li>
           <li>Troca de lençóis </li>
           <li>Arraste de móveis e tapetes para limpeza completa </li>
           <li>Remoção de pó </li>
+          <li>Coleta e descarte de lixo</li>
           <li>Limpeza externa de eletrodomésticos </li>
           <li>Limpeza interna de janelas </li>
           <li>Lavagem de louça</li>
           <li>Limpeza de banheiros</li>
         </ul>
       </div>
-    </small>
-    <small *ngIf="tipoServico == 5">
+    </div>
+    <div *ngIf="tipoServico == 5">
       <div class="">
         <p>A <strong>limpeza empresarial</strong> é um serviço profissional projetado para manter a higiene e a
-          apresentação impecável de ambientes de trabalho.
+          apresentação impecável de ambientes de trabalho.</p>
+        <p>O que sempre fazemos:</p>
         <ul>
           <li>Limpeza de mesas</li>
           <li>Remoção de pó </li>
+          <li>Coleta e descarte de lixo</li>
           <li>Limpeza externa de eletrodomésticos </li>
           <li>Limpeza interna de janelas </li>
           <li>Lavagem de louça</li>
           <li>Limpeza de banheiros</li>
         </ul>
       </div>
-    </small>
-    <small *ngIf="tipoServico == 6">
+    </div>
+    <div *ngIf="tipoServico == 6">
       <div class="">
         <p>A <strong>passadoria</strong> é um serviço especializado em cuidados com roupas, focado em garantir que suas
-          peças estejam sempre apresentáveis e em perfeito estado.
+          peças estejam sempre apresentáveis e em perfeito estado.</p>
+
+        <p>O que sempre fazemos:</p>
         <ul>
           <li>Cuidado com Tecidos Delicados</li>
           <li>Eliminação de Rugas</li>
@@ -122,7 +129,21 @@
           <li>Preparação para Eventos Especiais</li>
         </ul>
       </div>
-    </small>
+    </div>
+    <div>
+      <!-- <p>
+        Informamos que, por motivos de segurança e para garantir a integridade física, as profissionais não realizarão
+        as seguintes atividades:</p> -->
+
+      <p>O que nunca fazemos:</p>
+      <ul>
+        <li>Limpeza externa de janelas em andares elevados.</li>
+        <li> Limpeza de paredes altas que necessitam de uso de escadas altas.</li>
+        <li>Limpeza interna de locais que possam conter itens pessoais e de valor (Guarda roupas, cofres..)</li>
+        <li>Limpeza de áreas com produtos químicos perigosos.</li>
+        <li> Uso de escadas ou equipamentos que não sejam seguros.</li>
+      </ul>
+    </div>
   </div>
   <div *ngIf="exibeInfoValores" class="text-center">
     <small class="col-12">* É disponibilizado um percentual de desconto

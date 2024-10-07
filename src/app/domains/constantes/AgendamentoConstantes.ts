@@ -64,7 +64,7 @@ export class AgendamentoConstantes {
         // }
         let info: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
         info.turno = turno;
-        info.valor = Number(valorHoras);
+        info.valor = this.VALORES_HORAS[Number(valorHoras)].valor;
 
         if (extraPlus) {
             info.valor += this.VALOR_PROFISSIONAL_SELECIONADO;
