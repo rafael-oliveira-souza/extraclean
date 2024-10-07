@@ -14,6 +14,23 @@ export class AgendamentoConstantes {
     public static METRAGEM_MIN = 15;
     public static METRAGEM_MAX = 1000;
 
+    public static VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = [
+        { id: HorasEnum.HORAS_4, valor: 145, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
+        { id: HorasEnum.HORAS_8, valor: 195, descricao: '8 Horas - 1 Profissional', numProfissionais: 1 },
+        { id: HorasEnum.HORAS_16, valor: 360, descricao: '8 Horas - 2 Profissional', numProfissionais: 2 },
+        { id: HorasEnum.HORAS_24, valor: 495, descricao: '8 Horas - 3 Profissional', numProfissionais: 3 },
+    ];
+
+    public static getInfoHora(horaEnum: string | number | HorasEnum): { id: HorasEnum, valor: number, descricao: string, numProfissionais: number } {
+        const filtro: any[] = this.VALORES_HORAS.filter(hora => hora.id == horaEnum || hora.descricao == horaEnum || hora.valor == horaEnum);
+
+        return filtro.length > 0 ? filtro[0] : HorasEnum.NAO_DEFINIDO;
+    }
+
+    public static getValorHora(horaEnum: HorasEnum): number {
+        return this.getInfoHora(horaEnum).valor;
+    }
+
     private static calcularValorPago(valor: number, numProfissionais: number, porcentagemProfissionais: number) {
         return valor / numProfissionais * porcentagemProfissionais / 100;
     }
@@ -47,7 +64,7 @@ export class AgendamentoConstantes {
         // }
         let info: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
         info.turno = turno;
-        info.valor = Number(valorHoras);
+        info.valor = this.VALORES_HORAS[Number(valorHoras)].valor;
 
         if (extraPlus) {
             info.valor += this.VALOR_PROFISSIONAL_SELECIONADO;

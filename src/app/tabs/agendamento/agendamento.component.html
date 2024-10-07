@@ -78,15 +78,16 @@
                     <div class="mt-4 ">
                         <div class="d-flex justify-content-center text-center">
                             <mat-button-toggle-group formControlName="valor" required>
-                                <mat-button-toggle value="1">Expressa</mat-button-toggle>
-                                <mat-button-toggle value="2">Detalhada</mat-button-toggle>
+                                <mat-button-toggle value="4">Residencial</mat-button-toggle>
+                                <mat-button-toggle value="5">Empresarial</mat-button-toggle>
+                                <mat-button-toggle value="3">Pré Mudança</mat-button-toggle>
+                                <mat-button-toggle value="6">Passadoria</mat-button-toggle>
                             </mat-button-toggle-group>
                         </div>
                         <div class="d-flex justify-content-center">
                             <div class="col-12 cor-laranja mt-3">
                                 <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="false"
-                                    [exibeTipoLimpeza]="true"
-                                    [isLimpezaDetalhada]="isLimpezaDetalhada()"></app-itens-limpeza>
+                                    [exibeTipoLimpeza]="true"></app-itens-limpeza>
 
                             </div>
                         </div>
@@ -236,19 +237,21 @@
             </mat-step>
             <mat-step *ngIf="habilitaStep[3]" [stepControl]="formTipoLimpeza" [editable]="isEditable">
                 <form [formGroup]="formTipoLimpeza">
-                    <ng-template matStepLabel>Tipo de Limpeza</ng-template>
+                    <ng-template matStepLabel>Tipo de Serviço</ng-template>
                     <div class="mt-4 ">
                         <div class="d-flex justify-content-center text-center">
                             <mat-button-toggle-group formControlName="valor" required>
-                                <mat-button-toggle value="1">Expressa</mat-button-toggle>
-                                <mat-button-toggle value="2">Detalhada</mat-button-toggle>
+                                <mat-button-toggle value="4">Residencial</mat-button-toggle>
+                                <mat-button-toggle value="5">Empresarial</mat-button-toggle>
+                                <mat-button-toggle value="3">Pré Mudança</mat-button-toggle>
+                                <mat-button-toggle value="6">Passadoria</mat-button-toggle>
                             </mat-button-toggle-group>
                         </div>
                         <div class="d-flex justify-content-center">
                             <div class="col-12 cor-laranja mt-3">
                                 <app-itens-limpeza [exibeInfoProdutos]="false" [exibeInfoValores]="false"
                                     [exibeTipoLimpeza]="true"
-                                    [isLimpezaDetalhada]="isLimpezaDetalhada()"></app-itens-limpeza>
+                                    [tipoServico]="formTipoLimpeza.controls['valor'].value"></app-itens-limpeza>
                             </div>
                         </div>
                     </div>

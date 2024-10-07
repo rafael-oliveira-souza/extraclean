@@ -35,7 +35,9 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
-import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
+import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
+import { HorasEnum } from '../../domains/enums/HorasEnum';
+import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 
 @Component({
   selector: 'app-admin',
@@ -72,6 +74,7 @@ export class AdminComponent implements OnInit {
     { label: "Criar Cliente", id: "idCriarCliente", index: 2 },
     { label: "Gerenciar Agendamentos", id: "idCalendAgend", index: 3 },
   ];
+  public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 
   public selectedMenu: MenuDTO = this.menus[0];
   public selectedIndex: number = 1;

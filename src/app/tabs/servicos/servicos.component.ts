@@ -28,8 +28,6 @@ export class ServicosComponent {
 
   public servicos: Array<ServicoDTO> = [];
 
-
-
   constructor() {
     this.servicos.push(new ServicoDTO("Limpeza Residencial",
       "É um serviço rápido e eficiente que oferece uma solução prática para a manutenção da sua casa ou escritório.",
@@ -49,7 +47,7 @@ export class ServicosComponent {
     this.servicos.push(new ServicoDTO("Pré Mudança",
       "É um serviço focado em locais vazios, projetado para proporcionar uma limpeza profunda em cada canto do seu novo espaço. ",
       "<ul>\n" +
-      "        <li>Limpeza de mesas</li>\n" +
+      "        <li>Limpeza de pisos</li>\n" +
       "        <li>Remoção de pó </li>\n" +
       "        <li>Limpeza externa de eletrodomésticos </li>\n" +
       "        <li>Limpeza interna de janelas </li>\n" +

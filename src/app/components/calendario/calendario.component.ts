@@ -28,7 +28,7 @@ import { LocalStorageUtils } from '../../utils/LocalStorageUtils';
 import { ProfissionalComponent } from '../profissional/profissional.component';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { DiariaService } from '../../services/diaria.service';
-import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
+import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
 import { AgendamentoPagamentoInfoDTO } from '../../domains/dtos/AgendamentoPagamentoInfoDTO';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { LinguagemEnum } from '../../domains/enums/LinguagemEnum';
@@ -86,7 +86,7 @@ export class CalendarioComponent implements OnInit {
   public profissionais: Array<ProfissionalDTO> = [];
 
   @Input('tipoLimpeza')
-  public tipoLimpeza: TipoLimpezaEnum = TipoLimpezaEnum.EXPRESSA;
+  public tipoLimpeza: TipoServicoEnum = TipoServicoEnum.EXPRESSA;
 
   @Output()
   public getDiasAgendados: EventEmitter<Array<MomentInput>> = new EventEmitter();
@@ -97,9 +97,10 @@ export class CalendarioComponent implements OnInit {
   public readonly ATTR_INDISPONIBLE: string = "indisponible";
   public readonly ATTR_SELECTED: string = "selected";
   public readonly ATTR_DISABLED: string = "disabled";
+  public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 
   public valor4Horas: HorasEnum = HorasEnum.HORAS_4;
-  public qtdHoras: HorasEnum = HorasEnum.HORAS_4;
+  public qtdHoras: HorasEnum = this.valor4Horas;
   public hoje: MomentInput = DateUtils.newDate();
   public diaSelecionado = new FormControl(DateUtils.add(this.hoje, 1, 'day'));
   public maxDate: MomentInput = DateUtils.add(this.hoje, 1, 'year');
@@ -109,7 +110,7 @@ export class CalendarioComponent implements OnInit {
   public profissional: ProfissionalDTO | null = null;
   public profissionalSelecionado: number = 0;
   public diasAgendadosProfissional: AgendamentoDiariaDTO[] = [];
-  public turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO;
+  public turno: TurnoEnum = TurnoEnum.MATUTINO;
   public valorTotal: number = 0;
   public desconto: number = 0;
   public corVerde: CorEnum = CorEnum.verde;
@@ -126,8 +127,8 @@ export class CalendarioComponent implements OnInit {
     this.recuperarDiariasAgendadasMes(this.diaSelecionado.value);
   }
 
-  private recuperarDiariasAgendadasMes(data: Moment | null) {
-    this._diariaService.recuperarDiariasAgendadasMes(this.turno, DateUtils.toDate(data))
+  public recuperarDiariasAgendadasMes(data: Moment | null) {
+    this._diariaService.recuperarDiariasAgendadasMes(this.turno, this.qtdHoras, DateUtils.toDate(data))
       .subscribe((agendamentos: Array<AgendamentoDiariaDTO>) => {
         if (typeof document !== 'undefined') {
           this.diasAgendadosProfissional = agendamentos;
@@ -223,7 +224,9 @@ export class CalendarioComponent implements OnInit {
     agendamento.valor = NumberUtils.arredondarCasasDecimais(this.valorTotal, 2);
     agendamento.diasSelecionados = diasSelecionados;
     agendamento.metragem = this.metragem;
+    agendamento.tipoLimpeza = this.tipoLimpeza;
     agendamento.profissionais = [this.profissionalSelecionado];
+    agendamento.horas = AgendamentoConstantes.getInfoHora(this.qtdHoras).id;
     agendamento.turno = this.turno;
     agendamento.dataHora = new Date();
     agendamento.email = LocalStorageUtils.getAuth()?.username;
@@ -321,6 +324,7 @@ export class CalendarioComponent implements OnInit {
 
     this.desconto = agendamento.desconto;
     this.valorTotal = agendamento.total;
+    this.metragem = agendamento.metragem;
 
     this.emitirDadosAgendamento();
     return this.valorTotal;
@@ -388,6 +392,6 @@ export class CalendarioComponent implements OnInit {
   }
 
   public isDetalhada(): boolean {
-    return this.tipoLimpeza == TipoLimpezaEnum.DETALHADA;
+    return this.tipoLimpeza == TipoServicoEnum.DETALHADA;
   }
 }

@@ -1,5 +1,6 @@
 import { Pipe, PipeTransform } from '@angular/core';
 import { HorasEnum } from '../domains/enums/HorasEnum';
+import { AgendamentoConstantes } from '../domains/constantes/AgendamentoConstantes';
 
 @Pipe({
   name: 'horasDiaria',
@@ -8,33 +9,11 @@ import { HorasEnum } from '../domains/enums/HorasEnum';
 export class HorasDiariaPipe implements PipeTransform {
 
   transform(value: string | number | HorasEnum): string {
-    switch (value) {
-      case 1:
-        return "4 Horas - 1 Profissionais";
-      case "1":
-        return "4 Horas - 1 Profissionais";
-      case HorasEnum.HORAS_4:
-        return "4 Horas - 1 Profissionais";
-      case 2:
-        return "8 Horas - 1 Profissionais";
-      case "2":
-        return "8 Horas - 1 Profissionais";
-      case HorasEnum.HORAS_8:
-        return "8 Horas - 1 Profissionais";
-      case 3:
-        return "8 Horas - 2 Profissionais";
-      case "3":
-        return "8 Horas - 2 Profissionais";
-      case HorasEnum.HORAS_16:
-        return "8 Horas - 2 Profissionais";
-      case 4:
-        return "8 Horas - 3 Profissionais";
-      case "4":
-        return "8 Horas - 3 Profissionais";
-      case HorasEnum.HORAS_24:
-        return "8 Horas - 3 Profissionais";
-      default:
-        return "Não Definido";
+    const horaInfo = AgendamentoConstantes.getInfoHora(value);
+    if (horaInfo.id == HorasEnum.NAO_DEFINIDO) {
+      return "Não Definido";
+    } else {
+      return horaInfo.descricao;
     }
   }
 

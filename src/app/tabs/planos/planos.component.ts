@@ -13,7 +13,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PagamentoComponent } from '../../components/pagamento/pagamento.component';
 import { PagamentoDTO } from '../../domains/dtos/PagamentoDTO';
-import { TipoLimpezaEnum } from '../../domains/enums/TipoLimpezaEnum';
+import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { PlanoService } from '../../services/plano.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
@@ -26,6 +26,8 @@ import { DateUtils } from '../../utils/DateUtils';
 import { TipoPlanoEnum } from '../../domains/enums/TipoPlanoEnum';
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
+import { MoedaPipe } from '../../pipes/moeda.pipe';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 
 @Component({
   selector: 'app-planos',
@@ -37,14 +39,13 @@ import { TurnoEnum } from '../../domains/enums/TurnoEnum';
     MatInputModule,
     CommonModule,
     MatIconModule,
-    PipeModule,
+    MoedaPipe,
     MatCheckboxModule,
     DialogModule,
     MatButtonModule,
   ],
   templateUrl: './planos.component.html',
   styleUrl: './planos.component.scss',
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PlanosComponent {
 
@@ -62,6 +63,7 @@ export class PlanosComponent {
     new PlanoDTO(TipoPlanoEnum.ANUAL, "Anual", "Consiste em 48 diárias de 4 ou 8 horas em datas que o cliente definir", 18, 48, 12)
   ];
 
+  public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
   public planos: Array<PlanoDTO> = [];
@@ -109,7 +111,6 @@ export class PlanosComponent {
 
   public atualizarValores(plano: PlanoDTO) {
     this.agendamentoInfo = this.calcularTotal(plano);
-    console.log(this.agendamentoInfo)
   }
 
 
@@ -134,13 +135,13 @@ export class PlanosComponent {
     dadosAgendamento.profissionais = this.agendamento.profissionais;
     dadosAgendamento.qtdParcelas = plano.qtdParcelas;
     dadosAgendamento.turno = this.agendamento.turno;
-    dadosAgendamento.tipoLimpeza = this.pagamento.isDetalhada ? TipoLimpezaEnum.DETALHADA : TipoLimpezaEnum.EXPRESSA;
+    dadosAgendamento.tipoLimpeza = this.pagamento.isDetalhada ? TipoServicoEnum.DETALHADA : TipoServicoEnum.EXPRESSA;
     this._agendamentoService.agendar(dadosAgendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.urlPagamento = result.url;
         window.open(result['url'], '_blank');
         this.getUrl.emit(result.url);
-        this.notification.alerta("Agendamento realizado com sucesso. O seu agendamento será efetivado após o pagamento!");
+        this.notification.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
       }, (error) => this.notification.erro(error));
   }
 
@@ -157,7 +158,7 @@ export class PlanosComponent {
     plano.desconto = agendamento.desconto;
     plano.quantidadeItens = 1;
     plano.qtdParcelas = plano.qtdParcelas;
-    plano.tipoLimpeza = plano.isDetalhada ? TipoLimpezaEnum.DETALHADA : TipoLimpezaEnum.EXPRESSA;
+    plano.tipoLimpeza = plano.isDetalhada ? TipoServicoEnum.DETALHADA : TipoServicoEnum.EXPRESSA;
     plano.email = email ? email : "";
     plano.origem = OrigemPagamentoEnum.PLANO;
     plano.extraPlus = plano.extraPlus;
@@ -166,7 +167,7 @@ export class PlanosComponent {
       .subscribe((pag: PagamentoMpDTO) => {
         this.urlPagamento = pag.url;
         this.getUrl.emit(pag.url);
-        this.notification.alerta("Plano solicitado com sucesso. O seu plano será efetivado após o pagamento!");
+        this.notification.alerta(MensagemEnum.PLANO_CONCLUIDO_SUCESSO);
         const documentWidth = document.documentElement.clientWidth;
         const documentHeigth = document.documentElement.clientHeight;
         window.open(pag['url'], '_blank');

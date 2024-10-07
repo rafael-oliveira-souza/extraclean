@@ -8,7 +8,7 @@ import { MetragemPipe } from './metragem.pipe';
 import { PontoPipe } from './ponto.pipe';
 import { MetroPipe } from './metro.pipe';
 import { SimNaoPipe } from './simNao.pipe';
-import { TipoLimpezaPipe } from './tipoLimpeza.pipe';
+import { TipoServicoPipe } from './tipoServico.pipe';
 import { TipoClientePipe } from './tipoCliente.pipe';
 import { SituacaoAgendamentoPipe } from './situacaoAgendamento.pipe';
 import { SituacaoDiariaPipe } from './situacaoDiaria.pipe';
@@ -27,7 +27,7 @@ import { HorasDiariaPipe } from './horasDiaria.pipe';
     PontoPipe,
     MetroPipe,
     SimNaoPipe,
-    TipoLimpezaPipe,
+    TipoServicoPipe,
     TipoClientePipe,
     SituacaoAgendamentoPipe,
     SituacaoDiariaPipe,
@@ -43,7 +43,7 @@ import { HorasDiariaPipe } from './horasDiaria.pipe';
     PontoPipe,
     MetroPipe,
     SimNaoPipe,
-    TipoLimpezaPipe,
+    TipoServicoPipe,
     TipoClientePipe,
     SituacaoAgendamentoPipe,
     SituacaoDiariaPipe,

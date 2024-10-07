@@ -96,8 +96,8 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, this.email)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {
         this.agendamentos = agendamentos.filter(agend => agend.situacao == SituacaoDiariaEnum.FINALIZADA
-           || agend.situacao == SituacaoDiariaEnum.AGENDADA
-           || agend.situacao == SituacaoDiariaEnum.REAGENDADA);
+          || agend.situacao == SituacaoDiariaEnum.AGENDADA
+          || agend.situacao == SituacaoDiariaEnum.REAGENDADA);
         this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
         this.dataSource.paginator = this.paginator;
       }, (error: any) => {

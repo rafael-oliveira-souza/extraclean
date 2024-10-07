@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
 
 @Component({
   selector: 'app-itens-limpeza',
@@ -20,8 +21,8 @@ export class ItensLimpezaComponent implements OnInit {
   @Input('exibeInfoProdutos')
   public exibeInfoProdutos: boolean = false;
 
-  @Input('isLimpezaDetalhada')
-  public isLimpezaDetalhada: boolean = false;
+  @Input('tipoServico')
+  public tipoServico: TipoServicoEnum = TipoServicoEnum.RESIDENCIAL;
 
   @Input('exibeTipoLimpeza')
   public exibeTipoLimpeza: boolean = false;

@@ -173,7 +173,11 @@ export class MenuComponent {
           this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
         });
     } else {
-      this.abrirPagina(HistoricoAgendamentoComponent, [], email, auth.nome, auth.tipoUsuario);
+      if (auth.tipoUsuario == TipoClienteEnum.DIARISTA) {
+        this.abrirPagina(HistoricoAgendamentoComponent, [], auth.username, auth.nome, auth.tipoUsuario);
+      } else {
+        this.abrirPagina(HistoricoAgendamentoComponent, [], auth.username, "", auth.tipoUsuario);
+      }
     }
   }
 
@@ -189,8 +193,8 @@ export class MenuComponent {
       if (auth == null) {
         return;
       }
-
       this.abrirPagina(HistoricoProfissionalComponent, [], auth.username, auth.nome, auth.tipoUsuario);
+
     } else {
       this._router.navigate([Rota.LOGIN]);
     }

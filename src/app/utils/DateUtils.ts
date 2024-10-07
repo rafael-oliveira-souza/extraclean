@@ -117,10 +117,6 @@ export class DateUtils {
 
         for (let i = 1; i <= daysInMonth; i++) {
             let day: Date = this.toMoment().date(i).month(date.month()).year(date.year()).toDate();
-            if (i - daysInMonth == 0) {
-                day = this.toMoment().date(0).month(date.month()).year(date.year()).toDate();
-            }
-
             datesInMonth.push(day);
 
         }
