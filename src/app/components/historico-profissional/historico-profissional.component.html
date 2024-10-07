@@ -11,7 +11,7 @@
     </mat-datepicker>
   </mat-form-field>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
-    <ng-container *ngIf="isNotXs()" matColumnDef="nomeCliente">
+    <ng-container matColumnDef="nomeCliente">
       <th mat-header-cell *matHeaderCellDef> Cliente </th>
       <td mat-cell *matCellDef="let element"> {{element.nomeCliente}} </td>
     </ng-container>
@@ -33,11 +33,11 @@
     </ng-container>
     <ng-container *ngIf="isNotXs()" matColumnDef="valor">
       <th mat-header-cell *matHeaderCellDef> Valor </th>
-      <td mat-cell *matCellDef="let element"> {{element.valor | moeda }} </td>
+      <td mat-cell *matCellDef="let element"> {{element.contratada ? '-' : (element.valor | moeda )}} </td>
     </ng-container>
     <ng-container matColumnDef="valorProfissional">
       <th mat-header-cell *matHeaderCellDef> Valor Recebido </th>
-      <td mat-cell *matCellDef="let element"> {{element.valorProfissional | moeda }} </td>
+      <td mat-cell *matCellDef="let element"> {{element.contratada ? '-' : (element.valorProfissional | moeda )}} </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

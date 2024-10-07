@@ -83,7 +83,7 @@
                 <!-- <mat-form-field class="col-12 ">
                   <mat-label>Metragem</mat-label>
                   <input type="text" matInput [(ngModel)]="agendamento.metragem">
-                </mat-form-field> --> 
+                </mat-form-field> -->
                 <mat-form-field class="col-12">
                   <mat-label>Escolha a Quantidade de Horas</mat-label>
                   <select matNativeControl [(ngModel)]="agendamento.horas">
@@ -132,6 +132,20 @@
                   <mat-form-field class="col-12 ">
                     <mat-label>Email</mat-label>
                     <input autocomplete="false" type="text" matInput [(ngModel)]="cliente['email']">
+                  </mat-form-field>
+                </div>
+                <div *ngIf="tipoCliente == 2" class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 ">
+                    <mat-label>CPF</mat-label>
+                    <input mask="000.000.000-00" autocomplete="false" type="text" matInput [(ngModel)]="cliente['cpf']">
+                  </mat-form-field>
+                </div>
+                <div *ngIf="tipoCliente == 2" class="col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12  mt-2">
+                  <mat-form-field class="col-12 mt-4">
+                    <mat-label>Data de Nascimento</mat-label>
+                    <input matInput [matDatepicker]="picker2" [(ngModel)]="cliente.dataNascimento">
+                    <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+                    <mat-datepicker #picker2></mat-datepicker>
                   </mat-form-field>
                 </div>
                 <div class=" col-12 col-xl-6 col-lg-6 col-md-6 col-sm-12 mt-2">

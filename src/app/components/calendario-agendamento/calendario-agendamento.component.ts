@@ -109,8 +109,10 @@ export class CalendarioAgendamentoComponent implements OnInit {
       this.profissionais.add(info.nomeDiarista);
       if (info.turno == TurnoEnum.MATUTINO) {
         this.atualizarMap(info, this.mapMat);
-      }
-      else if (info.turno == TurnoEnum.VESPERTINO) {
+      } else if (info.turno == TurnoEnum.VESPERTINO) {
+        this.atualizarMap(info, this.mapVesp);
+      } else if (info.turno == TurnoEnum.INTEGRAL) {
+        this.atualizarMap(info, this.mapMat);
         this.atualizarMap(info, this.mapVesp);
       }
     });

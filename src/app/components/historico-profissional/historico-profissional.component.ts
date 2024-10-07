@@ -81,7 +81,7 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
         'tipoLimpeza', 'turno', 'valor', 'valorProfissional'
       ];
     } else {
-      this.displayedColumns = ['dataDiaria', 'valorProfissional'];
+      this.displayedColumns = ['nomeCliente', 'dataDiaria', 'valorProfissional'];
     }
   }
 

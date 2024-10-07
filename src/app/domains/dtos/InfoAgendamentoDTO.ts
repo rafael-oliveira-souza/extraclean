@@ -25,6 +25,7 @@ export class InfoAgendamentoDTO {
     dataReagendamento!: Date | null;
     entrada!: Date | null;
     saida!: Date | null;
+    contratada!: boolean;
     qtdProfissionais!: number;
     valorProfissional!: number;
     profissionalAtualizado!: number;
