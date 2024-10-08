@@ -63,7 +63,7 @@ export class AgendamentoConstantes {
         // }
         let info: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
         info.turno = turno;
-        info.valor = this.VALORES_HORAS[Number(valorHoras)].valor;
+        info.valor = this.VALORES_HORAS[Number(valorHoras)-1].valor;
 
         if (valorHoras == HorasEnum.HORAS_4) {
             info.metragem = 50;
