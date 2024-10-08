@@ -315,6 +315,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
     this._agendService.registrarHorarioAtendimento(registro)
       .subscribe((result: any) => {
+        this._changes.detectChanges();
         this._notificacaoService.alerta(entrada ? "Entrada Registrada!" : "Saída Registrada!");
       }, (error: any) => {
         this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
