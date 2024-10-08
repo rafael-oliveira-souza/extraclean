@@ -232,12 +232,22 @@ export class CalendarioAgendamentoComponent implements OnInit {
     return DateUtils.getDiasSemana(date);
   }
 
+  public exibeBotoesModificacao(diaria: InfoAgendamentoDTO) {
+    return this.exibeBotoes(diaria) && !this.isPagamentoAprovado(diaria);
+  }
+
   public exibeBotoes(diaria: InfoAgendamentoDTO) {
     return this.isAdm && this.isPagamentoEmAberto(diaria);
   }
 
+  public isPagamentoAprovado(diaria: InfoAgendamentoDTO) {
+    return diaria.situacaoPagamento == SituacaoPagamentoEnum.APROVADO;
+  }
+
   public isPagamentoEmAberto(diaria: InfoAgendamentoDTO) {
-    return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 0 || diaria.situacaoPagamento == 2;
+    return diaria.situacaoPagamento == SituacaoPagamentoEnum.CRIADO
+      || diaria.situacaoPagamento == SituacaoPagamentoEnum.EM_ANALISE
+      || diaria.situacaoPagamento == SituacaoPagamentoEnum.EM_PROCESSO;
   }
 
   public atualizarProfissionalAgendamento(diaria: InfoAgendamentoDTO) {

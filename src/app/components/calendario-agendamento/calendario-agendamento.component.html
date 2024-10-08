@@ -60,14 +60,16 @@
             <div class="p-1" *ngIf="diaria">
               <hr>
               <div class="row justify-content-center">
-                <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
+                <mat-form-field *ngIf="exibeBotoesModificacao(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 "
+                  style="">
                   <mat-label>Reagendar</mat-label>
                   <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
                   <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                   <mat-datepicker #picker>
                   </mat-datepicker>
                 </mat-form-field>
-                <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
+                <mat-form-field *ngIf="exibeBotoesModificacao(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 "
+                  style="">
                   <mat-label>Novo Profissional</mat-label>
                   <input matInput [(ngModel)]="diaria.profissionalAtualizado">
                 </mat-form-field>
@@ -84,13 +86,13 @@
                   moeda}}</small><br> -->
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Situação Pagamento:
+                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Situação Pagamento:
                   </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
                 <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                     [href]="diaria.localizacao">Localização</a></small><br>
-                <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Pagamento: </strong>
+                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
                   <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
                 </small>
               </div>
@@ -107,12 +109,15 @@
               <div *ngIf="exibeBotoes(diaria)" class="row justify-content-center mt-3">
                 <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
                 </button>
-                <button (click)="cancelarAgendamento(diaria)" type="button" class="col-8 btn btn-danger mt-2">Cancelar
+                <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
+                  class="col-8 btn btn-danger mt-2">Cancelar
                 </button>
-                <button [disabled]="!diaria.dataReagendamento" (click)="reagendarAgendamento(diaria)" type="button"
+                <button *ngIf="exibeBotoesModificacao(diaria)" [disabled]="!diaria.dataReagendamento"
+                  (click)="reagendarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-success mt-2">Reagendar</button>
-                <button [disabled]="!diaria.profissionalAtualizado" (click)="atualizarProfissionalAgendamento(diaria)"
-                  type="button" class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
+                <button *ngIf="exibeBotoesModificacao(diaria)" [disabled]="!diaria.profissionalAtualizado"
+                  (click)="atualizarProfissionalAgendamento(diaria)" type="button"
+                  class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
               </div>
               <hr>
             </div>
@@ -126,14 +131,16 @@
           <div class="col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(vesp, false)">
             <div class="p-1" *ngIf="diaria">
               <hr>
-              <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
+              <mat-form-field *ngIf="exibeBotoesModificacao(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 "
+                style="">
                 <mat-label>Reagendar</mat-label>
                 <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
                 <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
                 <mat-datepicker #picker>
                 </mat-datepicker>
               </mat-form-field>
-              <mat-form-field *ngIf="exibeBotoes(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
+              <mat-form-field *ngIf="exibeBotoesModificacao(diaria)" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 "
+                style="">
                 <mat-label>Novo Profissional</mat-label>
                 <input matInput [(ngModel)]="diaria.profissionalAtualizado">
               </mat-form-field>
@@ -148,13 +155,13 @@
                   moeda}}</small><br> -->
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Situação Pagamento:
+                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Situação Pagamento:
                   </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
                 <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                     [href]="diaria.localizacao">Localização</a></small><br>
-                <small class="col-12" *ngIf="exibeBotoes(diaria)"><strong>Pagamento: </strong>
+                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
                   <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
                 </small>
               </div>
@@ -171,12 +178,15 @@
               <div *ngIf="exibeBotoes(diaria)" class="row justify-content-center mt-3">
                 <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
                 </button>
-                <button (click)="cancelarAgendamento(diaria)" type="button" class="col-8 btn btn-danger mt-2">Cancelar
+                <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
+                  class="col-8 btn btn-danger mt-2">Cancelar
                 </button>
-                <button [disabled]="!diaria.dataReagendamento" (click)="reagendarAgendamento(diaria)" type="button"
+                <button *ngIf="exibeBotoesModificacao(diaria)" [disabled]="!diaria.dataReagendamento"
+                  (click)="reagendarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-success mt-2">Reagendar</button>
-                <button [disabled]="!diaria.profissionalAtualizado" (click)="atualizarProfissionalAgendamento(diaria)"
-                  type="button" class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
+                <button *ngIf="exibeBotoesModificacao(diaria)" [disabled]="!diaria.profissionalAtualizado"
+                  (click)="atualizarProfissionalAgendamento(diaria)" type="button"
+                  class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
               </div>
               <hr>
             </div>
