@@ -23,7 +23,6 @@ export class AgendamentoConstantes {
 
     public static getInfoHora(horaEnum: string | number | HorasEnum): { id: HorasEnum, valor: number, descricao: string, numProfissionais: number } {
         const filtro: any[] = this.VALORES_HORAS.filter(hora => hora.id == horaEnum || hora.descricao == horaEnum || hora.valor == horaEnum);
-
         return filtro.length > 0 ? filtro[0] : HorasEnum.NAO_DEFINIDO;
     }
 
@@ -66,17 +65,6 @@ export class AgendamentoConstantes {
         info.turno = turno;
         info.valor = this.VALORES_HORAS[Number(valorHoras)].valor;
 
-        if (extraPlus) {
-            info.valor += this.VALOR_PROFISSIONAL_SELECIONADO;
-            info.valor *= qtdDias;
-        } else {
-            info.valor *= qtdDias;
-        }
-
-        info.desconto = this.aplicarDesconto(info.valor, porcentagemDesconto);
-        info.total = info.valor - info.desconto;
-        info.horas = valorHoras;
-
         if (valorHoras == HorasEnum.HORAS_4) {
             info.metragem = 50;
             info.numProfissionais = 1;
@@ -91,6 +79,16 @@ export class AgendamentoConstantes {
             info.numProfissionais = 3;
         }
 
+        if (extraPlus) {
+            info.valor += this.VALOR_PROFISSIONAL_SELECIONADO;
+            info.valor *= qtdDias;
+        } else {
+            info.valor *= qtdDias;
+        }
+
+        info.desconto = this.aplicarDesconto(info.valor, porcentagemDesconto);
+        info.total = info.valor - info.desconto;
+        info.horas = valorHoras;
         info.porcentagemProfissionais = porcentagemProfissionalInicial;
         let ajusteValorPorcentagem = this.calcularValorPago(info.total, info.numProfissionais, info.porcentagemProfissionais);
 
