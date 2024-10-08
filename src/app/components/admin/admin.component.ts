@@ -7,14 +7,11 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTabsModule } from '@angular/material/tabs';
 import { AgendamentoComponent } from '../../tabs/agendamento/agendamento.component';
-import { HomeComponent } from '../../tabs/home/home.component';
 import { PlanosComponent } from '../../tabs/planos/planos.component';
 import { ServicosComponent } from '../../tabs/servicos/servicos.component';
-import { PerfilComponent } from '../perfil/perfil.component';
 import { ScrollComponent } from '../scroll/scroll.component';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CepComponent } from '../cep/cep.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
@@ -38,6 +35,9 @@ import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calend
 import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { HistoricoAdminComponent } from '../historico-admin/historico-admin.component';
+import { DiariaService } from '../../services/diaria.service';
+import { ProfissionalAdminComponent } from '../profissional-admin/profissional-admin.component';
 
 @Component({
   selector: 'app-admin',
@@ -61,7 +61,9 @@ import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConst
     ProfissionalComponent,
     MatButtonToggleModule,
     MatCheckboxModule,
-    CalendarioAgendamentoComponent
+    CalendarioAgendamentoComponent,
+    HistoricoAdminComponent,
+    ProfissionalAdminComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -73,6 +75,7 @@ export class AdminComponent implements OnInit {
     { label: "Enviar Agendamento", id: "idEnvioAgendamento", index: 1 },
     { label: "Criar Cliente", id: "idCriarCliente", index: 2 },
     { label: "Gerenciar Agendamentos", id: "idCalendAgend", index: 3 },
+    { label: "Gerenciar Profissionais", id: "idGerencProf", index: 4 },
   ];
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 
@@ -82,8 +85,11 @@ export class AdminComponent implements OnInit {
   public profissionais: Array<ProfissionalDTO> = [];
   public profissionaisSelecionados: number[] = [0];
   public agendamento: AgendamentoDTO = new AgendamentoDTO();
+  public clientes: ClienteDTO[] = [];
   public cliente: ClienteDTO = new ClienteDTO();
   public tipoCliente: TipoClienteEnum = TipoClienteEnum.CLIENTE;
+  public agendamentoManual: boolean = false;
+  public showTable: boolean = true;
   public url!: string;
 
   constructor(
@@ -108,7 +114,25 @@ export class AdminComponent implements OnInit {
       this._router.navigate([Rota.LOGIN]);
     }
 
-    this.recuperarProfissionais();
+    // this.recuperarProfissionais();
+    this.recuperarClientes();
+  }
+
+  public recuperarClientes() {
+    this.clienteService.recuperarTodos()
+      .subscribe((clientes: Array<ClienteDTO>) => {
+        this.clientes = clientes;
+      });
+  }
+
+  public atualizarEndereco() {
+    this.agendamento.endereco = "";
+    if (this.agendamento.email) {
+      const clientesSelecionados = this.clientes.filter(cli => cli.email == this.agendamento.email);
+      if (clientesSelecionados && clientesSelecionados.length > 0) {
+        this.agendamento.endereco = clientesSelecionados[0].endereco;
+      }
+    }
   }
 
   public recuperarProfissional(profissional: ProfissionalDTO) {
@@ -119,6 +143,11 @@ export class AdminComponent implements OnInit {
     this.endereco = endereco;
     this.agendamento.endereco = EnderecoUtils.montarEndereco(endereco);
   }
+
+  public isEnderecoValido() {
+    return this.endereco.valido || this.agendamento.endereco;
+  }
+
 
   public updateSelectedMenu(): void {
     this.menus.forEach(menu => {

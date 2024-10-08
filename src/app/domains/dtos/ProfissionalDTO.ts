@@ -15,6 +15,7 @@ export class ProfissionalDTO {
     sextaDisponivel: boolean = true;
     sabadoDisponivel: boolean = false;
     domingoDisponivel: boolean = false;
+    contratada: boolean = false;
 
     constructor(id: number, nome: string) {
         this.id = id;

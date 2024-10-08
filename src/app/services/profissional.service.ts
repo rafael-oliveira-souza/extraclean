@@ -20,6 +20,11 @@ export class ProfissionalService {
     // return of([new ProfissionalDTO(1, "Andrea"), new ProfissionalDTO(2, "Joana")]);
   }
 
+  public salvar(profs: ProfissionalDTO[]): Observable<ProfissionalDTO[]> {
+    const url = `${this.HOST_URL}/salvar-lote`;
+    return this._http.post<ProfissionalDTO[]>(url, profs);
+  }
+
   public recuperarDiariasPorProfissional(idProfissional: number, turno: TurnoEnum, data: Date): Observable<Array<AgendamentoDiariaDTO>> {
     const url = `${this.HOST_URL}/${idProfissional}/diarias`;
 

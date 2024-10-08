@@ -101,10 +101,12 @@ export class MenuComponent {
           this.menusHamb.push({ label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() });
         } else if (auth.tipoUsuario == TipoClienteEnum.DIARISTA) {
           this.menusHamb.push({ label: "Historico de Limpezas", icon: "admin_panel_settings", method: () => this.abrirHistoricoLimpeza() });
+          this.menusHamb.push({ label: "Agendamentos da Semana", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
+        } else if (auth.tipoUsuario == TipoClienteEnum.CLIENTE) {
+          this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
         }
       }
 
-      this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
       this.menusHamb.push({ label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() });
       this.menusHamb.push({ label: "Sair", icon: "logout", method: () => this.logout() });
     } else {
