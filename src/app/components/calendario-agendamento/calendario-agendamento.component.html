@@ -106,7 +106,7 @@
                   Marcar Saída
                 </button>
               </div>
-              <div *ngIf="exibeBotoes(diaria)" class="row justify-content-center mt-3">
+              <div *ngIf="!isDiariaFinalizada(diaria)" class="row justify-content-center mt-3">
                 <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
                 </button>
                 <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
@@ -175,7 +175,7 @@
                   Marcar Saída
                 </button>
               </div>
-              <div *ngIf="exibeBotoes(diaria)" class="row justify-content-center mt-3">
+              <div *ngIf="!isDiariaFinalizada(diaria)" class="row justify-content-center mt-3">
                 <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
                 </button>
                 <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"

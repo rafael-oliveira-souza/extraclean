@@ -20,6 +20,7 @@ import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
+import { SituacaoAgendamentoEnum } from '../../domains/enums/SituacaoAgendamentoEnum';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -238,6 +239,14 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
   public exibeBotoes(diaria: InfoAgendamentoDTO) {
     return this.isAdm && this.isPagamentoEmAberto(diaria);
+  }
+
+  public isAgendamentoNaoFinalizado(diaria: InfoAgendamentoDTO) {
+    return !this.isDiariaFinalizada(diaria) && !this.isPagamentoAprovado(diaria);
+  }
+
+  public isDiariaFinalizada(diaria: InfoAgendamentoDTO) {
+    return diaria.situacao == SituacaoDiariaEnum.FINALIZADA;
   }
 
   public isPagamentoAprovado(diaria: InfoAgendamentoDTO) {
