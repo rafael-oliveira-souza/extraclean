@@ -21,6 +21,7 @@ import { NotificacaoService } from '../../services/notificacao.service';
 import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
 import { SituacaoAgendamentoEnum } from '../../domains/enums/SituacaoAgendamentoEnum';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -32,6 +33,7 @@ import { SituacaoAgendamentoEnum } from '../../domains/enums/SituacaoAgendamento
     MatInputModule,
     MatGridListModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     FormsModule,
     CommonModule,
     PipeModule,
@@ -61,6 +63,8 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = new Date();
   public hoje: Date = new Date();
+  public habilitaAlteracaoProfissional: boolean = false;
+  public habilitaReagendamento: boolean = false;
 
   constructor(private _agendService: AgendamentoService,
     private _notificacaoService: NotificacaoService,

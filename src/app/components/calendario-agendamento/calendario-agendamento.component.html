@@ -1,5 +1,9 @@
 <div class="mt-5">
   <div>
+    <div class="row justify-content-center">
+      <mat-checkbox class="col-6" [(ngModel)]="habilitaAlteracaoProfissional">Habilitar Troca de Profissional</mat-checkbox> <br>
+      <mat-checkbox class="col-6" [(ngModel)]="habilitaReagendamento">Habilitar Reagendamentos</mat-checkbox> <br>
+    </div>
     <mat-form-field class="col-12" *ngIf="isAdm">
       <mat-label>Profissional</mat-label>
       <select matNativeControl [(ngModel)]="profissional" (ngModelChange)="atualizarProfissional()">
@@ -16,10 +20,6 @@
         <option value="2">Vespertino</option>
       </select>
     </mat-form-field>
-    <div>
-      <mat-checkbox [(ngModel)]="habilitaAlteracaoProfissional">Habilitar Troca de Profissional</mat-checkbox> <br>
-      <mat-checkbox [(ngModel)]="habilitaReagendamento">Habilitar Reagendamentos</mat-checkbox> <br>
-    </div>
     <!-- <mat-form-field class="col-12">
       <mat-label>Ajustar Visualização</mat-label>
       <select matNativeControl [(ngModel)]="qtdInfo">
