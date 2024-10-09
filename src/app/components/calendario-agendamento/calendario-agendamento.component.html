@@ -86,9 +86,7 @@
                   moeda}}</small><br> -->
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Situação Pagamento:
-                  </strong>{{diaria.situacaoPagamento |
-                  situacaoPagamento}}<br></small>
+                <small class="col-12"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento |    situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
                 <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                     [href]="diaria.localizacao">Localização</a></small><br>
@@ -155,7 +153,7 @@
                   moeda}}</small><br> -->
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Situação Pagamento:
+                <small class="col-12"><strong>Situação Pagamento:
                   </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
