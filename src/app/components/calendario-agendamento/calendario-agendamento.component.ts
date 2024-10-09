@@ -242,11 +242,11 @@ export class CalendarioAgendamentoComponent implements OnInit {
   }
 
   public isAgendamentoNaoFinalizado(diaria: InfoAgendamentoDTO) {
-    return !this.isDiariaFinalizada(diaria) && !this.isPagamentoAprovado(diaria);
+    return this.isDiariaEmAdamento(diaria) && !this.isPagamentoAprovado(diaria);
   }
 
-  public isDiariaFinalizada(diaria: InfoAgendamentoDTO) {
-    return diaria.situacao == SituacaoDiariaEnum.FINALIZADA;
+  public isDiariaEmAdamento(diaria: InfoAgendamentoDTO) {
+    return diaria.situacao != SituacaoDiariaEnum.FINALIZADA && diaria.situacao != SituacaoDiariaEnum.CANCELADA;
   }
 
   public isPagamentoAprovado(diaria: InfoAgendamentoDTO) {
