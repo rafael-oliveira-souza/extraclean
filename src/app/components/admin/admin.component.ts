@@ -115,7 +115,6 @@ export class AdminComponent implements OnInit {
     }
 
     // this.recuperarProfissionais();
-    this.recuperarClientes();
   }
 
   public recuperarClientes() {

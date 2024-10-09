@@ -34,7 +34,7 @@
               <section class="example-section" *ngIf="agendamento.dataHora">
                 <mat-checkbox [(ngModel)]="agendamentoManual"> Agendamento Manual </mat-checkbox> <br>
               </section>
-              <div class="col-12 " *ngIf="agendamentoManual && agendamento.dataHora">
+              <div class="col-12 " (click)="recuperarClientes()" *ngIf="agendamentoManual && agendamento.dataHora">
                 <mat-form-field class="col-12 ">
                   <mat-label>Email Cliente</mat-label>
                   <input type="text" matInput [(ngModel)]="agendamento.email">
