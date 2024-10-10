@@ -21,6 +21,8 @@ import { MY_FORMATS } from '../calendario/calendario.component';
 import { TituloComponent } from '../titulo/titulo.component';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalComponent } from '../profissional/profissional.component';
+import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
+import { MatSort } from '@angular/material/sort';
 
 @Component({
   selector: 'app-historico-admin',
@@ -53,10 +55,16 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public indice: number = 0;
   public profissionalSelecionado: string = "";
   public profissionais: string[] = [];
+  public situacao!: SituacaoDiariaEnum;
   public dataSource = new MatTableDataSource<InfoAgendamentoDTO>();
   public dataInicio: Date = new Date();
   public dataMin: Date = DateUtils.toMoment().add(-3, 'month').toDate();
   public dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
+  public situacoes: { nome: string, id: number }[] = [
+    { nome: 'Agendada', id: 1 }, 
+    { nome: 'Reagendada', id: 4 }, 
+    { nome: 'Finalizada', id: 2 }
+  ];
 
   public displayedColumns: string[] = [];
 
@@ -76,18 +84,34 @@ export class HistoricoAdminComponent implements AfterViewInit {
     this.buscarAgendamentos();
   }
 
+  public recuperarSituacao() {
+    if (this.situacao) {
+      const agendamentos = this.ordernarDecrescente(this.agendamentos
+        .filter(agend => agend.situacao == this.situacao));
+
+      this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(agendamentos);
+    } else {
+      this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
+    }
+    this.dataSource.paginator = this.paginator;
+  }
+
   public recuperarProfissional() {
     if (this.profissionalSelecionado) {
-      const agendamentos = this.agendamentos
-        .filter(agend => agend.nomeDiarista == this.profissionalSelecionado)
-        .sort((a, b) => a.dataDiaria.getTime() - b.dataDiaria.getTime());
+      const agendamentos = this.ordernarDecrescente(this.agendamentos
+        .filter(agend => agend.nomeDiarista == this.profissionalSelecionado));
+
       this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(agendamentos);
     } else {
       this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
     }
 
     this.dataSource.paginator = this.paginator;
+  }
 
+  private ordernarDecrescente(agendamentos: InfoAgendamentoDTO[]) {
+    return agendamentos;
+    // return agendamentos.sort((a, b) => DateUtils.toDate(b.dataDiaria).getTime() - DateUtils.toDate(a.dataDiaria).getTime());
   }
 
   private buscarAgendamentos() {
@@ -101,11 +125,10 @@ export class HistoricoAdminComponent implements AfterViewInit {
           .map(agend => agend.nomeDiarista)
           .filter((value, index, self) => self.indexOf(value) === index);
 
-        this.agendamentos = agendamentos.filter(agend => agend.situacao == SituacaoDiariaEnum.FINALIZADA
+        this.agendamentos = this.ordernarDecrescente(agendamentos.filter(agend => agend.situacao == SituacaoDiariaEnum.FINALIZADA
           || agend.situacao == SituacaoDiariaEnum.AGENDADA
           || agend.situacao == SituacaoDiariaEnum.NAO_AGENDADA
-          || agend.situacao == SituacaoDiariaEnum.REAGENDADA)
-          .sort((a, b) => a.dataDiaria.getTime() - b.dataDiaria.getTime());
+          || agend.situacao == SituacaoDiariaEnum.REAGENDADA));
 
         this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
         this.dataSource.paginator = this.paginator;
