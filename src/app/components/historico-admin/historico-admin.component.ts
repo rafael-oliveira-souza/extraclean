@@ -78,7 +78,9 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
   public recuperarProfissional() {
     if (this.profissionalSelecionado) {
-      const agendamentos = this.agendamentos.filter(agend => agend.nomeDiarista == this.profissionalSelecionado);
+      const agendamentos = this.agendamentos
+        .filter(agend => agend.nomeDiarista == this.profissionalSelecionado)
+        .sort((a, b) => a.dataDiaria.getTime() - b.dataDiaria.getTime());
       this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(agendamentos);
     } else {
       this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
@@ -102,7 +104,9 @@ export class HistoricoAdminComponent implements AfterViewInit {
         this.agendamentos = agendamentos.filter(agend => agend.situacao == SituacaoDiariaEnum.FINALIZADA
           || agend.situacao == SituacaoDiariaEnum.AGENDADA
           || agend.situacao == SituacaoDiariaEnum.NAO_AGENDADA
-          || agend.situacao == SituacaoDiariaEnum.REAGENDADA);
+          || agend.situacao == SituacaoDiariaEnum.REAGENDADA)
+          .sort((a, b) => a.dataDiaria.getTime() - b.dataDiaria.getTime());
+
         this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
         this.dataSource.paginator = this.paginator;
       }, (error: any) => {
