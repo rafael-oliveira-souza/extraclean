@@ -100,7 +100,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     this._agendService
       .recuperarInfoAgendamentos(this.formatarData(dataAtual), null, null)
       .subscribe((infos: InfoAgendamentoDTO[]) => {
-        this.infos = infos;
+        this.infos = infos.filter(agend => agend.situacao != SituacaoDiariaEnum.CANCELADA);
         if (this.profissional) {
           this.infos = this.filtrarProfissional();
         }
