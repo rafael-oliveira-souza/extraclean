@@ -278,6 +278,21 @@ export class CalendarioAgendamentoComponent implements OnInit {
       }, (error) => this._notificacaoService.erro(error));
   }
 
+  public confirmarPagamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+
+    this._agendService
+      .confirmarPagamento(agend)
+      .subscribe((info: any) => {
+        diaria.situacaoPagamento = SituacaoPagamentoEnum.APROVADO;
+        this._changes.detectChanges();
+        this._notificacaoService.alerta(MensagemEnum.PAGAMENTO_FINALIZADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
+  }
+
   public finalizarAgendamento(diaria: InfoAgendamentoDTO) {
     let agend = new FinalizacaoAgendamentoDTO();
     agend.dataDiaria = diaria.dataDiaria;

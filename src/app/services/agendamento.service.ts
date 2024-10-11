@@ -50,6 +50,11 @@ export class AgendamentoService {
     return this._http.post<any>(url, obj);
   }
 
+  public confirmarPagamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
+    const url = `${this.HOST_URL}/confirmar-pagamento`;
+    return this._http.post<any>(url, obj);
+  }
+
   public atualizarProfissionalAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
     const url = `${this.HOST_URL}/atualizar-profissional`;
     return this._http.post<any>(url, obj);

@@ -6,6 +6,7 @@ export enum MensagemEnum {
     PROFISSIONAIS_ATUALIZADOS_SUCESSO = "Profissionais atualizados com sucesso.",
     AGENDAMENTO_CANCELADO_SUCESSO = "Agendamento Cancelado com sucesso.",
     AGENDAMENTO_FINALIZADO_SUCESSO = "Agendamento Finalizado com sucesso.",
+    PAGAMENTO_FINALIZADO_SUCESSO = "Pagamento Atualizado com sucesso.",
     PROFISSIONAL_ATUALIZADO_SUCESSO = "Profissional atualizado com sucesso.",
     REAGENDAMENTO_CONCLUIDO_SUCESSO = "Reagendamento finalizado com sucesso.",
     NECESSARIO_ATUALIZAR_PERFIL = "É necessário atualizar seu perfil para utilizar todas as funcionalidades do sistema.",
