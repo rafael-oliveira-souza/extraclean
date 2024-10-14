@@ -112,10 +112,12 @@
                 </button>
               </div>
               <div *ngIf="isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
-                <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
+                <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
+                  class="col-8 btn btn-primary">Finalizar
                 </button>
-                <button *ngIf="!this.isPagamentoAprovado(diaria)" (click)="confirmarPagamento(diaria)" type="button"
-                  class="col-8 btn btn-success mt-2">Confirmar Pagamento
+                <button *ngIf="!this.isPagamentoAprovado(diaria) && !isPagamentoCancelado(diaria)"
+                  (click)="confirmarPagamento(diaria)" type="button" class="col-8 btn btn-success mt-2">Confirmar
+                  Pagamento
                 </button>
                 <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-danger mt-2">Cancelar
@@ -183,10 +185,12 @@
                 </button>
               </div>
               <div *ngIf="isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
-                <button (click)="finalizarAgendamento(diaria)" type="button" class="col-8 btn btn-primary">Finalizar
+                <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
+                  class="col-8 btn btn-primary">Finalizar
                 </button>
-                <button *ngIf="!this.isPagamentoAprovado(diaria)" (click)="confirmarPagamento(diaria)" type="button"
-                  class="col-8 btn btn-success mt-2">Confirmar Pagamento
+                <button *ngIf="!this.isPagamentoAprovado(diaria) && !isPagamentoCancelado(diaria)"
+                  (click)="confirmarPagamento(diaria)" type="button" class="col-8 btn btn-success mt-2">Confirmar
+                  Pagamento
                 </button>
                 <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-danger mt-2">Cancelar

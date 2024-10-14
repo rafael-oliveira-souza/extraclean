@@ -257,6 +257,10 @@ export class CalendarioAgendamentoComponent implements OnInit {
     return diaria.situacaoPagamento == SituacaoPagamentoEnum.APROVADO;
   }
 
+  public isPagamentoCancelado(diaria: InfoAgendamentoDTO) {
+    return diaria.situacaoPagamento == SituacaoPagamentoEnum.CANCELADO;
+  }
+
   public isPagamentoEmAberto(diaria: InfoAgendamentoDTO) {
     return diaria.situacaoPagamento == SituacaoPagamentoEnum.CRIADO
       || diaria.situacaoPagamento == SituacaoPagamentoEnum.EM_ANALISE
