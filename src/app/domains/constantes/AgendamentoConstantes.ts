@@ -15,7 +15,7 @@ export class AgendamentoConstantes {
     public static METRAGEM_MAX = 1000;
 
     public static VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = [
-        { id: HorasEnum.HORAS_4, valor: 140, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
+        { id: HorasEnum.HORAS_4, valor: 125, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_8, valor: 190, descricao: '8 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_16, valor: 360, descricao: '8 Horas - 2 Profissional', numProfissionais: 2 },
         { id: HorasEnum.HORAS_24, valor: 495, descricao: '8 Horas - 3 Profissional', numProfissionais: 3 },
@@ -119,7 +119,7 @@ export class AgendamentoConstantes {
     public static calcularTotal(metragem: number, isDetalhada: boolean, qtdDias: number = 1, porcentagemDesconto: number = 0,
         profissionalSelecionado: boolean = false, turno: TurnoEnum = TurnoEnum.NAO_DEFINIDO): AgendamentoPagamentoInfoDTO {
         const metragemInicial = 60;
-        const valorInicial = 120;
+        const valorInicial = this.VALORES_HORAS[0].valor;
         const maxMetroPorProf = 140;
         const aumentoACadaMetro = 12.5;
         const relacaoMetroValor = 10;
