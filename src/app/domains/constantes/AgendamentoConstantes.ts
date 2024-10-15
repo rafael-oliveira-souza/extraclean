@@ -21,6 +21,26 @@ export class AgendamentoConstantes {
         { id: HorasEnum.HORAS_24, valor: 495, descricao: '8 Horas - 3 Profissional', numProfissionais: 3 },
     ];
 
+    public static REGIOES: { id: number, nome: string, adicional: number }[] = [
+        { id: 1, nome: "Águas Claras", adicional: 0 },
+        { id: 2, nome: "Arniqueira", adicional: 0 },
+        { id: 3, nome: "Candangolândia", adicional: 10 },
+        { id: 4, nome: "Ceilândia", adicional: 0 },
+        { id: 5, nome: "Cruzeiro", adicional: 10 },
+        { id: 6, nome: "Guará", adicional: 5 },
+        { id: 7, nome: "Lago Sul", adicional: 25 },
+        { id: 8, nome: "Lago Norte", adicional: 25 },
+        { id: 9, nome: "Núcleo Bandeirante", adicional: 10 },
+        { id: 10, nome: "Plano Piloto	", adicional: 10 },
+        { id: 11, nome: "Recanto das Emas", adicional: 10 },
+        { id: 12, nome: "Riacho Fundo", adicional: 0 },
+        { id: 13, nome: "Samambaia", adicional: 10 },
+        { id: 14, nome: "SIA	", adicional: 10 },
+        { id: 15, nome: "Sudoeste/Octogonal", adicional: 10 },
+        { id: 16, nome: "Taguatinga", adicional: 0 },
+        { id: 17, nome: "Vicente Pires", adicional: 0 }
+    ];
+
     public static getInfoHora(horaEnum: string | number | HorasEnum): { id: HorasEnum, valor: number, descricao: string, numProfissionais: number } {
         const filtro: any[] = this.VALORES_HORAS.filter(hora => hora.id == horaEnum || hora.descricao == horaEnum || hora.valor == horaEnum);
         return filtro.length > 0 ? filtro[0] : HorasEnum.NAO_DEFINIDO;
@@ -63,7 +83,7 @@ export class AgendamentoConstantes {
         // }
         let info: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
         info.turno = turno;
-        info.valor = this.VALORES_HORAS[Number(valorHoras)-1].valor;
+        info.valor = this.VALORES_HORAS[Number(valorHoras) - 1].valor;
 
         if (valorHoras == HorasEnum.HORAS_4) {
             info.metragem = 50;

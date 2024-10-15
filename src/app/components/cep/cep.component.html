@@ -1,5 +1,13 @@
 <div class="custom">
-  <form [formGroup]="formCep">
+  <mat-form-field class="col-12" *ngIf="!isAdm">
+    <mat-label>Áreas de Atendimento</mat-label>
+    <select matNativeControl [(ngModel)]="regiao">
+      <option [value]="0">Não Selecionado</option>
+      <option *ngFor="let regiao of regioes;" [value]="regiao.id">{{regiao.nome | titlecase}}
+      </option>
+    </select>
+  </mat-form-field>
+  <form *ngIf="regiao != 0 || isAdm" [formGroup]="formCep">
     <div class="row justify-content-center">
       <mat-form-field class="col-12  text-center">
         <mat-label>Digite seu cep</mat-label>

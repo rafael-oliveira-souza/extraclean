@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { NgxMaskDirective, NgxMaskPipe, provideNgxMask } from 'ngx-mask';
 import { PipeModule } from '../../pipes/pipe.module';
+import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 
 @Component({
   selector: 'app-cep',
@@ -34,10 +35,17 @@ import { PipeModule } from '../../pipes/pipe.module';
 })
 export class CepComponent {
 
+  @Input("isAdm")
+  public isAdm: boolean = false;
+
   @Input("formCep")
   public formCep!: FormGroup;
 
   public exibeCep = false;
+  public regiao = 0;
+  public regioes: { id: number, nome: string, adicional: number }[] = AgendamentoConstantes.REGIOES;
+
+
 
   @Output()
   public getEndereco: EventEmitter<EnderecoDTO> = new EventEmitter();
