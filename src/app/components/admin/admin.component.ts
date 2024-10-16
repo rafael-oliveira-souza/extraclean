@@ -115,6 +115,7 @@ export class AdminComponent implements OnInit {
     }
 
     // this.recuperarProfissionais();
+    // this.recuperarClientes();
   }
 
   public recuperarClientes() {
@@ -125,12 +126,19 @@ export class AdminComponent implements OnInit {
   }
 
   public atualizarEndereco() {
+    this.recuperarClientes();
     this.agendamento.endereco = "";
+    this.endereco = new EnderecoDTO();
     if (this.agendamento.email) {
-      const clientesSelecionados = this.clientes.filter(cli => cli.email.toLowerCase().trim() == this.agendamento.email?.toLowerCase().trim());
-      if (clientesSelecionados && clientesSelecionados.length > 0) {
-        this.agendamento.endereco = clientesSelecionados[0].endereco;
-      }
+      this.clienteService.recuperarTodos()
+        .subscribe((clientes: Array<ClienteDTO>) => {
+          this.clientes = clientes;
+          const clientesSelecionados = this.clientes.filter(cli => cli.email.toLowerCase().trim() == this.agendamento.email?.toLowerCase().trim());
+          if (clientesSelecionados && clientesSelecionados.length > 0) {
+            this.agendamento.endereco = clientesSelecionados[0].endereco;
+            this.endereco.valido = true;
+          }
+        });
     }
   }
 

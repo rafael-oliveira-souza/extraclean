@@ -80,7 +80,7 @@
                 </app-profissional>
               </div>
               <div class="col-12">
-                <app-cep *ngIf="agendamento.endereco && agendamento.turno" [isAdm]="true"
+                <app-cep *ngIf="!isEnderecoValido() && agendamento.turno" [isAdm]="true"
                   (getEndereco)="getEndereco($event)"></app-cep>
               </div>
               <div class="col-6 mt-2 " *ngIf="isEnderecoValido()">
