@@ -88,7 +88,7 @@ export class AdminComponent implements OnInit {
   public clientes: ClienteDTO[] = [];
   public cliente: ClienteDTO = new ClienteDTO();
   public tipoCliente: TipoClienteEnum = TipoClienteEnum.CLIENTE;
-  public agendamentoManual: boolean = false;
+  public agendamentoManual: boolean = true;
   public showTable: boolean = true;
   public url!: string;
 
@@ -127,7 +127,7 @@ export class AdminComponent implements OnInit {
   public atualizarEndereco() {
     this.agendamento.endereco = "";
     if (this.agendamento.email) {
-      const clientesSelecionados = this.clientes.filter(cli => cli.email == this.agendamento.email);
+      const clientesSelecionados = this.clientes.filter(cli => cli.email.toLowerCase().trim() == this.agendamento.email?.toLowerCase().trim());
       if (clientesSelecionados && clientesSelecionados.length > 0) {
         this.agendamento.endereco = clientesSelecionados[0].endereco;
       }

@@ -31,16 +31,16 @@
                   <mat-datepicker #picker></mat-datepicker>
                 </mat-form-field>
               </div>
-              <section class="example-section" *ngIf="agendamento.dataHora">
+              <!-- <section class="example-section" *ngIf="agendamento.dataHora">
                 <mat-checkbox [(ngModel)]="agendamentoManual"> Agendamento Manual </mat-checkbox> <br>
-              </section>
+              </section> -->
               <div class="col-12 " *ngIf="agendamentoManual && agendamento.dataHora">
                 <mat-form-field class="col-12 ">
                   <mat-label>Email Cliente</mat-label>
                   <input type="text" matInput [(ngModel)]="agendamento.email" (change)="atualizarEndereco()">
                 </mat-form-field>
               </div>
-              <div class="col-12 " *ngIf="!agendamentoManual && agendamento.dataHora" (click)="recuperarClientes()">
+              <!-- <div class="col-12 " *ngIf="!agendamentoManual && agendamento.dataHora" (click)="recuperarClientes()">
                 <mat-form-field *ngIf="clientes" class="col-12">
                   <mat-label>Escolha um Cliente</mat-label>
                   <select matNativeControl [(ngModel)]="agendamento.email" (ngModelChange)="atualizarEndereco()">
@@ -50,7 +50,7 @@
                     </option>
                   </select>
                 </mat-form-field>
-              </div>
+              </div> -->
               <div class="col-6" *ngIf="agendamento.email">
                 <mat-form-field class="col-12">
                   <mat-label>Escolha um Período</mat-label>
@@ -79,7 +79,7 @@
                 </app-profissional>
               </div>
               <div class="col-12">
-                <app-cep *ngIf="agendamentoManual && agendamento.turno" [isAdm]="true"
+                <app-cep *ngIf="agendamento.endereco && agendamento.turno" [isAdm]="true"
                   (getEndereco)="getEndereco($event)"></app-cep>
               </div>
               <div class="col-6 mt-2 " *ngIf="isEnderecoValido()">
