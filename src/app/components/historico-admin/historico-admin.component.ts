@@ -169,11 +169,11 @@ export class HistoricoAdminComponent implements AfterViewInit {
     let total = 0;
     let map = new Map<string, number>();
     this.dataSource.data.forEach(value => {
-      let key = value.codigoPagamento + value.dataDiaria + value.nomeDiarista + value.nomeCliente;
-      if (map.get(key)) {
-        const valorAnt = map.get(key) ? Number(map.get(key)) : 0;
-        map.set(key, valorAnt + value.valor);
-      } else {
+      let key = value.codigoPagamento + "_" +
+        value.dataDiaria + "_" +
+        value.idCliente;
+
+      if (!map.has(key)) {
         map.set(key, value.valor);
       }
     });

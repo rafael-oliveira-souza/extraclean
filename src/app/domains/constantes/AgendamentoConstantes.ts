@@ -1,5 +1,6 @@
 import { PlanosComponent } from "../../tabs/planos/planos.component";
 import { AgendamentoPagamentoInfoDTO } from "../dtos/AgendamentoPagamentoInfoDTO";
+import { HorasDTO } from "../dtos/HorasDTO";
 import { PlanoDTO } from "../dtos/PlanoDTO";
 import { HorasEnum } from "../enums/HorasEnum";
 import { TurnoEnum } from "../enums/TurnoEnum";
@@ -14,7 +15,7 @@ export class AgendamentoConstantes {
     public static METRAGEM_MIN = 15;
     public static METRAGEM_MAX = 1000;
 
-    public static VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = [
+    public static VALORES_HORAS: HorasDTO[] = [
         { id: HorasEnum.HORAS_4, valor: 125, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_6, valor: 160, descricao: '6 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_8, valor: 190, descricao: '8 Horas - 1 Profissional', numProfissionais: 1 },
@@ -42,10 +43,9 @@ export class AgendamentoConstantes {
         { id: 17, nome: "Vicente Pires", adicional: 0 }
     ];
 
-    public static getInfoHora(horaEnum: string | number | HorasEnum): { id: HorasEnum, valor: number, descricao: string, numProfissionais: number } {
-        const filtro: any[] = this.VALORES_HORAS.filter(hora => hora.id == horaEnum || hora.descricao == horaEnum || hora.valor == horaEnum);
-        debugger
-        return filtro.length > 0 ? filtro[0] : HorasEnum.NAO_DEFINIDO;
+    public static getInfoHora(horaEnum: string | number | HorasEnum): HorasDTO {
+        const filtro: HorasDTO[] = this.VALORES_HORAS.filter(hora => hora.id == horaEnum || hora.descricao == horaEnum || hora.valor == horaEnum);
+        return filtro.length > 0 ? filtro[0] : new HorasDTO();
     }
 
     public static getValorHora(horaEnum: HorasEnum): number {
@@ -83,9 +83,10 @@ export class AgendamentoConstantes {
         // if (qtdDias == 0) {
         //     qtdDias = 1;
         // }
+        const horasFiltradas: HorasDTO[] = this.VALORES_HORAS.filter(horaObj => horaObj.id == valorHoras);
         let info: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
         info.turno = turno;
-        info.valor = this.VALORES_HORAS[Number(valorHoras) - 1].valor;
+        info.valor = horasFiltradas ? horasFiltradas[0].valor : 0;
 
         if (valorHoras == HorasEnum.HORAS_4) {
             info.metragem = 50;

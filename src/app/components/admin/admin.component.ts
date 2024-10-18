@@ -90,6 +90,7 @@ export class AdminComponent implements OnInit {
   public tipoCliente: TipoClienteEnum = TipoClienteEnum.CLIENTE;
   public agendamentoManual: boolean = true;
   public showTable: boolean = true;
+  public isPlano: boolean = false;
   public url!: string;
 
   constructor(

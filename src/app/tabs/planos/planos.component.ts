@@ -28,12 +28,16 @@ import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { TurnoEnum } from '../../domains/enums/TurnoEnum';
 import { MoedaPipe } from '../../pipes/moeda.pipe';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MomentInput } from 'moment';
+import { HorasDTO } from '../../domains/dtos/HorasDTO';
 
 @Component({
   selector: 'app-planos',
   standalone: true,
   imports: [
     FormsModule,
+    MatDatepickerModule,
     ReactiveFormsModule,
     MatFormFieldModule,
     MatInputModule,
@@ -66,12 +70,17 @@ export class PlanosComponent {
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
+  public readonly dataMin = new Date();
+  public readonly dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
+
   public planos: Array<PlanoDTO> = [];
   public pagamento: PagamentoDTO = new PagamentoDTO();
   public agendamentoInfo: AgendamentoPagamentoInfoDTO = new AgendamentoPagamentoInfoDTO();
   public planoSelecionado: PlanoDTO | null = null;
   public urlPagamento: string | null = null;
   public isAdmin: boolean = false;
+  public diasSelecionados: MomentInput[] = [];
+  public qtdDias: number[] = [];
 
   constructor(private planoService: PlanoService,
     private authService: AutenticacaoService,
@@ -96,8 +105,22 @@ export class PlanosComponent {
       this.pagamento.metragem = 0;
     }
 
+    for (let i = 0; i < this.recuperarQtdDiasPorPlano(); i++) {
+      this.qtdDias.push(i + 1);
+    }
+
     return AgendamentoConstantes.calcularTotalPorHora(
       this.pagamento.horas, plano.qtdDias, this.pagamento.extraPlus, plano.desconto, TurnoEnum.NAO_DEFINIDO);
+  }
+
+  public recuperarQtdDiasPorPlano() {
+    const planosFiltrados: PlanoDTO[] = PlanosComponent.PLANOS.filter(plano => plano.id = this.pagamento.tipoPlano);
+
+    if (planosFiltrados && planosFiltrados.length > 0) {
+      return planosFiltrados[0].qtdDias;
+    }
+
+    return 0;
   }
 
   public selecionarPlano() {
