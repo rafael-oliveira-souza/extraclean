@@ -61,8 +61,8 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public dataMin: Date = DateUtils.toMoment().add(-3, 'month').toDate();
   public dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
   public situacoes: { nome: string, id: number }[] = [
-    { nome: 'Agendada', id: 1 }, 
-    { nome: 'Reagendada', id: 4 }, 
+    { nome: 'Agendada', id: 1 },
+    { nome: 'Reagendada', id: 4 },
     { nome: 'Finalizada', id: 2 }
   ];
 
@@ -169,7 +169,10 @@ export class HistoricoAdminComponent implements AfterViewInit {
     let total = 0;
     let map = new Map<string, number>();
     this.dataSource.data.forEach(value => {
-      if (!map.has(value.codigoPagamento)) {
+      if (map.get(value.codigoPagamento)) {
+        const valorAnt = map.get(value.codigoPagamento) ? Number(map.get(value.codigoPagamento)) : 0;
+        map.set(value.codigoPagamento, valorAnt + value.valor);
+      } else {
         map.set(value.codigoPagamento, value.valor);
       }
     });
