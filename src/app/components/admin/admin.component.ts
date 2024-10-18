@@ -188,6 +188,7 @@ export class AdminComponent implements OnInit {
       .subscribe((result: PagamentoMpDTO) => {
         this.url = result.url;
         this.agendamento = new AgendamentoDTO();
+        this.agendamento.profissionais = [];
         this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
       }, (error) => this._notificacaoService.erro(error));
   }

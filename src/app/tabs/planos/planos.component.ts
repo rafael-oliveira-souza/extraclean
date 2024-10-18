@@ -56,11 +56,11 @@ export class PlanosComponent {
   public getUrl: EventEmitter<string> = new EventEmitter();
 
   public static readonly PLANOS: PlanoDTO[] = [
-    new PlanoDTO(TipoPlanoEnum.SEMANAL, "Semanal", "Consiste em 2 diárias de 4 ou 8 horas em datas que o cliente definir.", 6, 2, 2),
-    new PlanoDTO(TipoPlanoEnum.MENSAL, "Mensal", "Consiste em 4 diárias de 4 ou 8 horas em datas que o cliente definir", 9, 4, 4),
-    new PlanoDTO(TipoPlanoEnum.TRIMESTAL, "Trimestal", "Consiste em 12 diárias de 4 ou 8 horas em datas que o cliente definir", 12, 12, 6),
-    new PlanoDTO(TipoPlanoEnum.SEMESTRAL, "Semestral", "Consiste em 24 diárias de 4 ou 8 horas em datas que o cliente definir", 15, 24, 6),
-    new PlanoDTO(TipoPlanoEnum.ANUAL, "Anual", "Consiste em 48 diárias de 4 ou 8 horas em datas que o cliente definir", 18, 48, 12)
+    new PlanoDTO(TipoPlanoEnum.DIARIA_2, "2 Diárias", "Consiste em 2 diárias de 4 ou 8 horas em datas que o cliente definir.", 4, 2, 2),
+    new PlanoDTO(TipoPlanoEnum.DIARIA_4, "4 Diárias", "Consiste em 4 diárias de 4 ou 8 horas em datas que o cliente definir", 8, 4, 3),
+    new PlanoDTO(TipoPlanoEnum.DIARIA_6, "6 Diárias", "Consiste em 6 diárias de 4 ou 8 horas em datas que o cliente definir", 12, 6, 3),
+    new PlanoDTO(TipoPlanoEnum.DIARIA_8, "8 Diárias", "Consiste em 8 diárias de 4 ou 8 horas em datas que o cliente definir", 16, 8, 4),
+    new PlanoDTO(TipoPlanoEnum.DIARIA_10, "10 Diárias", "Consiste em 10 diárias de 4 ou 8 horas em datas que o cliente definir", 20, 10, 4)
   ];
 
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;

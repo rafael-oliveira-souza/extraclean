@@ -16,7 +16,7 @@ export class AgendamentoConstantes {
 
     public static VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = [
         { id: HorasEnum.HORAS_4, valor: 125, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
-        { id: HorasEnum.HORAS_6, valor: 160, descricao: '6 Horas - 1 Profissional', numProfissionais: 1 },
+        // { id: HorasEnum.HORAS_6, valor: 160, descricao: '6 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_8, valor: 190, descricao: '8 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_16, valor: 360, descricao: '8 Horas - 2 Profissional', numProfissionais: 2 },
         { id: HorasEnum.HORAS_24, valor: 495, descricao: '8 Horas - 3 Profissional', numProfissionais: 3 },
@@ -44,6 +44,7 @@ export class AgendamentoConstantes {
 
     public static getInfoHora(horaEnum: string | number | HorasEnum): { id: HorasEnum, valor: number, descricao: string, numProfissionais: number } {
         const filtro: any[] = this.VALORES_HORAS.filter(hora => hora.id == horaEnum || hora.descricao == horaEnum || hora.valor == horaEnum);
+        debugger
         return filtro.length > 0 ? filtro[0] : HorasEnum.NAO_DEFINIDO;
     }
 

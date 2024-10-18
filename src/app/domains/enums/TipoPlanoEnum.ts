@@ -1,8 +1,8 @@
 export enum TipoPlanoEnum {
     DIARIA = 0,
-    SEMANAL = 1,
-    MENSAL = 2,
-    TRIMESTAL = 3,
-    SEMESTRAL = 4,
-    ANUAL = 5
+    DIARIA_2 = 1,
+    DIARIA_4 = 2,
+    DIARIA_6 = 3,
+    DIARIA_8 = 4,
+    DIARIA_10 = 5
 }
