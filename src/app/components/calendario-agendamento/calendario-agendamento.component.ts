@@ -22,6 +22,8 @@ import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
 import { SituacaoAgendamentoEnum } from '../../domains/enums/SituacaoAgendamentoEnum';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
+import { CodigoValorDTO } from '../../domains/dtos/CodigoValorDTO';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -37,7 +39,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     FormsModule,
     CommonModule,
     PipeModule,
-    ScrollComponent
+    ScrollComponent,
+    AutoCompleteComponent,
   ],
   templateUrl: './calendario-agendamento.component.html',
   styleUrls: ['./calendario-agendamento.component.scss']
@@ -60,6 +63,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public qtdInfo: string = "1:1";
   public infos: InfoAgendamentoDTO[] = [];
   public profissionais: Set<string> = new Set<string>();
+  public profissionaisAtuais: Array<CodigoValorDTO> = [];
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = new Date();
   public hoje: Date = new Date();
@@ -109,9 +113,17 @@ export class CalendarioAgendamentoComponent implements OnInit {
       });
   }
 
+  public convertToList(profissionais: Set<string>) {
+    return Array.from(profissionais);
+  }
+
   private atualizarCalendario(infos: InfoAgendamentoDTO[]) {
     infos.forEach(info => {
       this.profissionais.add(info.nomeDiarista);
+      if (this.profissionaisAtuais.filter(prof => prof.codigo == info.idProfissional).length == 0) {
+        this.profissionaisAtuais.push(new CodigoValorDTO(info.idProfissional, info.nomeDiarista));
+      }
+
       if (info.turno == TurnoEnum.MATUTINO) {
         this.atualizarMap(info, this.mapMat);
       } else if (info.turno == TurnoEnum.VESPERTINO) {

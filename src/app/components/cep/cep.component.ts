@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
 import { CepService } from '../../services/cep.service';
@@ -38,37 +38,51 @@ export class CepComponent {
   @Input("isAdm")
   public isAdm: boolean = false;
 
+  @Input("disabled")
+  public disabled: boolean = true;
+
   @Input("formCep")
   public formCep!: FormGroup;
+
+  @Input("endereco")
+  public endereco = new EnderecoDTO();
 
   public exibeCep = false;
   public regiao = 0;
   public regioes: { id: number, nome: string, adicional: number }[] = AgendamentoConstantes.REGIOES;
 
-
-
   @Output()
   public getEndereco: EventEmitter<EnderecoDTO> = new EventEmitter();
+
+  @Output()
+  public enderecoChange: EventEmitter<EnderecoDTO> = new EventEmitter();
 
   constructor(private _cepService: CepService,
     private _formBuilder: FormBuilder,
     private _notificacaoService: NotificacaoService) {
-    this.montarFormCep(true);
+    this.montarFormCep(this.disabled);
   }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (changes['endereco'].currentValue != changes['endereco'].previousValue) {
+      this.montarFormCep(this.disabled);
+    }
+
+  }
 
   public atualizarEndereco() {
-    let endereco = new EnderecoDTO();
-    endereco.bairro = this.formCep.controls['bairro'].value;
-    endereco.numero = this.formCep.controls['numero'].value;
-    endereco.logradouro = this.formCep.controls['logradouro'].value;
-    endereco.complemento = this.formCep.controls['complemento'].value;
-    endereco.localidade = this.formCep.controls['localidade'].value;
-    endereco.cep = this.formCep.controls['cep'].value;
-    endereco.uf = this.formCep.controls['uf'].value;
-    endereco.valido = this.formCep.valid;
+    this.endereco = new EnderecoDTO();
+    this.endereco.bairro = this.formCep.controls['bairro'].value;
+    this.endereco.numero = this.formCep.controls['numero'].value;
+    this.endereco.logradouro = this.formCep.controls['logradouro'].value;
+    this.endereco.complemento = this.formCep.controls['complemento'].value;
+    this.endereco.localidade = this.formCep.controls['localidade'].value;
+    this.endereco.cep = this.formCep.controls['cep'].value;
+    this.endereco.uf = this.formCep.controls['uf'].value;
+    this.endereco.valido = this.formCep.valid;
 
-    this.getEndereco.emit(endereco);
+    this.getEndereco.emit(this.endereco);
+    this.enderecoChange.emit(this.endereco);
   }
 
   public getCep(cep: string) {
@@ -93,16 +107,26 @@ export class CepComponent {
     this.formCep.controls['uf'].setValue(cepRecuperado?.uf);
   }
 
-  public montarFormCep(habilitaInput: boolean) {
+  public montarFormCep(disabled: boolean) {
+    if (this.endereco.valido) {
+      this.exibeCep = true;
+    }
+
+    let naoEncontrado = false;
+    if (this.formCep && this.formCep.controls['naoEncontrado'].value) {
+      naoEncontrado = true;
+      disabled = false;
+    }
+
     this.formCep = this._formBuilder.group({
-      cep: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
-      numero: ['', Validators.required],
-      logradouro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      complemento: new FormControl({ value: '', disabled: false }),
-      bairro: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      localidade: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      uf: new FormControl({ value: '', disabled: habilitaInput }, Validators.required),
-      naoEncontrado: false
+      cep: [this.endereco.cep.replace(/[^0-9]/g, ""), [Validators.required, Validators.minLength(8), Validators.maxLength(8)]],
+      numero: [this.endereco.numero, Validators.required],
+      logradouro: new FormControl({ value: this.endereco.logradouro, disabled: disabled }, Validators.required),
+      complemento: new FormControl({ value: this.endereco.complemento, disabled: false }),
+      bairro: new FormControl({ value: this.endereco.bairro, disabled: disabled }, Validators.required),
+      localidade: new FormControl({ value: this.endereco.localidade, disabled: disabled }, Validators.required),
+      uf: new FormControl({ value: this.endereco.uf, disabled: disabled }, Validators.required),
+      naoEncontrado: naoEncontrado
     });
 
     this.formCep.valueChanges.subscribe(cep => {

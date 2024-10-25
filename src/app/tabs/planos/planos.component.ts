@@ -31,6 +31,14 @@ import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MomentInput } from 'moment';
 import { HorasDTO } from '../../domains/dtos/HorasDTO';
+import { AutoCompleteComponent } from '../../components/auto-complete/auto-complete.component';
+import { ClienteService } from '../../services/cliente.service';
+import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
+import { HorasDiariaPipe } from '../../pipes/horasDiaria.pipe';
+import { TurnoPipe } from '../../pipes/turno.pipe';
+import { ProfissionalComponent } from '../../components/profissional/profissional.component';
+import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
+import { ProfissionalService } from '../../services/profissional.service';
 
 @Component({
   selector: 'app-planos',
@@ -47,6 +55,8 @@ import { HorasDTO } from '../../domains/dtos/HorasDTO';
     MatCheckboxModule,
     DialogModule,
     MatButtonModule,
+    AutoCompleteComponent,
+    ProfissionalComponent,
   ],
   templateUrl: './planos.component.html',
   styleUrl: './planos.component.scss',
@@ -81,19 +91,33 @@ export class PlanosComponent {
   public isAdmin: boolean = false;
   public diasSelecionados: MomentInput[] = [];
   public qtdDias: number[] = [];
+  public clientes: Array<ClienteDTO> = [];
+  public profissionais:Array<ProfissionalDTO> = [];
+  public profissionaisSelecionados:Array<number> = [];
+  public turno: TurnoEnum = TurnoEnum.INTEGRAL;
 
   constructor(private planoService: PlanoService,
     private authService: AutenticacaoService,
     private notification: NotificacaoService,
     private _agendamentoService: AgendamentoService,
+    private _profissionalService: ProfissionalService,
+    private clienteService: ClienteService,
     private dialog: MatDialog) {
 
     if (this.authService.isAdminLoggedIn()) {
       this.isAdmin = true;
+      this.recuperarClientes();
       this.planos.push(new PlanoDTO(0, "Diária", "Consiste em 1 diária expressa ou detalhada em data que o cliente definir.", 0, 1, 1));
     }
 
     PlanosComponent.PLANOS.forEach(plano => this.planos.push(plano));
+  }
+
+  public recuperarClientes() {
+    this.clienteService.recuperarTodos()
+      .subscribe((clientes: Array<ClienteDTO>) => {
+        this.clientes = clientes;
+      });
   }
 
   public calcularTotal(plano: PlanoDTO): AgendamentoPagamentoInfoDTO {
@@ -105,6 +129,7 @@ export class PlanosComponent {
       this.pagamento.metragem = 0;
     }
 
+    this.qtdDias = [];
     for (let i = 0; i < this.recuperarQtdDiasPorPlano(); i++) {
       this.qtdDias.push(i + 1);
     }
@@ -114,10 +139,8 @@ export class PlanosComponent {
   }
 
   public recuperarQtdDiasPorPlano() {
-    const planosFiltrados: PlanoDTO[] = PlanosComponent.PLANOS.filter(plano => plano.id = this.pagamento.tipoPlano);
-
-    if (planosFiltrados && planosFiltrados.length > 0) {
-      return planosFiltrados[0].qtdDias;
+    if (this.planoSelecionado) {
+      return this.planoSelecionado.qtdDias;
     }
 
     return 0;
@@ -127,7 +150,9 @@ export class PlanosComponent {
     this.planos.forEach(plano => {
       if (this.pagamento.tipoPlano == plano.id) {
         this.planoSelecionado = plano;
+        this.diasSelecionados = [];
         this.atualizarValores(plano);
+        return;
       }
     });
   }
@@ -150,15 +175,17 @@ export class PlanosComponent {
     dadosAgendamento.valor = this.agendamentoInfo.valor;
     dadosAgendamento.horas = this.agendamentoInfo.horas;
     dadosAgendamento.metragem = this.pagamento.metragem;
-    dadosAgendamento.email = this.agendamento.email;
+    dadosAgendamento.email = this.pagamento.email;
     dadosAgendamento.extraPlus = this.pagamento.extraPlus;
-    dadosAgendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora, 'yyyy-MM-dd')];
+    dadosAgendamento.ignoreQtdProfissionais = true;
+    dadosAgendamento.diasSelecionados = this.diasSelecionados;
     dadosAgendamento.origem = OrigemPagamentoEnum.AGENDAMENTO;
     dadosAgendamento.quantidadeItens = 1;
     dadosAgendamento.profissionais = this.agendamento.profissionais;
     dadosAgendamento.qtdParcelas = plano.qtdParcelas;
-    dadosAgendamento.turno = this.agendamento.turno;
-    dadosAgendamento.tipoLimpeza = this.pagamento.isDetalhada ? TipoServicoEnum.DETALHADA : TipoServicoEnum.EXPRESSA;
+    dadosAgendamento.turno = this.turno;
+    dadosAgendamento.tipoLimpeza = this.pagamento.tipoLimpeza;
+    dadosAgendamento.profissionais = this.profissionaisSelecionados;
     this._agendamentoService.agendar(dadosAgendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.urlPagamento = result.url;
@@ -166,6 +193,34 @@ export class PlanosComponent {
         this.getUrl.emit(result.url);
         this.notification.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
       }, (error) => this.notification.erro(error));
+  }
+
+  public solicitarPlano(plano: PlanoDTO) {
+    window.open(`https://api.whatsapp.com/send?phone=5561998657077&text=Ol%C3%A1,%20vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es! \n\n Infos:${this.montarInfo()}`, '_blank');
+  }
+
+  private montarInfo(): string {
+    let infos: string = "";
+    const moedaPipe = new MoedaPipe();
+    infos = infos.concat(`Email: ${this.pagamento.email} \n\n`);
+    infos = infos.concat(`Horas: ${new HorasDiariaPipe().transform(this.pagamento.horas)} \n\n`);
+    if (this.planoSelecionado) {
+      if (this.diasSelecionados.length > 0) {
+        infos = infos.concat(`Dias Selecionados: `);
+        this.diasSelecionados.forEach(data => {
+          infos = infos.concat(`[${DateUtils.format(data, 'DD/MM/YYYY')}] `);
+        });
+      }
+
+      infos = infos.concat(`\n\n Turno: ${new TurnoPipe().transform(this.agendamentoInfo.turno)} \n\n`);
+      infos = infos.concat(`Valor Total: ${moedaPipe.transform(this.agendamentoInfo.total)} \n\n`);
+      infos = infos.concat(`Valor Diária: ${moedaPipe.transform(this.agendamentoInfo.valor)} \n\n`);
+      infos = infos.concat(`Valor Desconto : ${moedaPipe.transform(this.agendamentoInfo.desconto)} \n\n`);
+      infos = infos.concat(`Valor por Diária: ${moedaPipe.transform(this.agendamentoInfo.total / this.planoSelecionado.qtdDias)} \n\n`);
+      infos = infos.concat(`Valor Total Extra Plus: ${moedaPipe.transform(this.VALOR_PROFISSIONAL_SELECIONADO * this.planoSelecionado.qtdDias)} \n`);
+    }
+
+    return infos;
   }
 
   public comprar(plano: PlanoDTO) {
@@ -186,6 +241,7 @@ export class PlanosComponent {
     plano.origem = OrigemPagamentoEnum.PLANO;
     plano.extraPlus = plano.extraPlus;
     plano.tipoPlano = plano.id;
+    plano.diasSelecionados = this.diasSelecionados;
     this.planoService.criar(plano)
       .subscribe((pag: PagamentoMpDTO) => {
         this.urlPagamento = pag.url;
@@ -207,5 +263,15 @@ export class PlanosComponent {
       }, (error) => {
         this.notification.erro(error);
       });
+  }
+  public recuperarProfissionais() {
+    this._profissionalService.get()
+      .subscribe((prof: Array<ProfissionalDTO>) => {
+        this.profissionais = prof;
+      });
+  }
+  
+  public recuperarProfissional(profissional: ProfissionalDTO) {
+    this.agendamento.profissionais = this.profissionaisSelecionados;
   }
 }

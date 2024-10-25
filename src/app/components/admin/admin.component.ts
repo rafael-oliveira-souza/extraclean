@@ -38,6 +38,10 @@ import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConst
 import { HistoricoAdminComponent } from '../historico-admin/historico-admin.component';
 import { DiariaService } from '../../services/diaria.service';
 import { ProfissionalAdminComponent } from '../profissional-admin/profissional-admin.component';
+import { DateUtils } from '../../utils/DateUtils';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
+import { CepService } from '../../services/cep.service';
 
 @Component({
   selector: 'app-admin',
@@ -64,6 +68,7 @@ import { ProfissionalAdminComponent } from '../profissional-admin/profissional-a
     CalendarioAgendamentoComponent,
     HistoricoAdminComponent,
     ProfissionalAdminComponent,
+    AutoCompleteComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -88,6 +93,7 @@ export class AdminComponent implements OnInit {
   public clientes: ClienteDTO[] = [];
   public cliente: ClienteDTO = new ClienteDTO();
   public tipoCliente: TipoClienteEnum = TipoClienteEnum.CLIENTE;
+  public desabilitarEndereco: boolean = false;
   public agendamentoManual: boolean = true;
   public showTable: boolean = true;
   public isPlano: boolean = false;
@@ -96,6 +102,7 @@ export class AdminComponent implements OnInit {
   constructor(
     public authService: AutenticacaoService,
     public clienteService: ClienteService,
+    public _cepService: CepService,
     public _agendamentoService: AgendamentoService,
     private _router: Router,
     private _notificacaoService: NotificacaoService,
@@ -103,6 +110,7 @@ export class AdminComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.agendamento.enviarEmail = true;
     this.route.queryParams.subscribe(params => {
       this.selectedIndex = 1;
       const tab = params['tab'];
@@ -116,7 +124,7 @@ export class AdminComponent implements OnInit {
     }
 
     // this.recuperarProfissionais();
-    // this.recuperarClientes();
+    this.recuperarClientes();
   }
 
   public recuperarClientes() {
@@ -153,9 +161,8 @@ export class AdminComponent implements OnInit {
   }
 
   public isEnderecoValido() {
-    return this.endereco.valido || this.agendamento.endereco;
+    return this.endereco.valido || this.agendamento.endereco != undefined || this.agendamento.endereco != null;
   }
-
 
   public updateSelectedMenu(): void {
     this.menus.forEach(menu => {
@@ -181,6 +188,11 @@ export class AdminComponent implements OnInit {
   }
 
   public agendar() {
+
+    if (this.agendamento.dataExpiracaoPagamento == null) {
+      this.agendamento.dataExpiracaoPagamento = DateUtils.add(this.agendamento.dataHora, 1, 'day').toDate();
+    }
+
     this.agendamento.diasSelecionados = [this.agendamento.dataHora];
     this.agendamento.dataHora = new Date();
     this.agendamento.ignoreQtdProfissionais = true;
@@ -206,6 +218,29 @@ export class AdminComponent implements OnInit {
         this.cliente = new ClienteDTO();
         this._notificacaoService.alerta(MensagemEnum.CLIENTE_CRIADO_CONCLUIDO_SUCESSO);
       }, (error) => this._notificacaoService.erro(error));
+  }
+
+  public recuperarClienteSelecionado(clientes: ClienteDTO[]) {
+    if (clientes.length == 1) {
+      const clienteSelec = clientes[0];
+      this.agendamento.endereco = clienteSelec.endereco;
+      this._cepService.getCep(clienteSelec.cep)
+        .subscribe((cepRecuperado: EnderecoDTO) => {
+          if (cepRecuperado['erro']) {
+            this.endereco = EnderecoUtils.montarEnderecoPorValores(clienteSelec.endereco, clienteSelec.numero, clienteSelec.cep);
+          } else {
+            this.endereco = cepRecuperado;
+            this.endereco.logradouro = clienteSelec.endereco;
+            this.endereco.numero = clienteSelec.numero;
+            this.endereco.valido = true;
+          }
+          this.desabilitarEndereco = true;
+        });
+    } else {
+      this.agendamento.endereco = "";
+      this.endereco = new EnderecoDTO();
+      this.desabilitarEndereco = false;
+    }
   }
 }
 

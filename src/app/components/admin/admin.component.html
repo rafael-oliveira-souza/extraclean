@@ -25,15 +25,15 @@
               </div> -->
               <div></div>
 
-              <div *ngIf="!isPlano" class="mt-4">
-                <div class="mt-2 text-center">
+              <div *ngIf="!isPlano" class="row justify-content-center mt-4">
+                <div id="idEnviarEmail" class="mt-2 text-center">
                   <p>Enviar Email</p>
                   <mat-button-toggle-group [(ngModel)]="agendamento.enviarEmail" required>
                     <mat-button-toggle [value]="true">Sim</mat-button-toggle>
                     <mat-button-toggle [value]="false">Não</mat-button-toggle>
                   </mat-button-toggle-group>
                 </div>
-                <div>
+                <div id="idDataDiaria">
                   <mat-form-field class="col-12 mt-4">
                     <mat-label>Data da Diária</mat-label>
                     <input matInput [matDatepicker]="picker" [(ngModel)]="agendamento.dataHora">
@@ -44,11 +44,9 @@
                 <!-- <section class="example-section" *ngIf="agendamento.dataHora">
                 <mat-checkbox [(ngModel)]="agendamentoManual"> Agendamento Manual </mat-checkbox> <br>
               </section> -->
-                <div class="col-12 " *ngIf="agendamentoManual && agendamento.dataHora">
-                  <mat-form-field class="col-12 ">
-                    <mat-label>Email Cliente</mat-label>
-                    <input type="text" matInput [(ngModel)]="agendamento.email" (change)="atualizarEndereco()">
-                  </mat-form-field>
+                <div id="idEmailCliente" class="col-12 " *ngIf="agendamentoManual && agendamento.dataHora">
+                  <app-auto-complete label="Email Cliente" [options]="clientes" [(value)]="agendamento.email"
+                    optionsValue="email" optionsDescription="email" (getOptionsSelected)="recuperarClienteSelecionado($event)"></app-auto-complete>
                 </div>
                 <!-- <div class="col-12 " *ngIf="!agendamentoManual && agendamento.dataHora" (click)="recuperarClientes()">
                 <mat-form-field *ngIf="clientes" class="col-12">
@@ -61,7 +59,7 @@
                   </select>
                 </mat-form-field>
               </div> -->
-                <div class="col-6" *ngIf="agendamento.email">
+                <div id="idPeriodo" class="col-6" *ngIf="agendamento.email">
                   <mat-form-field class="col-12">
                     <mat-label>Escolha um Período</mat-label>
                     <select matNativeControl [(ngModel)]="agendamento.turno">
@@ -71,7 +69,7 @@
                     </select>
                   </mat-form-field>
                 </div>
-                <div class="col-6" *ngIf="agendamento.email">
+                <div id="idTipoLimpeza" class="col-6" *ngIf="agendamento.email">
                   <mat-form-field class="col-12">
                     <mat-label>Tipo de Limpeza</mat-label>
                     <select matNativeControl [(ngModel)]="agendamento.tipoLimpeza">
@@ -82,33 +80,25 @@
                     </select>
                   </mat-form-field>
                 </div>
-                <div class="col-12" *ngIf="agendamento.turno" (click)="recuperarProfissionais()">
+                <div id="idProfissional" class="col-12" *ngIf="agendamento.turno" (click)="recuperarProfissionais()">
                   <app-profissional [multiplo]="true" [profissionais]="profissionais"
                     (atualizarProfissional)="recuperarProfissional($event)"
                     [(profissionaisSelecionados)]="profissionaisSelecionados">
                   </app-profissional>
                 </div>
-                <div class="col-12">
-                  <app-cep *ngIf="!isEnderecoValido() && agendamento.turno" [isAdm]="true"
-                    (getEndereco)="getEndereco($event)"></app-cep>
-                </div>
-                <div class="col-6 mt-2 " *ngIf="isEnderecoValido()">
+                <div id="idValor" class="col-6 mt-2 " *ngIf="agendamento.turno">
                   <mat-form-field class="col-12 ">
                     <mat-label>Valor</mat-label>
                     <input type="text" matInput [(ngModel)]="agendamento.valor">
                   </mat-form-field>
                 </div>
-                <div class="col-6  mt-2" *ngIf="isEnderecoValido()">
+                <div id="idDesconto" class="col-6  mt-2" *ngIf="agendamento.turno">
                   <mat-form-field class="col-12 ">
                     <mat-label>Desconto</mat-label>
                     <input type="text" matInput [(ngModel)]="agendamento.desconto">
                   </mat-form-field>
                 </div>
-                <div class="col-12  mt-2" *ngIf="isEnderecoValido()">
-                  <!-- <mat-form-field class="col-12 ">
-                  <mat-label>Metragem</mat-label>
-                  <input type="text" matInput [(ngModel)]="agendamento.metragem">
-                </mat-form-field> -->
+                <div id="idQtdHoras" class="col-12  mt-2" *ngIf="agendamento.valor">
                   <mat-form-field class="col-12">
                     <mat-label>Escolha a Quantidade de Horas</mat-label>
                     <select matNativeControl [(ngModel)]="agendamento.horas">
@@ -117,7 +107,11 @@
                     </select>
                   </mat-form-field>
                 </div>
-                <div>
+                <div id="idEndereco" class="col-12" *ngIf="agendamento.horas">
+                  <app-cep *ngIf="agendamento.turno" [(endereco)]="endereco" [isAdm]="true"
+                    [disabled]="desabilitarEndereco" (getEndereco)="getEndereco($event)"></app-cep>
+                </div>
+                <div id="idDataExpiracao" *ngIf="agendamento.horas && isEnderecoValido()">
                   <mat-form-field class="col-12 mt-4">
                     <mat-label>Data Expiração do Pagamento</mat-label>
                     <input matInput [matDatepicker]="picker2" [(ngModel)]="agendamento.dataExpiracaoPagamento">
@@ -128,15 +122,15 @@
                 <!-- <section class="example-section">
                 <mat-checkbox [(ngModel)]="agendamento.isDetalhada">DETALHADA</mat-checkbox> <br>
               </section> -->
-                <section class="example-section">
+                <section id="idExtraClean" class="example-section">
                   <mat-checkbox [(ngModel)]="agendamento.extraPlus">EXTRA
                     PLUS</mat-checkbox> <br>
                 </section>
-                <div class="d-flex justify-content-center">
+                <div id="idBotaoAgendar" class="d-flex justify-content-center">
                   <button [disabled]="!agendamento.horas" class="col-8 btn btn-primary mt-3 p-4 mb-3"
                     (click)="agendar()">Agendar</button>
                 </div>
-                <div *ngIf="url">
+                <div id="idUrlPagamento" *ngIf="url">
                   <p>Link de Pagamento:</p>
                   <textarea style="width: 100%;" class="mt-5">{{url}}</textarea>
                 </div>
