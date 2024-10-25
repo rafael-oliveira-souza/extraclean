@@ -101,6 +101,10 @@ export class CalendarioAgendamentoComponent implements OnInit {
       this.mapMat.set(dataDiaria, [null]);
     });
 
+    this.atualizarInfos(dataAtual);
+  }
+
+  private atualizarInfos(dataAtual: MomentInput) {
     this._agendService
       .recuperarInfoAgendamentos(this.formatarData(dataAtual), null, null)
       .subscribe((infos: InfoAgendamentoDTO[]) => {
@@ -290,7 +294,10 @@ export class CalendarioAgendamentoComponent implements OnInit {
     this._agendService
       .atualizarProfissionalAgendamento(agend)
       .subscribe((info: any) => {
+        this._changes.detectChanges();
         this._notificacaoService.alerta(MensagemEnum.PROFISSIONAL_ATUALIZADO_SUCESSO);
+        const dataAtual: Date = this.proximosPeriodos[this.periodo];
+        this.atualizarInfos(dataAtual);
       }, (error) => this._notificacaoService.erro(error));
   }
 
