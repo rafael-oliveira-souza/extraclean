@@ -46,7 +46,8 @@
               </section> -->
                 <div id="idEmailCliente" class="col-12 " *ngIf="agendamentoManual && agendamento.dataHora">
                   <app-auto-complete label="Email Cliente" [options]="clientes" [(value)]="agendamento.email"
-                    optionsValue="email" optionsDescription="email" (getOptionsSelected)="recuperarClienteSelecionado($event)"></app-auto-complete>
+                    optionsValue="email" optionsDescription="email"
+                    (getOptionsSelected)="recuperarClienteSelecionado($event)"></app-auto-complete>
                 </div>
                 <!-- <div class="col-12 " *ngIf="!agendamentoManual && agendamento.dataHora" (click)="recuperarClientes()">
                 <mat-form-field *ngIf="clientes" class="col-12">
@@ -80,11 +81,21 @@
                     </select>
                   </mat-form-field>
                 </div>
-                <div id="idProfissional" class="col-12" *ngIf="agendamento.turno" (click)="recuperarProfissionais()">
-                  <app-profissional [multiplo]="true" [profissionais]="profissionais"
+                <div class="col-12" *ngIf="agendamento.turno && agendamento.tipoLimpeza" (click)="recuperarProfissionais()">
+                  <!-- <app-profissional [multiplo]="true" [profissionais]="profissionais"
                     (atualizarProfissional)="recuperarProfissional($event)"
                     [(profissionaisSelecionados)]="profissionaisSelecionados">
-                  </app-profissional>
+                  </app-profissional> -->
+
+                  <mat-form-field class="col-12">
+                    <mat-label>Escolha uma profissional</mat-label>
+                    <mat-select [(ngModel)]="profissionaisSelecionados" multiple>
+                      <mat-option value="0">Sem preferência</mat-option>
+                      @for (prof of profissionais; track prof) {
+                      <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome | ponto: 20}}</mat-option>
+                      }
+                    </mat-select>
+                  </mat-form-field>
                 </div>
                 <div id="idValor" class="col-6 mt-2 " *ngIf="agendamento.turno">
                   <mat-form-field class="col-12 ">

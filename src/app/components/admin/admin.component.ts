@@ -32,16 +32,15 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
-import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 import { HistoricoAdminComponent } from '../historico-admin/historico-admin.component';
-import { DiariaService } from '../../services/diaria.service';
 import { ProfissionalAdminComponent } from '../profissional-admin/profissional-admin.component';
 import { DateUtils } from '../../utils/DateUtils';
-import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 import { CepService } from '../../services/cep.service';
+import { PipeModule } from '../../pipes/pipe.module';
+import { MatSelectModule } from '@angular/material/select';
 
 @Component({
   selector: 'app-admin',
@@ -62,13 +61,14 @@ import { CepService } from '../../services/cep.service';
     CommonModule,
     ScrollComponent,
     PlanosComponent,
-    ProfissionalComponent,
     MatButtonToggleModule,
     MatCheckboxModule,
     CalendarioAgendamentoComponent,
     HistoricoAdminComponent,
     ProfissionalAdminComponent,
     AutoCompleteComponent,
+    MatSelectModule,
+    PipeModule
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
