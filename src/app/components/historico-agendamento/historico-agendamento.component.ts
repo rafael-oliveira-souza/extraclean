@@ -124,7 +124,7 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   }
 
   public isAdmin() {
-    return !this.isDiarista() && !this.isCliente();
+    return this.tipoCliente == TipoClienteEnum.ADMIN;
   }
 
   public marcarHorarioAtendimento(entrada: boolean) {

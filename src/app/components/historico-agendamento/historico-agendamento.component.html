@@ -109,7 +109,7 @@
     </div>
     <ng-template #not_client>
       <div class=" row justify-content-center mb-5">
-        <app-calendario-agendamento [isAdm]="false" [profissional]="nomeProfissional"></app-calendario-agendamento>
+        <app-calendario-agendamento [isAdm]="isAdmin()" [profissional]="nomeProfissional"></app-calendario-agendamento>
       </div>
     </ng-template>
   </div>

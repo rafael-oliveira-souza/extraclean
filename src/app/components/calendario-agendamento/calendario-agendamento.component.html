@@ -1,6 +1,6 @@
 <div class="mt-5">
   <div>
-    <div class="row justify-content-center">
+    <div class="row justify-content-center" *ngIf="isAdm">
       <mat-checkbox class="col-6" [(ngModel)]="habilitaAlteracaoProfissional">Habilitar Troca de
         Profissional</mat-checkbox> <br>
       <mat-checkbox class="col-6" [(ngModel)]="habilitaReagendamento">Habilitar Reagendamentos</mat-checkbox> <br>
@@ -92,12 +92,12 @@
                   moeda}}</small><br> -->
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento |
+                <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
                 <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                     [href]="diaria.localizacao">Localização</a></small><br>
-                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
+                <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
                   <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
                 </small>
               </div>
@@ -111,7 +111,7 @@
                   Marcar Saída
                 </button>
               </div>
-              <div *ngIf="isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
+              <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
                 <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-primary">Finalizar
                 </button>
@@ -164,13 +164,13 @@
                   moeda}}</small><br> -->
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12"><strong>Situação Pagamento:
+                <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento:
                   </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
                 <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                     [href]="diaria.localizacao">Localização</a></small><br>
-                <small class="col-12" *ngIf="exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
+                <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
                   <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
                 </small>
               </div>
@@ -184,7 +184,7 @@
                   Marcar Saída
                 </button>
               </div>
-              <div *ngIf="isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
+              <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
                 <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
                   class="col-8 btn btn-primary">Finalizar
                 </button>
