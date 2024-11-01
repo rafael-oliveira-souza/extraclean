@@ -22,8 +22,8 @@
               <th mat-header-cell *matHeaderCellDef> Endereço</th>
               <td mat-cell *matCellDef="let element"> {{element.endereco | ponto: 35}} </td>
             </ng-container>
-            <ng-container matColumnDef="metragem">
-              <th mat-header-cell *matHeaderCellDef> Horas</th>
+            <ng-container matColumnDef="horas">
+              <th mat-header-cell *matHeaderCellDef> Quantidade de Horas</th>
               <td mat-cell *matCellDef="let element"> {{element.horas | horasDiaria}} </td>
             </ng-container>
             <ng-container matColumnDef="desconto">

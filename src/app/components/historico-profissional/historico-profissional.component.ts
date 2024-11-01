@@ -78,7 +78,7 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
     if (this.isNotXs()) {
       this.displayedColumns = [
         'nomeCliente', 'dataDiaria', 'situacao',
-        'tipoLimpeza', 'turno', 'valor', 'valorProfissional'
+        'tipoLimpeza', 'horas', 'turno', 'valor', 'valorProfissional'
       ];
     } else {
       this.displayedColumns = ['nomeCliente', 'dataDiaria', 'valorProfissional'];
@@ -126,9 +126,7 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
   public calcularTotal() {
     let total = 0;
     this.agendamentos.forEach(agend => {
-      if (!agend.contratada) {
-        total += agend.valorProfissional;
-      }
+      total += agend.valorProfissional;
     });
     return total;
   }

@@ -73,7 +73,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
     if (this.isNotXs()) {
       this.displayedColumns = [
         'nomeCliente', 'nomeDiarista', 'dataDiaria', 'situacao',
-        'tipoLimpeza', 'turno', 'valor', 'valorProfissional'
+        'tipoLimpeza', 'horas', 'turno', 'valor', 'valorProfissional'
       ];
     } else {
       this.displayedColumns = ['nomeCliente', 'dataDiaria', 'valorProfissional'];

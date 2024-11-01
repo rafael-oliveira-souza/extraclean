@@ -46,7 +46,7 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   public dataSource = new MatTableDataSource<HistoricoAgendamentoDTO>(this.agendamentos);
   public agendamentoSelecionado: HistoricoAgendamentoDTO | null = this.getAgendamentoSelecionado();
 
-  public displayedColumns: string[] = ['endereco', 'tipoLimpeza', 'turno', 'metragem',
+  public displayedColumns: string[] = ['endereco', 'tipoLimpeza', 'turno', 'horas',
     'valor', 'desconto', 'dataHora'];
 
   constructor(private _agendamentoService: AgendamentoService,
