@@ -36,7 +36,7 @@ export class AutoCompleteComponent implements OnInit {
   public options: any[] = [];
 
   @Input('value')
-  public value!: any;
+  public value: any = null;
 
   @Output()
   public valueChange: EventEmitter<any> = new EventEmitter();
@@ -53,7 +53,7 @@ export class AutoCompleteComponent implements OnInit {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
-        const name = typeof value === 'string' ? value : value?.name;
+        const name = (value['name'] ? value['name'] : value);
         this.value = name;
         this.valueChange.emit(this.value);
         const valueFiltered = name ? this._filter(name as string) : this.sort(this.options.slice());

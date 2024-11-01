@@ -151,7 +151,7 @@ export class AdminComponent implements OnInit {
     }
   }
 
-  public recuperarProfissional(profissional: ProfissionalDTO) {
+  public recuperarProfissional(profissional: ProfissionalDTO[]) {
     this.agendamento.profissionais = this.profissionaisSelecionados;
   }
 

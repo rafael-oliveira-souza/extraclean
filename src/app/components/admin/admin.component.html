@@ -81,7 +81,7 @@
                     </select>
                   </mat-form-field>
                 </div>
-                <div class="col-12" *ngIf="agendamento.turno && agendamento.tipoLimpeza" (click)="recuperarProfissionais()">
+                <div class="col-12" *ngIf="agendamento.turno && agendamento.tipoLimpeza">
                   <!-- <app-profissional [multiplo]="true" [profissionais]="profissionais"
                     (atualizarProfissional)="recuperarProfissional($event)"
                     [(profissionaisSelecionados)]="profissionaisSelecionados">
@@ -89,7 +89,8 @@
 
                   <mat-form-field class="col-12">
                     <mat-label>Escolha uma profissional</mat-label>
-                    <mat-select [(ngModel)]="profissionaisSelecionados" multiple>
+                    <mat-select [(ngModel)]="profissionaisSelecionados" (click)="recuperarProfissionais()" multiple
+                      (ngModelChange)="recuperarProfissional(profissionais)">
                       <mat-option value="0">Sem preferência</mat-option>
                       @for (prof of profissionais; track prof) {
                       <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome | ponto: 20}}</mat-option>

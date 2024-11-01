@@ -290,14 +290,14 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.codigoPagamento = diaria.codigoPagamento;
     agend.idProfissional = diaria.idProfissional;
     agend.idProfissionalAtualizado = diaria.profissionalAtualizado;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .atualizarProfissionalAgendamento(agend)
       .subscribe((info: any) => {
+        this.atualizarPeriodo();
         this._changes.detectChanges();
         this._notificacaoService.alerta(MensagemEnum.PROFISSIONAL_ATUALIZADO_SUCESSO);
-        const dataAtual: Date = this.proximosPeriodos[this.periodo];
-        this.atualizarInfos(dataAtual);
       }, (error) => this._notificacaoService.erro(error));
   }
 
@@ -306,6 +306,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.dataDiaria = diaria.dataDiaria;
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .confirmarPagamento(agend)
@@ -321,6 +322,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.dataDiaria = diaria.dataDiaria;
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .finalizarAgendamento(agend)
@@ -337,6 +339,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.dataDiaria = diaria.dataDiaria;
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .cancelarAgendamento(agend)
@@ -354,6 +357,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
     agend.dataReagendamento = diaria.dataReagendamento;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .reagendarAgendamento(agend)
@@ -373,6 +377,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     registro.horario = new Date();
     registro.idCliente = diaria.idCliente;
     registro.dataDiaria = diaria.dataDiaria;
+    registro.idDiaria = diaria.idDiaria;
 
     this._agendService.registrarHorarioAtendimento(registro)
       .subscribe((result: any) => {

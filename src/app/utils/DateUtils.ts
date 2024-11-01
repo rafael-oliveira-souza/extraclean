@@ -116,9 +116,8 @@ export class DateUtils {
         let datesInMonth: Array<Date> = [];
 
         for (let i = 1; i <= daysInMonth; i++) {
-            let day: Date = this.toMoment().date(i).month(date.month()).year(date.year()).toDate();
-            datesInMonth.push(day);
-
+            const data: Date = date.clone().date(i).toDate();
+            datesInMonth.push(data);
         }
 
         return datesInMonth;
