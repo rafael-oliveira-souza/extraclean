@@ -217,6 +217,7 @@ export class AdminComponent implements OnInit {
         this._notificacaoService.alerta("Cliente Criado com sucesso.");
         this.cliente = new ClienteDTO();
         this._notificacaoService.alerta(MensagemEnum.CLIENTE_CRIADO_CONCLUIDO_SUCESSO);
+        this.recuperarProfissionais();
       }, (error) => this._notificacaoService.erro(error));
   }
 
