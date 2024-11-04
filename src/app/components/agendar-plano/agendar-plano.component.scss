@@ -1,0 +1,47 @@
+@import '../../../color.scss';
+
+small {
+    text-align: justify;
+    color: $white;
+    font-size: 17px;
+}
+
+::ng-deep mat-icon {
+    text-align: justify;
+    color: $white;
+}
+
+.clip-path-rectangle:hover {
+    cursor: pointer;
+    border: 2px solid $primary10;
+    text-align: start;
+    /* Cor e largura da borda ao passar o mouse */
+}
+
+::ng-deep mat-checkbox {
+    .mdc-label {
+        color: $white !important;
+    }
+
+    input {
+        color: $white !important;
+    }
+}
+
+::ng-deep .mdc-checkbox__background{
+    border: 1px solid $white !important;
+}
+
+::ng-deep .mdc-button {
+    color: $primary !important;
+    background-color: $white !important;
+}
+
+::ng-deep .mat-mdc-button-disabled {
+    color: $primary !important;
+    background-color: $cinza !important;
+}
+
+.whatsapp-aux {
+  background-color: $verde;
+}

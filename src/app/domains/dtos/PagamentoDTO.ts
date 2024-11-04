@@ -3,6 +3,7 @@ import { HorasEnum } from "../enums/HorasEnum";
 import { OrigemPagamentoEnum } from "../enums/OrigemPagamentoEnum";
 import { TipoServicoEnum } from "../enums/TipoServicoEnum";
 import { TipoPlanoEnum } from "../enums/TipoPlanoEnum";
+import { TipoPagamentoEnum } from "../enums/TipoPagamentoEnum";
 
 export class PagamentoDTO {
     id!: number;
@@ -18,7 +19,7 @@ export class PagamentoDTO {
     quantidadeItens!: number;
     formaPagamento!: FormaPagamentoEnum;
     tipoLimpeza!: TipoServicoEnum;
-    tipoPagamento!: string;
+    tipoPagamento!: TipoPagamentoEnum;
     origem!: OrigemPagamentoEnum;
     tipoPlano!: TipoPlanoEnum;
     extraPlus: boolean = false;

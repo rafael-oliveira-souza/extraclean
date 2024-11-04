@@ -36,13 +36,14 @@
                 <div *ngIf="isAdmin">
                     <div id="idEmailCliente" class="col-11 ">
                         <app-auto-complete label="Email Cliente" [options]="clientes" [(value)]="pagamento.email"
-                            labelValue="email"></app-auto-complete>
+                            optionsDescription="email" optionsValue="email"></app-auto-complete>
                     </div>
-                    <div id="idProfissional" class="col-12" *ngIf="agendamento.turno" (click)="recuperarProfissionais()">
-                      <app-profissional [multiplo]="true" [profissionais]="profissionais"
-                        (atualizarProfissional)="recuperarProfissional($event)"
-                        [(profissionaisSelecionados)]="profissionaisSelecionados">
-                      </app-profissional>
+                    <div id="idProfissional" class="col-12" *ngIf="agendamento.turno"
+                        (click)="recuperarProfissionais()">
+                        <app-profissional [multiplo]="true" [profissionais]="profissionais"
+                            (atualizarProfissional)="recuperarProfissional($event)"
+                            [(profissionaisSelecionados)]="profissionaisSelecionados">
+                        </app-profissional>
                     </div>
                     <div id="idTipoLimpeza" class="col-11" *ngIf="pagamento.email">
                         <mat-form-field class="col-12">
@@ -58,7 +59,7 @@
                     <div id="idPeriodo" class="col-11" *ngIf="pagamento.email">
                         <mat-form-field class="col-12">
                             <mat-label>Escolha um Período</mat-label>
-                            <select matNativeControl [(ngModel)]="agendamentoInfo.turno">
+                            <select matNativeControl [(ngModel)]="turno">
                                 <option value="3">Integral</option>
                                 <option value="1">Matutino</option>
                                 <option value="2">Vespertino</option>
@@ -71,8 +72,8 @@
                             <input matInput [min]="dataMin" [max]="dataMax" [matDatepicker]="picker"
                                 [(ngModel)]="diasSelecionados[dia-1]">
                             <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                            <mat-datepicker #picker startView="multi-year">
-                            </mat-datepicker>
+                            <mat-datepicker #picker></mat-datepicker>
+
                         </mat-form-field>
                     </div>
                 </div>

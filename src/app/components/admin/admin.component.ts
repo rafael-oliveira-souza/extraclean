@@ -41,6 +41,7 @@ import { AutoCompleteComponent } from '../auto-complete/auto-complete.component'
 import { CepService } from '../../services/cep.service';
 import { PipeModule } from '../../pipes/pipe.module';
 import { MatSelectModule } from '@angular/material/select';
+import { AgendarPlanoComponent } from "../agendar-plano/agendar-plano.component";
 
 @Component({
   selector: 'app-admin',
@@ -68,7 +69,8 @@ import { MatSelectModule } from '@angular/material/select';
     ProfissionalAdminComponent,
     AutoCompleteComponent,
     MatSelectModule,
-    PipeModule
+    PipeModule,
+    AgendarPlanoComponent
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -77,6 +79,7 @@ export class AdminComponent implements OnInit {
   public readonly ATTR_SELECTED: string = "selected";
   public width: number | null = null;
   public menus: MenuDTO[] = [
+    { label: "Agendar Plano", id: "idEnvioAgendamentoPlano", index: 0 },
     { label: "Enviar Agendamento", id: "idEnvioAgendamento", index: 1 },
     { label: "Criar Cliente", id: "idCriarCliente", index: 2 },
     { label: "Gerenciar Agendamentos", id: "idCalendAgend", index: 3 },
@@ -112,7 +115,7 @@ export class AdminComponent implements OnInit {
   ngOnInit() {
     this.agendamento.enviarEmail = true;
     this.route.queryParams.subscribe(params => {
-      this.selectedIndex = 1;
+      this.selectedIndex = 0;
       const tab = params['tab'];
       if (tab && tab > 0 && tab <= this.menus.length) {
         this.selectedIndex = tab;
@@ -122,9 +125,8 @@ export class AdminComponent implements OnInit {
     if (!this.authService.isAdminLoggedIn()) {
       this._router.navigate([Rota.LOGIN]);
     }
-
-    // this.recuperarProfissionais();
     this.recuperarClientes();
+    this.recuperarProfissionais();
   }
 
   public recuperarClientes() {
@@ -183,6 +185,11 @@ export class AdminComponent implements OnInit {
   }
 
   public select(index: number) {
+    if (this.selectedIndex == 0 || this.selectedIndex == 1) {
+      this.recuperarProfissionais();
+      this.recuperarClientes();
+    }
+
     this.selectedIndex = index;
     this._router.navigate([Rota.ADMIN], { queryParams: { tab: index } });
   }
