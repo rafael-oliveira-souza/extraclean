@@ -143,6 +143,8 @@ export class AgendarPlanoComponent implements OnInit {
       agend.tipoPagamento = this.formaPagamento == 1 ? TipoPagamentoEnum.DINHEIRO : TipoPagamentoEnum.CREDITO;
       agend.qtdParcelas = this.qtdParcelas;
       agend.quantidadeItens = 1;
+      agend.gerarPagamento = false;
+      agend.enviarEmail = false;
       agend.tipoPlano = this.planoSelecionado ? this.planoSelecionado.tipoPlano : TipoPlanoEnum.DIARIA;
 
       if (agend.valor > 0) {
@@ -211,17 +213,43 @@ export class AgendarPlanoComponent implements OnInit {
       return;
     }
 
-    this.planoService.agendar(this.planoSelecionado.tipoPlano, this.agendamentos)
-      .subscribe((pag: PagamentoMpDTO) => {
-        this.urlPagamento = pag.url;
-        this.getUrl.emit(pag.url);
-        this.notification.alerta(MensagemEnum.PLANO_CONCLUIDO_SUCESSO);
-        this.agendamentos = [];
-        this.tipoPlano = 0;
-        window.open(pag['url'], '_blank');
-      }, (error) => {
-        this.notification.erro(error);
-      });
+    let envia = true;
+    this.agendamentos.forEach(agend => {
+      if (agend.profissionais.length <= 0) {
+        this.notification.alerta("Existem profissionais nao preenchidos.");
+        envia = false;
+      }
+
+      if (!agend.turno) {
+        this.notification.alerta("Existem periodos nao preenchidos.");
+        envia = false;
+      }
+
+      if (!agend.tipoLimpeza) {
+        this.notification.alerta("Existem periodos nao preenchidos.");
+        envia = false;
+      }
+
+      if (agend.diasSelecionados.length <= 0) {
+        this.notification.alerta("Existem dias nao selecionados.");
+        envia = false;
+      }
+      agend.desconto = AgendamentoConstantes.aplicarDesconto(agend.valor, plano.desconto);
+    })
+
+    if (envia) {
+      this.planoService.agendar(this.planoSelecionado.tipoPlano, this.agendamentos)
+        .subscribe((pag: PagamentoMpDTO) => {
+          this.urlPagamento = pag.url;
+          this.getUrl.emit(pag.url);
+          this.notification.alerta(MensagemEnum.PLANO_CONCLUIDO_SUCESSO);
+          this.agendamentos = [];
+          this.tipoPlano = 0;
+          window.open(pag['url'], '_blank');
+        }, (error) => {
+          this.notification.erro(error);
+        });
+    }
   }
 
   public calcularTaxaCartao(valor: number) {
