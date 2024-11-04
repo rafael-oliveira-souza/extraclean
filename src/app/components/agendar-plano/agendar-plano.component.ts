@@ -211,17 +211,6 @@ export class AgendarPlanoComponent implements OnInit {
       return;
     }
 
-    this.agendamentos.forEach(agend => {
-      if (this.extraPlus) {
-        agend.valor = agend.valor + this.VALOR_PROFISSIONAL_SELECIONADO;
-      }
-      if (this.formaPagamento == 2) {
-        agend.valor = agend.valor + this.calcularTaxaCartao(agend.valor);
-      }
-
-      agend.desconto = AgendamentoConstantes.aplicarDesconto(agend.valor, plano.desconto);
-    });
-
     this.planoService.agendar(this.planoSelecionado.tipoPlano, this.agendamentos)
       .subscribe((pag: PagamentoMpDTO) => {
         this.urlPagamento = pag.url;

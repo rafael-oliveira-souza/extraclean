@@ -98,7 +98,7 @@
             <div id="idProfissional" class="col">
               <mat-form-field class="col-12">
                 <mat-label>Profissional</mat-label>
-                <mat-select [(ngModel)]="agend.profissionais">
+                <mat-select [(ngModel)]="agend.profissionais" multiple>
                   <mat-option value="0">Sem preferência</mat-option>
                   @for (prof of profissionais; track prof) {
                   <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome | ponto: 20}}</mat-option>
