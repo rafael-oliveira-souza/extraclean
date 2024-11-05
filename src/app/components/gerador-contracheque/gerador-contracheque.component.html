@@ -9,27 +9,44 @@
         }
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="col-8">
-      <mat-label>Escolha o Período</mat-label>
-      <mat-select [(ngModel)]="periodo">
-        <mat-option [value]="0">Janeiro</mat-option>
-        <mat-option [value]="1">Fevereiro</mat-option>
-        <mat-option [value]="2">Março</mat-option>
-        <mat-option [value]="3">Abril</mat-option>
-        <mat-option [value]="4">Maio</mat-option>
-        <mat-option [value]="5">Junho</mat-option>
-        <mat-option [value]="6">Julho</mat-option>
-        <mat-option [value]="7">Agosto</mat-option>
-        <mat-option [value]="8">Setembro</mat-option>
-        <mat-option [value]="9">Outubro</mat-option>
-        <mat-option [value]="10">Novembro</mat-option>
-        <mat-option [value]="11">Dezembro</mat-option>
-      </mat-select>
-    </mat-form-field>
-    <mat-form-field style="margin-left: 10px;" class="col-3">
-      <mat-label>Horas Extras</mat-label>
-      <input type="number" matInput [(ngModel)]="horasExtras">
-    </mat-form-field>
+    <div class="row justify-content-between">
+      <mat-form-field class="col-2">
+        <mat-label>Horas Mensais</mat-label>
+        <input disabled type="text" matInput [(ngModel)]="horasMensais">
+      </mat-form-field>
+      <mat-form-field class="col-3">
+        <mat-label>Escolha o Período</mat-label>
+        <mat-select [(ngModel)]="periodo" (modelChange)="calcularHorasTotais()">
+          <mat-option [value]="0">Janeiro</mat-option>
+          <mat-option [value]="1">Fevereiro</mat-option>
+          <mat-option [value]="2">Março</mat-option>
+          <mat-option [value]="3">Abril</mat-option>
+          <mat-option [value]="4">Maio</mat-option>
+          <mat-option [value]="5">Junho</mat-option>
+          <mat-option [value]="6">Julho</mat-option>
+          <mat-option [value]="7">Agosto</mat-option>
+          <mat-option [value]="8">Setembro</mat-option>
+          <mat-option [value]="9">Outubro</mat-option>
+          <mat-option [value]="10">Novembro</mat-option>
+          <mat-option [value]="11">Dezembro</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-3">
+        <mat-label>Horas Trabalhadas</mat-label>
+        <input type="text" matInput [(ngModel)]="horasTrabalhadas">
+      </mat-form-field>
+      <mat-form-field class="col-2">
+        <mat-label>Horas Extras</mat-label>
+        <input type="text" matInput [(ngModel)]="horasExtras">
+      </mat-form-field>
+      <mat-form-field class="col-2">
+        <mat-label>Numero de Feriados</mat-label>
+        <input type="text" matInput [(ngModel)]="numFeriados" (modelChange)="calcularHorasTotais()">
+      </mat-form-field>
+    </div>
+    <section id="idExtraClean" class="example-section">
+      <mat-checkbox [(ngModel)]="ignorarDescontos">Ignorar Descontos</mat-checkbox> <br>
+    </section>
   </div>
   <div class="print-only">
     <h1>Demonstrativo de Pagamento</h1>
