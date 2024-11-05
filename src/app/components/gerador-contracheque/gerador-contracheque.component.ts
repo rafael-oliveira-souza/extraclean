@@ -75,7 +75,7 @@ export class GeradorContrachequeComponent implements OnInit {
 
   public calcularDifHorasTrabalhadas(salarioBase: number): number {
     if (this.horasTrabalhadas < this.horasMensais) {
-      return (salarioBase * this.horasTrabalhadas) / this.horasMensais;
+      return salarioBase - ((salarioBase * this.horasTrabalhadas) / this.horasMensais);
     }
 
     return 0;
