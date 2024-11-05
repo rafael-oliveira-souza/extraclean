@@ -198,13 +198,11 @@ export class AdminComponent implements OnInit {
   }
 
   public agendar() {
-
     if (this.agendamento.dataExpiracaoPagamento == null) {
       this.agendamento.dataExpiracaoPagamento = DateUtils.add(this.agendamento.dataHora, 1, 'day').toDate();
     }
 
-    this.agendamento.diasSelecionados = [this.agendamento.dataHora];
-    this.agendamento.dataHora = new Date();
+    this.agendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora)];
     this.agendamento.ignoreQtdProfissionais = true;
     this.agendamento.tipoLimpeza = this.agendamento.tipoLimpeza;
     this._agendamentoService.agendar(this.agendamento)
