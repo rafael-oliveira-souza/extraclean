@@ -42,6 +42,7 @@ import { CepService } from '../../services/cep.service';
 import { PipeModule } from '../../pipes/pipe.module';
 import { MatSelectModule } from '@angular/material/select';
 import { AgendarPlanoComponent } from "../agendar-plano/agendar-plano.component";
+import { GeradorContrachequeComponent } from '../gerador-contracheque/gerador-contracheque.component';
 
 @Component({
   selector: 'app-admin',
@@ -70,7 +71,8 @@ import { AgendarPlanoComponent } from "../agendar-plano/agendar-plano.component"
     AutoCompleteComponent,
     MatSelectModule,
     PipeModule,
-    AgendarPlanoComponent
+    AgendarPlanoComponent,
+    GeradorContrachequeComponent
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -84,6 +86,7 @@ export class AdminComponent implements OnInit {
     { label: "Criar Cliente", id: "idCriarCliente", index: 2 },
     { label: "Gerenciar Agendamentos", id: "idCalendAgend", index: 3 },
     { label: "Gerenciar Profissionais", id: "idGerencProf", index: 4 },
+    { label: "Gerar Contra Cheque", id: "idGerencContraCheque", index: 5 },
   ];
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 

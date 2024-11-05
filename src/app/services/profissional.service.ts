@@ -5,6 +5,7 @@ import { ProfissionalDTO } from '../domains/dtos/ProfissionalDTO';
 import { environment } from '../../enviromment';
 import { AgendamentoDiariaDTO } from '../domains/dtos/AgendamentoDiariaDTO';
 import { TurnoEnum } from '../domains/enums/TurnoEnum';
+import { CalculoFuncionarioDTO } from '../domains/dtos/CalculoFuncionarioDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,11 @@ export class ProfissionalService {
     const url = `${this.HOST_URL}/listar`;
     return this._http.get<Array<ProfissionalDTO>>(url);
     // return of([new ProfissionalDTO(1, "Andrea"), new ProfissionalDTO(2, "Joana")]);
+  }
+
+  public calcularGastosFuncionario(obj: CalculoFuncionarioDTO): Observable<CalculoFuncionarioDTO> {
+    const url = `https://www.idinheiro.com.br/calculadoras/calculadora-custo-de-funcionario-para-empresa/`;
+    return this._http.post<CalculoFuncionarioDTO>(url, obj);
   }
 
   public salvar(profs: ProfissionalDTO[]): Observable<ProfissionalDTO[]> {

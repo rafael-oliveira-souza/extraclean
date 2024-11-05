@@ -1,0 +1,123 @@
+<div class="container-fluid" style="overflow-y:hidden;">
+  <div class="no-print">
+    <mat-form-field class="col-12">
+      <mat-label>Escolha uma profissional</mat-label>
+      <mat-select [(ngModel)]="profissionalSelecionado">
+        <mat-option>Sem preferência</mat-option>
+        @for (prof of profissionais; track prof) {
+        <mat-option [value]="prof"> {{prof.nome}} {{prof.sobrenome }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="col-8">
+      <mat-label>Escolha o Período</mat-label>
+      <mat-select [(ngModel)]="periodo">
+        <mat-option [value]="0">Janeiro</mat-option>
+        <mat-option [value]="1">Fevereiro</mat-option>
+        <mat-option [value]="2">Março</mat-option>
+        <mat-option [value]="3">Abril</mat-option>
+        <mat-option [value]="4">Maio</mat-option>
+        <mat-option [value]="5">Junho</mat-option>
+        <mat-option [value]="6">Julho</mat-option>
+        <mat-option [value]="7">Agosto</mat-option>
+        <mat-option [value]="8">Setembro</mat-option>
+        <mat-option [value]="9">Outubro</mat-option>
+        <mat-option [value]="10">Novembro</mat-option>
+        <mat-option [value]="11">Dezembro</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field style="margin-left: 10px;" class="col-3">
+      <mat-label>Horas Extras</mat-label>
+      <input type="number" matInput [(ngModel)]="horasExtras">
+    </mat-form-field>
+  </div>
+  <div class="print-only">
+    <h1>Demonstrativo de Pagamento</h1>
+    <p class="mt-4"><strong>Empresa: </strong>EXTRA CLEAN - LIMPEZAS PROFISSIONAIS LTDA. <br><strong>CNPJ:
+      </strong>56.875.501/0001-76
+    </p>
+    <p><strong>Período de Pagamento:</strong> {{getPeriodo()}} </p>
+
+    <h3 class="mt-3">Dados do Funcionário</h3>
+    <table>
+      <tr *ngIf="profissionalSelecionado">
+        <th>Nome</th>
+        <td>{{profissionalSelecionado.nome}} {{profissionalSelecionado.sobrenome}}</td>
+      </tr>
+      <tr>
+        <th>Cargo</th>
+        <td>Auxiliar de Limpeza</td>
+      </tr>
+    </table>
+
+    <h3 class="mt-3">Resumo de Proventos</h3>
+    <table>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+      <tr>
+        <td>Salário Base</td>
+        <td>{{salarioBase | moeda}}</td>
+      </tr>
+      <tr>
+        <td>Hora Extra ({{horasExtras}} horas)</td>
+        <td>{{calcularHorasExtras(salarioBase, horasExtras) | moeda}}</td>
+      </tr>
+
+      <tr *ngIf="planoSaude">
+        <td>Plano de Saúde</td>
+        <td>{{planoSaude | moeda}}</td>
+      </tr>
+      <tr>
+        <td>Vale Transporte</td>
+        <td>{{valeTransporte | moeda}}</td>
+      </tr>
+      <tr>
+        <td>Vale Alimentação</td>
+        <td>{{valeAlimentacao | moeda}}</td>
+      </tr>
+      <!-- <tr>
+        <td>Bonus de Performance</td>
+        <td>R$ 500,00</td>
+      </tr> -->
+    </table>
+
+    <h3 class="mt-3">Resumo de Descontos</h3>
+    <table>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+      <tr>
+        <td>INSS</td>
+        <td>{{calcularINSS(salarioBase) | moeda}}</td>
+      </tr>
+      <tr>
+        <td>IRRF</td>
+        <td>{{calcularIRRF(salarioBase) | moeda}}</td>
+      </tr>
+    </table>
+
+    <h3 class="mt-3">Total a Receber</h3>
+    <table>
+      <tr>
+        <th>Total Bruto</th>
+        <td>{{calcularTotais(salarioBase) | moeda}}</td>
+      </tr>
+      <tr>
+        <th>Total Descontos</th>
+        <td>{{calcularDescontos(salarioBase).totalDescontos| moeda}}</td>
+      </tr>
+      <tr class="total">
+        <th>Total Líquido</th>
+        <td>{{calcularSalarioLiquido(salarioBase) | moeda}}</td>
+      </tr>
+    </table>
+
+    <div class="footer">
+      <p>Emitido por: EXTRA CLEAN - LIMPEZAS PROFISSIONAIS LTDA.</p>
+      <p>Data de Emissão: {{hoje | date: 'dd/MM/yyyy'}}</p>
+    </div>
+  </div>
+</div>
