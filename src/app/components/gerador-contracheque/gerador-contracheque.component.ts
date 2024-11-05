@@ -62,7 +62,7 @@ export class GeradorContrachequeComponent implements OnInit {
   }
 
   public calcularTotais(salarioBase: number): number {
-    let total = (salarioBase * this.horasTrabalhadas) / this.horasMensais;
+    let total = salarioBase;
     total += this.calcularINSS(salarioBase);
     total += this.calcularIRRF(salarioBase);
     total += this.calcularHorasExtras(salarioBase, this.horasExtras);
@@ -71,6 +71,10 @@ export class GeradorContrachequeComponent implements OnInit {
     total += this.valeTransporte;
 
     return total;
+  }
+
+  public calcularDifHorasTrabalhadas(salarioBase: number): number {
+    return (salarioBase * this.horasTrabalhadas) / this.horasMensais
   }
 
   public calcularHorasTotais(): number {
@@ -135,11 +139,12 @@ export class GeradorContrachequeComponent implements OnInit {
   }
 
   // Função para calcular o total de descontos (INSS + IRRF)
-  public calcularDescontos(salarioBase: number): { inss: number, irrf: number, totalDescontos: number } {
+  public calcularDescontos(salarioBase: number): { inss: number, irrf: number, horasNaoTrabalhadas: number, totalDescontos: number } {
     const inss = this.calcularINSS(salarioBase);
     const irrf = this.calcularIRRF(salarioBase);
-    const totalDescontos = inss + irrf;
-    return { inss, irrf, totalDescontos };
+    const horasNaoTrabalhadas = this.calcularDifHorasTrabalhadas(salarioBase);
+    const totalDescontos = inss + irrf + horasNaoTrabalhadas;
+    return { inss, irrf, horasNaoTrabalhadas, totalDescontos };
   }
 
   // Função para calcular o salário líquido (salário base - descontos)

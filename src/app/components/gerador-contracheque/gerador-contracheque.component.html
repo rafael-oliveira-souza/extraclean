@@ -114,6 +114,10 @@
         <td>IRRF</td>
         <td>{{calcularIRRF(salarioBase) | moeda}}</td>
       </tr>
+      <tr *ngIf="(horasMensais-horasTrabalhadas) >= 0">
+        <td>Horas Não Trabalhadas: {{(horasMensais-horasTrabalhadas)}}</td>
+        <td>{{calcularDifHorasTrabalhadas(salarioBase) | moeda}}</td>
+      </tr>
     </table>
 
     <h3 class="mt-3">Total a Receber</h3>
