@@ -35,7 +35,6 @@ export class PontoProfissionalComponent implements OnInit {
 
   public registrarEntrada() {
     this.ponto.entrada = DateUtils.newDate();
-    console.log(this.ponto)
     this.pontoService.cadastrar(this.ponto)
       .subscribe((ponto: HistoricoPontoDTO) => {
         this.ponto = ponto;
