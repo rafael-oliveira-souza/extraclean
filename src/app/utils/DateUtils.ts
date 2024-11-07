@@ -16,22 +16,22 @@ export class DateUtils {
         }
 
         if (date && format && language) {
-            return moment(date, format, language).tz(this.TIMEZONE_SAO_PAULO);
+            return moment(date, format, language);
         }
 
         if (date && !format) {
             if (moment(date, this.BR, language).isValid()) {
-                return moment(date, this.BR).tz(this.TIMEZONE_SAO_PAULO);
+                return moment(date, this.BR);
             }
         }
 
 
-        return moment().tz(this.TIMEZONE_SAO_PAULO).locale(LinguagemEnum.PT);
+        return moment().locale(LinguagemEnum.PT);
     }
 
     public static newDate(): Date {
-        // const data = this.toMoment().toDate();
-        return new Date();
+        return this.toMoment().toDate();
+        // return new Date();
     }
 
     public static format(date: MomentInput, format: moment.MomentFormatSpecification): string {

@@ -11,19 +11,19 @@
 
     <div class="row mt-5">
       <div class="col-12">
-        <button [disabled]="ponto.entrada" id="btnEntrada" class="btn btn-success btn-action"
+        <button *ngIf="ponto.entrada" id="btnEntrada" class="btn btn-success btn-action"
           (click)="registrarEntrada()">
           <i class="fas fa-sign-in-alt"></i> Registrar Entrada
         </button>
       </div>
       <div class="col-12">
-        <button [disabled]="!ponto.entrada || ponto.intervalo" id="btnIntervalo" class="btn btn-info btn-action"
+        <button *ngIf="!ponto.entrada || ponto.intervalo" id="btnIntervalo" class="btn btn-info btn-action"
           (click)="registrarIntervalo()">
           <i class="fas fa-coffee"></i> Registrar Intervalo
         </button>
       </div>
       <div class="col-12">
-        <button [disabled]="!ponto.entrada || ponto.saida" id="btnSaida" class="btn btn-warning btn-action"
+        <button *ngIf="!ponto.entrada || ponto.saida" id="btnSaida" class="btn btn-warning btn-action"
           (click)="registrarSaida()">
           <i class="fas fa-sign-out-alt"></i> Registrar Saída
         </button>
