@@ -24,6 +24,7 @@ import { SituacaoAgendamentoEnum } from '../../domains/enums/SituacaoAgendamento
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 import { CodigoValorDTO } from '../../domains/dtos/CodigoValorDTO';
+import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -53,6 +54,9 @@ export class CalendarioAgendamentoComponent implements OnInit {
   @Input('profissional')
   public profissional: string = "";
 
+  @Input('profissionais')
+  public profissionais: ProfissionalDTO[] = [];
+
   public mapMat: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public mapVesp: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public map: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
@@ -62,7 +66,6 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public periodo: number = 0;
   public qtdInfo: string = "1:1";
   public infos: InfoAgendamentoDTO[] = [];
-  public profissionais: Set<string> = new Set<string>();
   public profissionaisAtuais: Array<CodigoValorDTO> = [];
   public turno: number = TurnoEnum.NAO_DEFINIDO;
   public periodoUnico: Date = DateUtils.newDate();
@@ -122,11 +125,15 @@ export class CalendarioAgendamentoComponent implements OnInit {
   }
 
   private atualizarCalendario(infos: InfoAgendamentoDTO[]) {
+    this.profissionais.forEach(prof => {
+      this.profissionaisAtuais.push(new CodigoValorDTO(prof.id, prof.nome));
+    });
+
     infos.forEach(info => {
-      this.profissionais.add(info.nomeDiarista);
-      if (this.profissionaisAtuais.filter(prof => prof.codigo == info.idProfissional).length == 0) {
-        this.profissionaisAtuais.push(new CodigoValorDTO(info.idProfissional, info.nomeDiarista));
-      }
+      // this.profissionais.push(info.nomeDiarista);
+      // if (this.profissionaisAtuais.filter(prof => prof.codigo == info.idProfissional).length == 0) {
+      //   this.profissionaisAtuais.push(new CodigoValorDTO(info.idProfissional, info.nomeDiarista));
+      // }
 
       if (info.turno == TurnoEnum.MATUTINO) {
         this.atualizarMap(info, this.mapMat);

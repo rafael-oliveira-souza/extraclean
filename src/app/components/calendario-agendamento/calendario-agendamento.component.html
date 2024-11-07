@@ -9,7 +9,7 @@
       <mat-label>Profissional</mat-label>
       <select matNativeControl [(ngModel)]="profissional" (ngModelChange)="atualizarProfissional()">
         <option>Não Selecionado</option>
-        <option *ngFor="let prof of profissionais;" [value]="prof">{{prof}}
+        <option *ngFor="let prof of profissionais;" [value]="prof.nome">{{prof.nome}}
         </option>
       </select>
     </mat-form-field>

@@ -7,8 +7,8 @@
       <mat-label>Escolha uma profissional</mat-label>
       <select matNativeControl [(ngModel)]="profissionalSelecionado" (ngModelChange)="recuperarProfissional()">
         <option value="">Sem preferência</option>
-        <option *ngFor="let prof of profissionais" [value]="prof">
-          {{prof | ponto: 20}}
+        <option *ngFor="let prof of profissionais" [value]="prof.nome">
+          {{prof.nome | ponto: 20}}
         </option>
       </select>
     </mat-form-field>

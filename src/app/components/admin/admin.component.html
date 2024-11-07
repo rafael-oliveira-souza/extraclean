@@ -263,8 +263,9 @@
                 <mat-button-toggle [value]="false">Não</mat-button-toggle>
               </mat-button-toggle-group>
             </div>
-            <app-historico-admin *ngIf="showTable"></app-historico-admin>
-            <app-calendario-agendamento *ngIf="!showTable" [isAdm]="true"></app-calendario-agendamento>
+            <app-historico-admin [profissionais]="profissionais" *ngIf="showTable"></app-historico-admin>
+            <app-calendario-agendamento [profissionais]="profissionais" *ngIf="!showTable"
+              [isAdm]="true"></app-calendario-agendamento>
           </div>
           <div *ngIf="selectedIndex==4">
             <div class="mt-3">

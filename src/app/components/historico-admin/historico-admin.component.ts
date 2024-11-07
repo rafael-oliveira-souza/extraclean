@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
 import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
@@ -50,11 +50,13 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  @Input('profissionais')
+  public profissionais: ProfissionalDTO[] = [];
+
   public agendamentos: InfoAgendamentoDTO[] = [];
 
   public indice: number = 0;
   public profissionalSelecionado: string = "";
-  public profissionais: string[] = [];
   public situacao!: SituacaoDiariaEnum;
   public dataSource = new MatTableDataSource<InfoAgendamentoDTO>();
   public dataInicio: Date = DateUtils.newDate();
@@ -70,6 +72,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
   constructor(private _agendamentoService: AgendamentoService,
     private _notificacaoService: NotificacaoService) {
+
     if (this.isNotXs()) {
       this.displayedColumns = [
         'nomeCliente', 'nomeDiarista', 'dataDiaria', 'situacao',
@@ -122,9 +125,9 @@ export class HistoricoAdminComponent implements AfterViewInit {
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, null)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {
         this.agendamentos = agendamentos;
-        this.profissionais = this.agendamentos
-          .map(agend => agend.nomeDiarista)
-          .filter((value, index, self) => self.indexOf(value) === index);
+        // this.profissionaisSelecionados = this.agendamentos
+        //   .map(agend => agend.nomeDiarista)
+        //   .filter((value, index, self) => self.indexOf(value) === index);
 
         this.agendamentos = this.ordernarDecrescente(agendamentos.filter(agend => agend.situacao == SituacaoDiariaEnum.FINALIZADA
           || agend.situacao == SituacaoDiariaEnum.AGENDADA

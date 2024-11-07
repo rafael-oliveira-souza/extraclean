@@ -52,6 +52,7 @@ export class PontoProfissionalComponent implements OnInit {
 
 
   public registrar() {
+    console.log(this.ponto)
     this.pontoService.cadastrar(this.ponto)
       .subscribe((ponto: HistoricoPontoDTO) => {
         this.ponto.emailDiarista = this.email;
