@@ -1,5 +1,5 @@
-import { DurationInputArg2, MomentInput } from 'moment-timezone';
-import moment from 'moment-timezone';
+import { DurationInputArg2, MomentInput } from 'moment';
+import moment from 'moment';
 import { InclusividadeEnum } from "../domains/enums/InclusividadeEnum";
 import { LinguagemEnum } from "../domains/enums/LinguagemEnum";
 import { DiaSemanaEnum } from "../domains/enums/DiaSemanaEnum";
@@ -26,7 +26,7 @@ export class DateUtils {
         }
 
 
-        return moment().locale(LinguagemEnum.PT);
+        return moment(new Date()).locale(LinguagemEnum.PT);
     }
 
     public static newDate(): Date {

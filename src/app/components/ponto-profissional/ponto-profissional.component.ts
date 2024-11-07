@@ -3,8 +3,9 @@ import { PontoService } from '../../services/ponto.service';
 import { DateUtils } from '../../utils/DateUtils';
 import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { HistoricoPontoDTO } from '../../domains/dtos/HistoricoPontoDTO';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { TituloComponent } from '../titulo/titulo.component';
+import { DataPipe } from '../../pipes/data.pipe';
 
 @Component({
   selector: 'app-ponto-profissional',
@@ -12,6 +13,7 @@ import { TituloComponent } from '../titulo/titulo.component';
   imports: [
     CommonModule,
     TituloComponent,
+    DataPipe
   ],
   templateUrl: './ponto-profissional.component.html',
   styleUrls: ['./ponto-profissional.component.scss']
@@ -35,26 +37,25 @@ export class PontoProfissionalComponent implements OnInit {
 
   public registrarEntrada() {
     this.ponto.entrada = DateUtils.newDate();
-    this.pontoService.cadastrar(this.ponto)
-      .subscribe((ponto: HistoricoPontoDTO) => {
-        this.ponto = ponto;
-      });
+    this.registrar();
   }
 
   public registrarSaida() {
     this.ponto.saida = DateUtils.newDate();
-    this.pontoService.cadastrar(this.ponto)
-      .subscribe((ponto: HistoricoPontoDTO) => {
-        this.ponto = ponto;
-      });
+    this.registrar();
   }
 
   public registrarIntervalo() {
     this.ponto.intervalo = DateUtils.newDate();
+    this.registrar();
+  }
+
+
+  public registrar() {
     this.pontoService.cadastrar(this.ponto)
       .subscribe((ponto: HistoricoPontoDTO) => {
+        this.ponto.emailDiarista = this.email;
         this.ponto = ponto;
       });
   }
-
 }
