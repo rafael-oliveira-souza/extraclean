@@ -1,6 +1,7 @@
 import { AgendamentoDTO } from "../domains/dtos/AgendamentoDTO";
 import { AutenticacaoDTO } from "../domains/dtos/AutenticacaoDTO";
 import { ClienteDTO } from "../domains/dtos/ClienteDTO";
+import { DateUtils } from "./DateUtils";
 
 export class LocalStorageUtils {
     // Padrao TTL de 30 minutos (1800000 ms)
@@ -48,7 +49,7 @@ export class LocalStorageUtils {
 
     // Método para salvar um item no localStorage com TTL
     static setItem<T>(key: string, value: T, ttl: number = this.TTL): void {
-        const now = new Date().getTime();
+        const now = DateUtils.newDate().getTime();
         const item: CachedItem<T> = {
             value: value,
             expiry: now + ttl,
@@ -74,7 +75,7 @@ export class LocalStorageUtils {
                 }
 
                 const parsedItem: CachedItem<T> = JSON.parse(item);
-                const now = new Date().getTime();
+                const now = DateUtils.newDate().getTime();
 
                 if (now > parsedItem.expiry) {
                     // Item expirou, remover do localStorage

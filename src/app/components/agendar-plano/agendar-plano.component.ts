@@ -89,7 +89,7 @@ export class AgendarPlanoComponent implements OnInit {
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
-  public readonly dataMin = new Date();
+  public readonly dataMin = DateUtils.newDate();
   public readonly dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
 
   public planos: Array<PlanoDTO> = [];
@@ -174,7 +174,7 @@ export class AgendarPlanoComponent implements OnInit {
     for (let i = 0; i < this.recuperarQtdDiasPorPlano(); i++) {
       this.qtdDias.push(i + 1);
       let agendamento = new AgendamentoDTO();
-      agendamento.dataHora = new Date();
+      agendamento.dataHora = DateUtils.newDate();
       agendamento.ignoreQtdProfissionais = true;
       agendamento.endereco = this.cliente?.endereco;
       agendamento.email = this.emailAgendamento;

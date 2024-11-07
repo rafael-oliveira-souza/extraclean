@@ -228,7 +228,7 @@ export class CalendarioComponent implements OnInit {
     agendamento.profissionais = [this.profissionalSelecionado];
     agendamento.horas = AgendamentoConstantes.getInfoHora(this.qtdHoras).id;
     agendamento.turno = this.turno;
-    agendamento.dataHora = new Date();
+    agendamento.dataHora = DateUtils.newDate();
     agendamento.email = LocalStorageUtils.getAuth()?.username;
     agendamento.extraPlus = !ProfissionalDTO.isEmpty(this.profissionalSelecionado);
     agendamento.origem = OrigemPagamentoEnum.AGENDAMENTO;
@@ -239,7 +239,7 @@ export class CalendarioComponent implements OnInit {
 
   public habilitarData(inputData: HTMLElement, dia: MomentInput) {
     if (dia) {
-      if (DateUtils.isSameOrBefore(dia, new Date())) {
+      if (DateUtils.isSameOrBefore(dia, DateUtils.newDate())) {
         inputData.setAttribute(this.ATTR_DISABLED, "true");
         inputData.setAttribute(this.ATTR_SELECTED, "false");
       } else {

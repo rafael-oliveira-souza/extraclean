@@ -2,7 +2,9 @@ import { Component, LOCALE_ID } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { MenuComponent } from './tabs/menu/menu.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
-import * as moment from 'moment'; // Import Moment.js
+// import * as moment from 'moment'; // Import Moment.js
+import * as moment from 'moment-timezone';
+
 import { LinguagemEnum } from './domains/enums/LinguagemEnum';
 import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { registerLocaleData } from '@angular/common';
@@ -10,8 +12,6 @@ import 'moment/locale/pt-br';
 import localePt from '@angular/common/locales/pt';
 import { ImageComponent } from './components/image/image.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
-import { HTTP_INTERCEPTORS } from '@angular/common/http';
-import { AuthInterceptor } from './interceptors/AuthInterceptor';
 import { LoadingComponent } from './components/loading/loading.component';
 
 registerLocaleData(localePt);

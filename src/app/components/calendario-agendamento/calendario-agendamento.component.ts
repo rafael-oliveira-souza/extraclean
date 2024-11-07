@@ -65,8 +65,8 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public profissionais: Set<string> = new Set<string>();
   public profissionaisAtuais: Array<CodigoValorDTO> = [];
   public turno: number = TurnoEnum.NAO_DEFINIDO;
-  public periodoUnico: Date = new Date();
-  public hoje: Date = new Date();
+  public periodoUnico: Date = DateUtils.newDate();
+  public hoje: Date = DateUtils.newDate();
   public habilitaAlteracaoProfissional: boolean = false;
   public habilitaReagendamento: boolean = false;
 
@@ -215,11 +215,11 @@ export class CalendarioAgendamentoComponent implements OnInit {
     this.proximosPeriodos = [];
 
     if (this.isXs()) {
-      DateUtils.getNextDays(new Date(), 7).forEach(data => {
+      DateUtils.getNextDays(DateUtils.newDate(), 7).forEach(data => {
         this.proximosPeriodos.push(data);
       });
     } else {
-      const ultimaSegunda: moment.Moment = DateUtils.toMoment(new Date()).day(1);
+      const ultimaSegunda: moment.Moment = DateUtils.toMoment(DateUtils.newDate()).day(1);
       this.proximosPeriodos.push(ultimaSegunda.toDate());
       for (let i = 0; i < 4; i++) {
         ultimaSegunda.add(7, 'day');
@@ -374,7 +374,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
   public marcarHorarioAtendimento(diaria: InfoAgendamentoDTO, entrada: boolean) {
     let registro = new RegistroAgendamentoDTO();
-    registro.horario = new Date();
+    registro.horario = DateUtils.newDate();
     registro.idCliente = diaria.idCliente;
     registro.dataDiaria = diaria.dataDiaria;
     registro.idDiaria = diaria.idDiaria;

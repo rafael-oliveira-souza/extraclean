@@ -57,7 +57,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public profissionais: string[] = [];
   public situacao!: SituacaoDiariaEnum;
   public dataSource = new MatTableDataSource<InfoAgendamentoDTO>();
-  public dataInicio: Date = new Date();
+  public dataInicio: Date = DateUtils.newDate();
   public dataMin: Date = DateUtils.toMoment().add(-3, 'month').toDate();
   public dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
   public situacoes: { nome: string, id: number }[] = [

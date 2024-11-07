@@ -80,7 +80,7 @@ export class PlanosComponent {
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
   public readonly VALOR_DESLOCAMENTO = AgendamentoConstantes.VALOR_DESLOCAMENTO;
   public readonly VALOR_PROFISSIONAL_SELECIONADO = AgendamentoConstantes.VALOR_PROFISSIONAL_SELECIONADO;
-  public readonly dataMin = new Date();
+  public readonly dataMin = DateUtils.newDate();
   public readonly dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
 
   public planos: Array<PlanoDTO> = [];
@@ -170,7 +170,7 @@ export class PlanosComponent {
 
     let dadosAgendamento: AgendamentoDTO = new AgendamentoDTO();
     dadosAgendamento.endereco = this.agendamento.endereco;
-    dadosAgendamento.dataHora = new Date();
+    dadosAgendamento.dataHora = DateUtils.newDate();
     dadosAgendamento.desconto = this.agendamentoInfo.desconto;
     dadosAgendamento.valor = this.agendamentoInfo.valor;
     dadosAgendamento.horas = this.agendamentoInfo.horas;
@@ -230,7 +230,7 @@ export class PlanosComponent {
     }
 
     const agendamento: AgendamentoPagamentoInfoDTO = this.calcularTotal(plano);
-    plano.dataHora = new Date();
+    plano.dataHora = DateUtils.newDate();
     plano.valor = agendamento.valor;
     plano.horas = agendamento.horas;
     plano.desconto = agendamento.desconto;

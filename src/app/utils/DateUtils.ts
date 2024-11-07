@@ -1,5 +1,5 @@
-import { DurationInputArg2, MomentInput } from "moment";
-import moment from "moment";
+import { DurationInputArg2, MomentInput } from 'moment-timezone';
+import moment from 'moment-timezone';
 import { InclusividadeEnum } from "../domains/enums/InclusividadeEnum";
 import { LinguagemEnum } from "../domains/enums/LinguagemEnum";
 import { DiaSemanaEnum } from "../domains/enums/DiaSemanaEnum";
@@ -8,6 +8,7 @@ export class DateUtils {
     public static BR: string = "DD/MM/yyyy";
     public static ES: string = "yyyy-MM-DD";
     public static ES_LOCALDATETIME: string = "YYYY-MM-DDTHH:mm:ss.SSSSSS";
+    public static TIMEZONE_SAO_PAULO: string = 'America/Sao_Paulo';
 
     public static toMoment(date?: MomentInput, format?: moment.MomentFormatSpecification, language = LinguagemEnum.PT): moment.Moment {
         if (moment.isMoment(date)) {
@@ -15,20 +16,22 @@ export class DateUtils {
         }
 
         if (date && format && language) {
-            return moment(date, format, language);
+            return moment(date, format, language).tz(this.TIMEZONE_SAO_PAULO);
         }
 
         if (date && !format) {
             if (moment(date, this.BR, language).isValid()) {
-                return moment(date, this.BR);
+                return moment(date, this.BR).tz(this.TIMEZONE_SAO_PAULO);
             }
         }
 
 
-        return moment().locale(LinguagemEnum.PT);
+        return moment().tz(this.TIMEZONE_SAO_PAULO).locale(LinguagemEnum.PT);
     }
+
     public static newDate(): Date {
-        return this.toMoment().toDate();
+        // const data = this.toMoment().toDate();
+        return new Date();
     }
 
     public static format(date: MomentInput, format: moment.MomentFormatSpecification): string {

@@ -28,6 +28,7 @@ import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
 import { InfoAgendamentoDTO } from '../../domains/dtos/InfoAgendamentoDTO';
 import { HistoricoProfissionalComponent } from '../../components/historico-profissional/historico-profissional.component';
 import { DateUtils } from '../../utils/DateUtils';
+import { PontoProfissionalComponent } from '../../components/ponto-profissional/ponto-profissional.component';
 
 @Component({
   selector: 'app-menu',
@@ -102,6 +103,7 @@ export class MenuComponent {
         } else if (auth.tipoUsuario == TipoClienteEnum.DIARISTA) {
           this.menusHamb.push({ label: "Historico de Limpezas", icon: "admin_panel_settings", method: () => this.abrirHistoricoLimpeza() });
           this.menusHamb.push({ label: "Agendamentos da Semana", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
+          this.menusHamb.push({ label: "Registro de Ponto", icon: "schedule", method: () => this.abrirRegistroPonto() });
         } else if (auth.tipoUsuario == TipoClienteEnum.CLIENTE) {
           this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
         }
@@ -186,6 +188,18 @@ export class MenuComponent {
   public abrirAdministrador() {
     if (this.authService.isAdminLoggedIn()) {
       this._router.navigate([Rota.ADMIN]);
+    }
+  }
+  public abrirRegistroPonto() {
+    if (this.authService.isLoggedIn()) {
+      const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+      if (auth == null) {
+        return;
+      }
+      this.abrirPagina(PontoProfissionalComponent, [], auth.username, auth.nome, auth.tipoUsuario);
+
+    } else {
+      this._router.navigate([Rota.LOGIN]);
     }
   }
 

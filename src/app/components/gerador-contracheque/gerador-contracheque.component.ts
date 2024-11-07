@@ -33,7 +33,7 @@ export class GeradorContrachequeComponent implements OnInit {
   @Input('profissionais')
   public profissionais: ProfissionalDTO[] = [];
 
-  public hoje: Date = new Date();
+  public hoje: Date = DateUtils.newDate();
   public periodo: number = this.hoje.getMonth();
   public horasExtras: number = 0;
   public salarioBase: number = 1450;
