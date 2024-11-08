@@ -164,7 +164,8 @@
                     PLUS</mat-checkbox> <br>
                 </section>
                 <div id="idBotaoAgendar" class="d-flex justify-content-center">
-                  <button [disabled]="!agendamento.horas" class="col-8 btn btn-primary mt-3 p-4 mb-3"
+                  <!-- [disabled]="!agendamento.horas" -->
+                  <button  class="col-8 btn btn-primary mt-3 p-4 mb-3"
                     (click)="agendar()">Agendar</button>
                 </div>
                 <div id="idUrlPagamento" *ngIf="url">

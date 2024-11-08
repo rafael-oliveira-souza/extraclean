@@ -11,9 +11,6 @@ export class DateUtils {
     public static TIMEZONE_SAO_PAULO: string = 'America/Sao_Paulo';
 
     public static toMoment(date?: MomentInput, format?: moment.MomentFormatSpecification, language = LinguagemEnum.PT): moment.Moment {
-        if (moment.isMoment(date)) {
-            return date;
-        }
 
         if (date && format && language) {
             return moment(date, format, language);
@@ -43,10 +40,6 @@ export class DateUtils {
     }
 
     public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
-        if (moment.isMoment(date)) {
-            return date.toDate();
-        }
-
         return this.toMoment(date, format).toDate();
     }
 

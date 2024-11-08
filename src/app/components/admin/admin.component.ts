@@ -203,6 +203,7 @@ export class AdminComponent implements OnInit {
     }
 
     this.agendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora)];
+    debugger
     this.agendamento.ignoreQtdProfissionais = true;
     this.agendamento.tipoLimpeza = this.agendamento.tipoLimpeza;
     this._agendamentoService.agendar(this.agendamento)

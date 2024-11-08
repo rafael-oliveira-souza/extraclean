@@ -121,7 +121,6 @@ export class HistoricoAdminComponent implements AfterViewInit {
     const datas: Date[] = DateUtils.datesInMonth(this.dataInicio);
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
-    debugger
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, null)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {
         this.agendamentos = agendamentos;

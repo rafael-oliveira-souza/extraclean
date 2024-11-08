@@ -14,7 +14,7 @@ import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from './interceptors/AuthInterceptor';
 import { LoadingComponent } from './components/loading/loading.component';
 
-registerLocaleData(localePt);
+// registerLocaleData(localePt);
 
 export const MY_FORMATS = {
   parse: {
