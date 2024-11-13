@@ -66,7 +66,6 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
   public situacoesPagamento: { nome: string, id: number }[] = [
     { nome: 'Em Analise', id: 1 },
-    { nome: 'Em Processo', id: 2 },
     { nome: 'Aprovado', id: 3 },
     { nome: 'Cancelado', id: 4 },
     { nome: 'Expirado', id: 5 },
@@ -98,7 +97,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   public recuperarSituacaoPagamento() {
-    if (this.situacao) {
+    if (this.situacaoPagamento) {
       const agendamentos = this.ordernarDecrescente(this.agendamentos
         .filter(agend => agend.situacaoPagamento == this.situacaoPagamento));
 
