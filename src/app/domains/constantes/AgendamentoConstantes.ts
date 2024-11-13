@@ -6,6 +6,7 @@ import { HorasEnum } from "../enums/HorasEnum";
 import { TurnoEnum } from "../enums/TurnoEnum";
 
 export class AgendamentoConstantes {
+    public static VALOR_PRODUTOS = 15;
     public static VALOR_PROFISSIONAL_SELECIONADO = 20;
     public static VALOR_DIARIA_DETALHADA = 1.5;
     public static VALOR_DESLOCAMENTO = 15;
@@ -19,8 +20,8 @@ export class AgendamentoConstantes {
         { id: HorasEnum.HORAS_4, valor: 125, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_6, valor: 155, descricao: '6 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_8, valor: 190, descricao: '8 Horas - 1 Profissional', numProfissionais: 1 },
-        { id: HorasEnum.HORAS_16, valor: 360, descricao: '8 Horas - 2 Profissional', numProfissionais: 2 },
-        { id: HorasEnum.HORAS_24, valor: 495, descricao: '8 Horas - 3 Profissional', numProfissionais: 3 },
+        { id: HorasEnum.HORAS_16, valor: 360, descricao: '8 Horas - 2 Profissionais', numProfissionais: 2 },
+        { id: HorasEnum.HORAS_24, valor: 495, descricao: '8 Horas - 3 Profissionais', numProfissionais: 3 },
     ];
 
     public static REGIOES: { id: number, nome: string, adicional: number }[] = [

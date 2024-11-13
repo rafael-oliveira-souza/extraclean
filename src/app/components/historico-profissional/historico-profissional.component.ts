@@ -20,6 +20,7 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { Moment } from 'moment';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { LinguagemEnum } from '../../domains/enums/LinguagemEnum';
+import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
 
 export const MY_FORMATS = {
   parse: {
@@ -57,8 +58,9 @@ export const MY_FORMATS = {
 export class HistoricoProfissionalComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  
   readonly data: any = inject<InfoAgendamentoDTO[]>(MAT_DIALOG_DATA);
+  readonly valorProdutos: number = AgendamentoConstantes.VALOR_PRODUTOS;
   public agendamentos: InfoAgendamentoDTO[] = [];
   public nomeProfissional: string = this.data['nomeProfissional'];
   public tipoCliente: number = this.data['tipoCliente'];
