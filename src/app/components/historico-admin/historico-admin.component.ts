@@ -23,6 +23,7 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalComponent } from '../profissional/profissional.component';
 import { AgendamentoDTO } from '../../domains/dtos/AgendamentoDTO';
 import { MatSort } from '@angular/material/sort';
+import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
 
 @Component({
   selector: 'app-historico-admin',
@@ -58,10 +59,19 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public indice: number = 0;
   public profissionalSelecionado: string = "";
   public situacao!: SituacaoDiariaEnum;
+  public situacaoPagamento!: SituacaoPagamentoEnum;
   public dataSource = new MatTableDataSource<InfoAgendamentoDTO>();
   public dataInicio: Date = DateUtils.newDate();
   public dataMin: Date = DateUtils.toMoment().add(-3, 'month').toDate();
   public dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
+  public situacoesPagamento: { nome: string, id: number }[] = [
+    { nome: 'Em Analise', id: 1 },
+    { nome: 'Em Processo', id: 2 },
+    { nome: 'Aprovado', id: 3 },
+    { nome: 'Cancelado', id: 4 },
+    { nome: 'Expirado', id: 5 },
+  ];
+
   public situacoes: { nome: string, id: number }[] = [
     { nome: 'Agendada', id: 1 },
     { nome: 'Reagendada', id: 4 },
@@ -85,6 +95,18 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
   ngAfterViewInit() {
     this.buscarAgendamentos();
+  }
+
+  public recuperarSituacaoPagamento() {
+    if (this.situacao) {
+      const agendamentos = this.ordernarDecrescente(this.agendamentos
+        .filter(agend => agend.situacaoPagamento == this.situacaoPagamento));
+
+      this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(agendamentos);
+    } else {
+      this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
+    }
+    this.dataSource.paginator = this.paginator;
   }
 
   public recuperarSituacao() {
