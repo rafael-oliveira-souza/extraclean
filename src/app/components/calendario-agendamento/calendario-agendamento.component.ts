@@ -125,6 +125,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
   }
 
   private atualizarCalendario(infos: InfoAgendamentoDTO[]) {
+    this.profissionaisAtuais = [];
     this.profissionais.forEach(prof => {
       this.profissionaisAtuais.push(new CodigoValorDTO(prof.id, prof.nome));
     });

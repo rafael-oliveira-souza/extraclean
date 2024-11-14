@@ -203,7 +203,6 @@ export class AdminComponent implements OnInit {
     }
 
     this.agendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora)];
-    debugger
     this.agendamento.ignoreQtdProfissionais = true;
     this.agendamento.tipoLimpeza = this.agendamento.tipoLimpeza;
     this._agendamentoService.agendar(this.agendamento)
@@ -227,6 +226,7 @@ export class AdminComponent implements OnInit {
         this.cliente = new ClienteDTO();
         this._notificacaoService.alerta(MensagemEnum.CLIENTE_CRIADO_CONCLUIDO_SUCESSO);
         this.recuperarProfissionais();
+        this.recuperarClientes();
       }, (error) => this._notificacaoService.erro(error));
   }
 
