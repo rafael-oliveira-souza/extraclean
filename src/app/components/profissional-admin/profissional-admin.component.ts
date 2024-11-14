@@ -61,7 +61,7 @@ export class ProfissionalAdminComponent implements OnInit {
   }
 
   public recuperarProfissionais() {
-    this._profissionalService.get()
+    this._profissionalService.todos()
       .subscribe((prof: Array<ProfissionalDTO>) => {
         this.profissionais = prof;
         this.recuperarProfissional()

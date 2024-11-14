@@ -21,6 +21,11 @@ export class ProfissionalService {
     // return of([new ProfissionalDTO(1, "Andrea"), new ProfissionalDTO(2, "Joana")]);
   }
 
+  public todos(): Observable<Array<ProfissionalDTO>> {
+    const url = `${this.HOST_URL}/todos`;
+    return this._http.get<Array<ProfissionalDTO>>(url);
+  }
+
   public calcularGastosFuncionario(obj: CalculoFuncionarioDTO): Observable<CalculoFuncionarioDTO> {
     const url = `https://www.idinheiro.com.br/calculadoras/calculadora-custo-de-funcionario-para-empresa/`;
     return this._http.post<CalculoFuncionarioDTO>(url, obj);
