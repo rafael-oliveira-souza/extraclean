@@ -8,9 +8,7 @@ import { MatPaginatorModule, MatPaginator } from '@angular/material/paginator';
 import { MatTableModule, MatTableDataSource } from '@angular/material/table';
 import { PipeModule } from '../../pipes/pipe.module';
 import { NotificacaoService } from '../../services/notificacao.service';
-import { CalculoUtils } from '../../utils/CalculoUtils';
 import { ProfissionalComponent } from '../profissional/profissional.component';
-import { TituloComponent } from '../titulo/titulo.component';
 import { ProfissionalService } from '../../services/profissional.service';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -54,7 +52,7 @@ export class ProfissionalAdminComponent implements OnInit {
     this.displayedColumns = [
       'nome', 'sobrenome', 'telefone', 'dataNascimento', 'porcentagem',
       'segundaDisponivel', 'tercaDisponivel', 'quartaDisponivel', 'quintaDisponivel',
-      'sextaDisponivel', 'sabadoDisponivel', 'domingoDisponivel', 'contratada',
+      'sextaDisponivel', 'sabadoDisponivel', 'domingoDisponivel', 'contratada', 'inativado'
     ];
   }
 
@@ -83,7 +81,18 @@ export class ProfissionalAdminComponent implements OnInit {
 
   public salvarAtualizacoesProf() {
     const profs: ProfissionalDTO[] = this.dataSource.data;
-    // profs.forEach(prof => prof.dataNascimento = prof.dataNascimento, DateUtils.BR))
+    profs.forEach(prof => {
+      if (prof.dataNascimento) {
+        prof.dataNascimento = DateUtils.toDate(prof.dataNascimento, DateUtils.ES);
+      }
+
+      if (prof.inativo) {
+        prof.prioridade = 0;
+      } else {
+        prof.prioridade = 3;
+      }
+    });
+
     this._profissionalService.salvar(profs)
       .subscribe((prof: Array<ProfissionalDTO>) => {
         this._notificacaoService.alerta(MensagemEnum.PROFISSIONAIS_ATUALIZADOS_SUCESSO);

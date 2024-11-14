@@ -165,8 +165,7 @@
                 </section>
                 <div id="idBotaoAgendar" class="d-flex justify-content-center">
                   <!-- [disabled]="!agendamento.horas" -->
-                  <button  class="col-8 btn btn-primary mt-3 p-4 mb-3"
-                    (click)="agendar()">Agendar</button>
+                  <button class="col-8 btn btn-primary mt-3 p-4 mb-3" (click)="agendar()">Agendar</button>
                 </div>
                 <div id="idUrlPagamento" *ngIf="url">
                   <p>Link de Pagamento:</p>
@@ -269,8 +268,15 @@
               [isAdm]="true"></app-calendario-agendamento>
           </div>
           <div *ngIf="selectedIndex==4">
-            <div class="mt-3">
-              <app-profissional-admin></app-profissional-admin>
+            <div class="mt-3 text-center">
+              <mat-button-toggle-group [(ngModel)]="editCliente" required>
+                <mat-button-toggle [value]="true">Editar Cliente</mat-button-toggle>
+                <mat-button-toggle [value]="false">Editar Profissional</mat-button-toggle>
+              </mat-button-toggle-group>
+            </div>
+            <div class="">
+              <app-cliente-admin *ngIf="editCliente"></app-cliente-admin>
+              <app-profissional-admin *ngIf="!editCliente"></app-profissional-admin>
             </div>
           </div>
           <div *ngIf="selectedIndex==5">

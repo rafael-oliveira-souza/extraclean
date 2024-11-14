@@ -39,7 +39,7 @@ export class DateUtils {
         return this.toMoment(date).format(format.toString());
     }
 
-    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
+    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date  {
         return this.toMoment(date, format).toDate();
     }
 
@@ -129,7 +129,7 @@ export class DateUtils {
 
     public static diffMinutes(dateA: MomentInput, dateB: MomentInput): number {
         const diffInMs = this.toDate(dateA).getTime() - this.toDate(dateB).getTime(); // Diferença em milissegundos
-        return Math.floor(diffInMs / (1000 * 60))
+        return Math.floor(diffInMs / (1000 * 60));
     }
 
     public static getDiasSemana(dateA: MomentInput) {
