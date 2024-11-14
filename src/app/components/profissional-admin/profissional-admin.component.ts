@@ -98,13 +98,13 @@ export class ProfissionalAdminComponent implements OnInit {
         prof.domingoDisponivel = false;
       } else {
         prof.prioridade = 3;
-        prof.segundaDisponivel = true;
-        prof.tercaDisponivel = true;
-        prof.quartaDisponivel = true;
-        prof.quintaDisponivel = true;
-        prof.sextaDisponivel = true;
-        prof.sabadoDisponivel = false;
-        prof.domingoDisponivel = false;
+        // prof.segundaDisponivel = true;
+        // prof.tercaDisponivel = true;
+        // prof.quartaDisponivel = true;
+        // prof.quintaDisponivel = true;
+        // prof.sextaDisponivel = true;
+        // prof.sabadoDisponivel = false;
+        // prof.domingoDisponivel = false;
       }
     });
 
