@@ -64,6 +64,7 @@ export class ProfissionalAdminComponent implements OnInit {
     this._profissionalService.todos()
       .subscribe((prof: Array<ProfissionalDTO>) => {
         this.profissionais = prof;
+        this.profissionais.forEach(profe => profe.inativo = profe.prioridade < 1);
         this.recuperarProfissional()
       });
   }
