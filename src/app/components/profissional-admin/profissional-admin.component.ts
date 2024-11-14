@@ -89,8 +89,22 @@ export class ProfissionalAdminComponent implements OnInit {
 
       if (prof.inativo) {
         prof.prioridade = 0;
+        prof.segundaDisponivel = false;
+        prof.tercaDisponivel = false;
+        prof.quartaDisponivel = false;
+        prof.quintaDisponivel = false;
+        prof.sextaDisponivel = false;
+        prof.sabadoDisponivel = false;
+        prof.domingoDisponivel = false;
       } else {
         prof.prioridade = 3;
+        prof.segundaDisponivel = true;
+        prof.tercaDisponivel = true;
+        prof.quartaDisponivel = true;
+        prof.quintaDisponivel = true;
+        prof.sextaDisponivel = true;
+        prof.sabadoDisponivel = false;
+        prof.domingoDisponivel = false;
       }
     });
 
