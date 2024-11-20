@@ -1,16 +1,18 @@
 <div class="container-fluid mt-5">
   <div class="col-12 row justify-content-center">
-    <mat-form-field class="col-4">
+    <mat-form-field class="col-3">
       <mat-label>Data da Diária</mat-label>
       <input matInput [matDatepicker]="picker" [(ngModel)]="dataDiaria">
       <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
       <mat-datepicker #picker></mat-datepicker>
     </mat-form-field>
-    <app-auto-complete class="col-6" label="Cliente" [options]="clientes" [(value)]="clienteSelecionado"
+    <app-auto-complete class="col-5" label="Cliente" [options]="clientes" [(value)]="clienteSelecionado"
       optionsValue="email" optionsLabel="[nome] [sobrenome] - [email]"></app-auto-complete>
-    <div class="col-2">
-      <button [disabled]="!dataDiaria && !clienteSelecionado" class="col-12 btn btn-success"
+    <div class="col-4">
+      <button [disabled]="!dataDiaria && !clienteSelecionado" class="col btn btn-success"
         (click)="buscarDiarias()">Buscar</button>
+        <button [disabled]="!dataDiaria && !clienteSelecionado" class="col btn btn-primary"
+          (click)="limpar()">Limpar</button>
     </div>
   </div>
   <mat-accordion *ngIf="(exibeDados) && dataSource" id="acord" class="mt-4">

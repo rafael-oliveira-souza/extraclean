@@ -58,7 +58,7 @@ export class DiariaAdminComponent implements OnInit {
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 
   public indice: number = 0;
-  public clienteSelecionado: string = "";
+  public clienteSelecionado: string | null = "";
   public dataSource = new MatTableDataSource<InfoDiariaDTO>();
   public dataDiaria: MomentInput;
   public exibeDados: boolean = false;
@@ -96,9 +96,15 @@ export class DiariaAdminComponent implements OnInit {
       });
   }
 
+  public limpar() {
+    this.dataDiaria = null;
+    this.clienteSelecionado = null;
+  }
+
   public buscarDiarias() {
     this.exibeDados = true;
-    this._agendamentoService.buscarInfoDiarias(DateUtils.format(this.dataDiaria, DateUtils.ES), this.clienteSelecionado)
+    const email = this.clienteSelecionado ? this.clienteSelecionado.replaceAll(" ", "") : "";
+    this._agendamentoService.buscarInfoDiarias(DateUtils.format(this.dataDiaria, DateUtils.ES), email)
       .subscribe(
         (diarias: Array<InfoDiariaDTO>) => {
           this.recuperarDiaria(diarias);
