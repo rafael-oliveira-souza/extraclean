@@ -8,6 +8,7 @@ import { HistoricoAgendamentoDTO } from '../domains/dtos/HistoricoAgendamentoDTO
 import { RegistroAgendamentoDTO } from '../domains/dtos/RegistroAgendamentoDTO';
 import { InfoAgendamentoDTO } from '../domains/dtos/InfoAgendamentoDTO';
 import { FinalizacaoAgendamentoDTO } from '../domains/dtos/FinalizacaoAgendamentoDTO';
+import { InfoDiariaDTO } from '../domains/dtos/InfoDiariaDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +29,20 @@ export class AgendamentoService {
       .set('email', email);
 
     return this._http.get<Array<HistoricoAgendamentoDTO>>(url, { params });
+  }
+
+  public atualizarInfoDiaria(diaria: InfoDiariaDTO): Observable<InfoDiariaDTO> {
+    const url = `${this.HOST_URL}/info/diaria`;
+    return this._http.post<InfoDiariaDTO>(url, diaria);
+  }
+
+  public buscarInfoDiarias(dataDiaria: string | null, email: string | null): Observable<Array<InfoDiariaDTO>> {
+    const url = `${this.HOST_URL}/info/diarias`;
+    let params = new HttpParams()
+      .set('dataDiaria', dataDiaria ? dataDiaria : "")
+      .set('email', email ? email : "");
+
+    return this._http.get<Array<InfoDiariaDTO>>(url, { params });
   }
 
   public registrarHorarioAtendimento(registro: RegistroAgendamentoDTO): Observable<any> {

@@ -62,7 +62,7 @@
               </section> -->
                 <div id="idEmailCliente" class="col-12 " *ngIf="agendamentoManual && agendamento.dataHora">
                   <app-auto-complete label="Email Cliente" [options]="clientes" [(value)]="agendamento.email"
-                    optionsValue="email" optionsDescription="email"
+                    optionsValue="email" optionsLabel="[nome] [sobrenome] - [email]"
                     (getOptionsSelected)="recuperarClienteSelecionado($event)"></app-auto-complete>
                 </div>
                 <!-- <div class="col-12 " *ngIf="!agendamentoManual && agendamento.dataHora" (click)="recuperarClientes()">
@@ -269,14 +269,16 @@
           </div>
           <div *ngIf="selectedIndex==4">
             <div class="mt-3 text-center">
-              <mat-button-toggle-group [(ngModel)]="editCliente" required>
-                <mat-button-toggle [value]="true">Editar Cliente</mat-button-toggle>
-                <mat-button-toggle [value]="false">Editar Profissional</mat-button-toggle>
+              <mat-button-toggle-group [(ngModel)]="editaDados" required>
+                <mat-button-toggle [value]="3">Editar Diaria</mat-button-toggle>
+                <mat-button-toggle [value]="1">Editar Cliente</mat-button-toggle>
+                <mat-button-toggle [value]="2">Editar Profissional</mat-button-toggle>
               </mat-button-toggle-group>
             </div>
             <div class="">
-              <app-cliente-admin *ngIf="editCliente"></app-cliente-admin>
-              <app-profissional-admin *ngIf="!editCliente"></app-profissional-admin>
+              <app-cliente-admin *ngIf="editaDados == 1"></app-cliente-admin>
+              <app-profissional-admin *ngIf="editaDados == 2"></app-profissional-admin>
+              <app-diaria-admin [clientes]="clientes" [profissionais]="profissionais" *ngIf="editaDados == 3"></app-diaria-admin>
             </div>
           </div>
           <div *ngIf="selectedIndex==5">

@@ -1,0 +1,109 @@
+<div class="container-fluid mt-5">
+  <div class="col-12 row justify-content-center">
+    <mat-form-field class="col-4">
+      <mat-label>Data da Diária</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="dataDiaria">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <app-auto-complete class="col-6" label="Cliente" [options]="clientes" [(value)]="clienteSelecionado"
+      optionsValue="email" optionsLabel="[nome] [sobrenome] - [email]"></app-auto-complete>
+    <div class="col-2">
+      <button [disabled]="!dataDiaria && !clienteSelecionado" class="col-12 btn btn-success"
+        (click)="buscarDiarias()">Buscar</button>
+    </div>
+  </div>
+  <mat-accordion *ngIf="(exibeDados) && dataSource" id="acord" class="mt-4">
+    <mat-expansion-panel hideToggle *ngFor="let element of dataSource.data">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{element.nomeCliente}} - {{element.email}} - {{element.telefone | telefone}}
+        </mat-panel-title>
+
+        <mat-panel-description>
+          {{element.tipoLimpeza | tipoServico}} - {{element.turno | turno}} - {{element.dataDiaria | data}} -
+          {{element.endereco}}
+        </mat-panel-description>
+
+      </mat-expansion-panel-header><br>
+      <div class="row justify-content-center">
+
+        <mat-form-field class="col-2">
+          <mat-label>Profissional</mat-label>
+          <mat-select [(ngModel)]="element.idDiarista">
+            <mat-option value="0">Sem preferência</mat-option>
+            @for (prof of profissionais; track prof) {
+            <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome | ponto: 20}}</mat-option>
+            }
+          </mat-select>
+        </mat-form-field>
+
+        <mat-form-field class="col-2">
+          <mat-label>Escolha a Quantidade de Horas</mat-label>
+          <select matNativeControl [(ngModel)]="element.horas">
+            <option *ngFor="let horaEnum of VALORES_HORAS" [value]="horaEnum.id">
+              {{horaEnum.descricao}}</option>
+          </select>
+        </mat-form-field>
+
+
+        <mat-form-field class="col-2">
+          <mat-label>Escolha um Período</mat-label>
+          <select matNativeControl [(ngModel)]="element.turno">
+            <option value="3">Integral</option>
+            <option value="1">Matutino</option>
+            <option value="2">Vespertino</option>
+          </select>
+        </mat-form-field>
+
+
+        <mat-form-field class="col-2">
+          <mat-label>Tipo de Limpeza</mat-label>
+          <select matNativeControl [(ngModel)]="element.tipoLimpeza">
+            <option value="4">Residencial</option>
+            <option value="5">Empresarial</option>
+            <option value="6">Passadoria</option>
+            <option value="3">Pré Mudança</option>
+          </select>
+        </mat-form-field>
+
+
+        <mat-form-field class="col-2">
+          <mat-label>Valor</mat-label>
+          <input matInput [(ngModel)]="element.valor">
+        </mat-form-field>
+
+        <mat-form-field class="col-2">
+          <mat-label>Desconto</mat-label>
+          <input matInput [(ngModel)]="element.desconto">
+        </mat-form-field>
+
+
+        <mat-form-field class="col-5">
+          <mat-label>Endereço </mat-label>
+          <input matInput [(ngModel)]="element.endereco">
+        </mat-form-field>
+
+        <mat-form-field class="col-1">
+          <mat-label>Numero </mat-label>
+          <input matInput [(ngModel)]="element.numero">
+        </mat-form-field>
+
+        <mat-form-field class="col-2">
+          <mat-label>Cep </mat-label>
+          <input matInput [(ngModel)]="element.cep">
+        </mat-form-field>
+
+
+        <mat-form-field class="col">
+          <mat-label>Localização</mat-label>
+          <input matInput [(ngModel)]="element.localizacao">
+        </mat-form-field>
+      </div>
+      <div *ngIf="exibeDados" class="row justify-content-center mt-4">
+        <button class="col-4 btn btn-primary" (click)="salvarAtualizacoes(element)">Salvar</button>
+      </div>
+
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

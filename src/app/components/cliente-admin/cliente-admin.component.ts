@@ -53,10 +53,10 @@ export class ClienteAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.recuperarProfissionais();
+    this.recuperarClientes();
   }
 
-  public recuperarProfissionais() {
+  public recuperarClientes() {
     this._clienteService.recuperarTodos()
       .subscribe((cliente: Array<ClienteDTO>) => {
         this.clientes = cliente;
@@ -75,7 +75,7 @@ export class ClienteAdminComponent implements OnInit {
     this.dataSource.paginator = this.paginator;
   }
 
-  public salvarAtualizacoesProf() {
+  public salvarAtualizacoesClientes() {
     const clientes: ClienteDTO[] = this.dataSource.data;
     this._clienteService.salvarTodos(clientes)
       .subscribe((cliente: Array<ClienteDTO>) => {

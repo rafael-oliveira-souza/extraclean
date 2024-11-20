@@ -44,6 +44,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { AgendarPlanoComponent } from "../agendar-plano/agendar-plano.component";
 import { GeradorContrachequeComponent } from '../gerador-contracheque/gerador-contracheque.component';
 import { ClienteAdminComponent } from '../cliente-admin/cliente-admin.component';
+import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
 
 @Component({
   selector: 'app-admin',
@@ -74,7 +75,8 @@ import { ClienteAdminComponent } from '../cliente-admin/cliente-admin.component'
     PipeModule,
     AgendarPlanoComponent,
     ClienteAdminComponent,
-    GeradorContrachequeComponent
+    GeradorContrachequeComponent,
+    DiariaAdminComponent,
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
@@ -105,7 +107,7 @@ export class AdminComponent implements OnInit {
   public agendamentoManual: boolean = true;
   public showTable: boolean = true;
   public isPlano: boolean = false;
-  public editCliente: boolean = false;
+  public editaDados: number = 3;
   public url!: string;
 
   constructor(

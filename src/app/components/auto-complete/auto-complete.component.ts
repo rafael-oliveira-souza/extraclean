@@ -26,6 +26,9 @@ export class AutoCompleteComponent implements OnInit {
   @Input('label')
   public label: string = "";
 
+  @Input('optionsLabel')
+  public optionsLabel: string = "";
+
   @Input('optionsValue')
   public optionsValue: string = "";
 
@@ -65,8 +68,10 @@ export class AutoCompleteComponent implements OnInit {
 
   private _filter(name: string): any[] {
     const filterValue = name.toLowerCase();
-
-    if (this.optionsDescription) {
+    if (this.optionsLabel) {
+      return this.sort(this.options
+        .filter(option => this.displayLabel(option).toLowerCase().includes(filterValue)));
+    } else if (this.optionsDescription) {
       return this.sort(this.options
         .filter(option => option[this.optionsDescription].toLowerCase().includes(filterValue)));
     } else if (this.optionsValue) {
@@ -102,6 +107,16 @@ export class AutoCompleteComponent implements OnInit {
 
   displayFn(data: any): string {
     return data ? data : '';
+  }
+
+  displayLabel(data: any): string {
+    // Expressão regular para capturar qualquer parâmetro entre colchetes
+    const regex = /\[([a-zA-Z0-9_]+)\]/g;
+
+    // Substituindo com os valores de 'data' dinamicamente
+    return this.optionsLabel.replace(regex, (match, param) => {
+      return data[param] !== undefined ? data[param] : '';
+    });
   }
 
 }
