@@ -13,7 +13,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { PipeModule } from '../../pipes/pipe.module';
 import { MomentInput } from 'moment';
-import { DiariaDTO } from '../../domains/dtos/DiariaDTO';
 import { InfoDiariaDTO } from '../../domains/dtos/InfoDiariaDTO';
 import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 import { MatSelectModule } from '@angular/material/select';
@@ -54,7 +53,6 @@ export class DiariaAdminComponent implements OnInit {
   @Input('clientes')
   public clientes: ClienteDTO[] = [];
 
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 
   public indice: number = 0;
@@ -99,6 +97,7 @@ export class DiariaAdminComponent implements OnInit {
   public limpar() {
     this.dataDiaria = null;
     this.clienteSelecionado = null;
+    this.dataSource = new MatTableDataSource<InfoDiariaDTO>([]);
   }
 
   public buscarDiarias() {
@@ -123,7 +122,6 @@ export class DiariaAdminComponent implements OnInit {
 
   public recuperarDiaria(diarias: InfoDiariaDTO[]) {
     this.dataSource = new MatTableDataSource<InfoDiariaDTO>(diarias);
-    this.dataSource.paginator = this.paginator;
   }
 
   public salvarAtualizacoes(diaria: InfoDiariaDTO) {

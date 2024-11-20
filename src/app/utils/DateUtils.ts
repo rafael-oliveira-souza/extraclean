@@ -32,6 +32,10 @@ export class DateUtils {
     }
 
     public static format(date: MomentInput, format: moment.MomentFormatSpecification): string {
+        if (!date) {
+            return "";
+        }
+
         if (moment.isMoment(date)) {
             return date.format(format.toString());
         }
@@ -39,7 +43,7 @@ export class DateUtils {
         return this.toMoment(date).format(format.toString());
     }
 
-    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date  {
+    public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
         return this.toMoment(date, format).toDate();
     }
 

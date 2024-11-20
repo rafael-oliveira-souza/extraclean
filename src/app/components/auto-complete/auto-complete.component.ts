@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, SimpleChanges } from '@angular/core';
 import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -52,10 +52,20 @@ export class AutoCompleteComponent implements OnInit {
 
   constructor() { }
 
+  ngOnChanges(changes: SimpleChanges): void {
+    if (!changes['value'].currentValue) {
+      this.myControl.setValue("");
+    }
+  }
+
   ngOnInit() {
     this.filteredOptions = this.myControl.valueChanges.pipe(
       startWith(''),
       map(value => {
+        if (!value) {
+          return value;
+        }
+
         const name = (value['name'] ? value['name'] : value);
         this.value = name;
         this.valueChange.emit(this.value);
@@ -110,6 +120,9 @@ export class AutoCompleteComponent implements OnInit {
   }
 
   displayLabel(data: any): string {
+    if (!this.myControl.value) {
+      return "";
+    }
     // Expressão regular para capturar qualquer parâmetro entre colchetes
     const regex = /\[([a-zA-Z0-9_]+)\]/g;
 
