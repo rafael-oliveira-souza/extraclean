@@ -8,11 +8,11 @@
     </mat-form-field>
     <app-auto-complete class="col-5" label="Cliente" [options]="clientes" [(value)]="clienteSelecionado"
       optionsValue="email" optionsLabel="[nome] [sobrenome] - [email]"></app-auto-complete>
-    <div class="col-4">
+    <div class="col-4 row justify-content-center">
       <button [disabled]="!dataDiaria && !clienteSelecionado" class="col btn btn-success"
         (click)="buscarDiarias()">Buscar</button>
-        <button [disabled]="!dataDiaria && !clienteSelecionado" class="col btn btn-primary"
-          (click)="limpar()">Limpar</button>
+      <button [disabled]="!dataDiaria && !clienteSelecionado" class="col btn btn-primary"
+        (click)="limpar()">Limpar</button>
     </div>
   </div>
   <mat-accordion *ngIf="(exibeDados) && dataSource" id="acord" class="mt-4">
