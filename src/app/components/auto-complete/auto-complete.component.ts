@@ -53,7 +53,7 @@ export class AutoCompleteComponent implements OnInit {
   constructor() { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (!changes['value'].currentValue) {
+    if (changes['value'] && !changes['value'].currentValue) {
       this.myControl.setValue("");
     }
   }
@@ -63,6 +63,8 @@ export class AutoCompleteComponent implements OnInit {
       startWith(''),
       map(value => {
         if (!value) {
+          this.valueChange.emit('');
+          this.getOptionsSelected.emit([]);
           return value;
         }
 

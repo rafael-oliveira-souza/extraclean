@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -38,9 +38,11 @@ export class ProfissionalAdminComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
+  @Input('profissionais')
+  public profissionais: ProfissionalDTO[] = [];
+
   public indice: number = 0;
   public profissionalSelecionado: number = 0;
-  public profissionais: ProfissionalDTO[] = [];
   public dataSource = new MatTableDataSource<ProfissionalDTO>();
 
   public displayedColumns: string[] = [];
@@ -57,7 +59,9 @@ export class ProfissionalAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.recuperarProfissionais();
+    if (this.profissionais.length == 0) {
+      this.recuperarProfissionais();
+    }
   }
 
   public recuperarProfissionais() {

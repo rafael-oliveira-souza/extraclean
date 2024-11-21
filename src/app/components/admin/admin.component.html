@@ -288,8 +288,8 @@
               </mat-button-toggle-group>
             </div>
             <div class="">
-              <app-cliente-admin *ngIf="editaDados == 1"></app-cliente-admin>
-              <app-profissional-admin *ngIf="editaDados == 2"></app-profissional-admin>
+              <app-cliente-admin [clientes]="clientes" *ngIf="editaDados == 1"></app-cliente-admin>
+              <app-profissional-admin [profissionais]="profissionais" *ngIf="editaDados == 2"></app-profissional-admin>
               <app-diaria-admin [clientes]="clientes" [profissionais]="profissionais"
                 *ngIf="editaDados == 3"></app-diaria-admin>
             </div>

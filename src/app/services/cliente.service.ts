@@ -23,7 +23,7 @@ export class ClienteService {
   }
 
   public salvarTodos(clientes: ClienteDTO[]): Observable<ClienteDTO[]> {
-    const url = `${this.HOST_URL}/salvar-todos`;
+    const url = `${this.HOST_URL}/salvar-lote`;
     return this._http.post<ClienteDTO[]>(url, clientes);
   }
 

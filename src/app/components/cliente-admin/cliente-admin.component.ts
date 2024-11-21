@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatDatepickerModule } from '@angular/material/datepicker';
@@ -12,6 +12,7 @@ import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { ClienteService } from '../../services/cliente.service';
+import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 
 @Component({
   selector: 'app-cliente-admin',
@@ -27,17 +28,20 @@ import { ClienteService } from '../../services/cliente.service';
     MatCheckboxModule,
     MatInputModule,
     PipeModule,
+    AutoCompleteComponent,
   ],
   templateUrl: './cliente-admin.component.html',
   styleUrls: ['./cliente-admin.component.scss']
 })
 export class ClienteAdminComponent implements OnInit {
 
+  @Input('clientes')
+  public clientes: ClienteDTO[] = [];
+
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   public indice: number = 0;
-  public clienteSelecionado: number = 0;
-  public clientes: ClienteDTO[] = [];
+  public clienteSelecionado: string = "";
   public dataSource = new MatTableDataSource<ClienteDTO>();
 
   public displayedColumns: string[] = [];
@@ -45,15 +49,17 @@ export class ClienteAdminComponent implements OnInit {
   constructor(
     private _notificacaoService: NotificacaoService,
     private _clienteService: ClienteService) {
-// 'dataNascimento',
+    // 'dataNascimento',
     this.displayedColumns = [
-      'nome', 'sobrenome', 'email',  'telefone',
+      'nome', 'sobrenome', 'email', 'telefone',
       'endereco', 'numero', 'localizacao', 'cep',
     ];
   }
 
   ngOnInit(): void {
-    this.recuperarClientes();
+    if (this.clientes.length == 0) {
+      this.recuperarClientes();
+    }
   }
 
   public recuperarClientes() {
@@ -65,8 +71,8 @@ export class ClienteAdminComponent implements OnInit {
   }
 
   public recuperarCliente() {
-    if (this.clienteSelecionado != 0) {
-      const clientes = this.clientes.filter(cliente => cliente.id == this.clienteSelecionado);
+    if (this.clienteSelecionado ) {
+      const clientes = this.clientes.filter(cliente => cliente.email == this.clienteSelecionado);
       this.dataSource = new MatTableDataSource<ClienteDTO>(clientes);
     } else {
       this.dataSource = new MatTableDataSource<ClienteDTO>(this.clientes);
