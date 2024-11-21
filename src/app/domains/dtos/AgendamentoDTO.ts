@@ -9,6 +9,8 @@ export class AgendamentoDTO extends PagamentoDTO {
     ignoreQtdProfissionais: boolean = false;
     enviarEmail: boolean = false;
     gerarPagamento: boolean = true;
+    localizacao!: string;
+    observacao!: string;
 
     public getQtdDias() {
         return this.diasSelecionados ? this.diasSelecionados.length : 0;

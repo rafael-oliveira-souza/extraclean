@@ -148,6 +148,18 @@
                   <app-cep *ngIf="agendamento.turno" [(endereco)]="endereco" [isAdm]="true"
                     [disabled]="desabilitarEndereco" (getEndereco)="getEndereco($event)"></app-cep>
                 </div>
+                <div id="idLocalizacao" *ngIf="agendamento.horas && isEnderecoValido()">
+                  <mat-form-field class="col-12 mt-4">
+                    <mat-label>Localização</mat-label>
+                    <input matInput [(ngModel)]="agendamento.localizacao">
+                  </mat-form-field>
+                </div>
+                <div id="idObservacao" *ngIf="agendamento.horas && isEnderecoValido()">
+                  <mat-form-field class="col-12 mt-4">
+                    <mat-label>Observação</mat-label>
+                    <input matInput [(ngModel)]="agendamento.observacao">
+                  </mat-form-field>
+                </div>
                 <div id="idDataExpiracao" *ngIf="agendamento.horas && isEnderecoValido()">
                   <mat-form-field class="col-12 mt-4">
                     <mat-label>Data Expiração do Pagamento</mat-label>
@@ -278,7 +290,8 @@
             <div class="">
               <app-cliente-admin *ngIf="editaDados == 1"></app-cliente-admin>
               <app-profissional-admin *ngIf="editaDados == 2"></app-profissional-admin>
-              <app-diaria-admin [clientes]="clientes" [profissionais]="profissionais" *ngIf="editaDados == 3"></app-diaria-admin>
+              <app-diaria-admin [clientes]="clientes" [profissionais]="profissionais"
+                *ngIf="editaDados == 3"></app-diaria-admin>
             </div>
           </div>
           <div *ngIf="selectedIndex==5">
