@@ -21,6 +21,7 @@ import { Moment } from 'moment';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { LinguagemEnum } from '../../domains/enums/LinguagemEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { HorasEnum } from '../../domains/enums/HorasEnum';
 
 export const MY_FORMATS = {
   parse: {
@@ -131,6 +132,20 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
       total += agend.valorProfissional;
     });
     return total;
+  }
+
+  public exibeValor(valor: number | undefined | null, horas: HorasEnum): number {
+    if (valor) {
+      if (horas == HorasEnum.HORAS_16) {
+        return (valor / 2);
+      } else if (horas == HorasEnum.HORAS_24) {
+        return (valor / 3);
+      } else {
+        return (valor);
+      }
+    }
+
+    return 0;
   }
 
 }
