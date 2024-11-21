@@ -21,6 +21,7 @@ export class InfoAgendamentoDTO {
     situacaoPagamento!: SituacaoPagamentoEnum;
     linkPagamento!: string;
     localizacao!: string;
+    observacao!: string;
     codigoPagamento!: string;
     idCliente!: number;
     idDiaria!: number;

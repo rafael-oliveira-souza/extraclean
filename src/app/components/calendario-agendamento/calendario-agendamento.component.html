@@ -96,6 +96,8 @@
                 <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+                <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
+                  </strong>{{diaria.observacao}}</small><br>
                 <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                     [href]="diaria.localizacao">Localização</a></small><br>
                 <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
@@ -160,14 +162,16 @@
                 <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
                 <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
                 <small class="col-6"><strong>Horas: </strong>{{diaria.horas | horasDiaria}}</small><br>
-                <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor |   moeda}}</small><br>
-                <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto |  moeda}}</small><br>
+                <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
+                <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
                 <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
                 <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
                 <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento:
                   </strong>{{diaria.situacaoPagamento |
                   situacaoPagamento}}<br></small>
                 <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+                <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
+                  </strong>{{diaria.observacao}}</small><br>
                 <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                     [href]="diaria.localizacao">Localização</a></small><br>
                 <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
