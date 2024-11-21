@@ -61,6 +61,30 @@ export class GeradorContrachequeComponent implements OnInit {
     //   .subscribe(calculo => console.log(calculo))
   }
 
+  public addDesconto() {
+    if (document !== null && typeof document !== 'undefined' && typeof document !== null) {
+      // Obtém a tabela
+      const table = document?.getElementById('tabelaDescontos')?.getElementsByTagName('tbody')[0];
+
+      if (table !== null && typeof table !== 'undefined' && typeof table !== null) {
+        // Cria uma nova linha
+        const newRow = table.insertRow();
+        if (newRow !== null && typeof newRow !== 'undefined' && typeof newRow !== null) {
+          // Cria as células da nova linha e adiciona conteúdo
+
+          const cell2 = newRow.insertCell(1);
+          cell2.textContent = `Nome ${table.rows.length}`;
+
+          const cell3 = newRow.insertCell(2);
+          cell3.textContent = `email${table.rows.length}@exemplo.com`;
+
+          // Adiciona a nova linha na tabela
+          table.appendChild(newRow);
+        }
+      }
+    }
+  }
+
   public calcularTotais(salarioBase: number): number {
     let total = salarioBase;
     total += this.calcularINSS(salarioBase);

@@ -22,6 +22,7 @@ import { TituloComponent } from '../titulo/titulo.component';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalComponent } from '../profissional/profissional.component';
 import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
+import { HorasEnum } from '../../domains/enums/HorasEnum';
 
 @Component({
   selector: 'app-historico-admin',
@@ -168,7 +169,10 @@ export class HistoricoAdminComponent implements AfterViewInit {
         value.dataDiaria + "_" +
         value.idCliente;
 
-      if (!map.has(key)) {
+      if (map.has(key)) {
+        const valor = this.exibeValor(map.get(key), value.horas);
+        map.set(key, valor);
+      } else {
         map.set(key, value.valor);
       }
     });
@@ -177,4 +181,17 @@ export class HistoricoAdminComponent implements AfterViewInit {
     return total;
   }
 
+  public exibeValor(valor: number | undefined | null, horas: HorasEnum): number {
+    if (valor) {
+      if (horas == HorasEnum.HORAS_16) {
+        return (valor / 2);
+      } else if (horas == HorasEnum.HORAS_24) {
+        return (valor / 3);
+      } else {
+        return (valor);
+      }
+    }
+
+    return 0;
+  }
 }

@@ -97,9 +97,15 @@
         </mat-form-field>
 
 
-        <mat-form-field class="col">
+        <mat-form-field class="col-4">
           <mat-label>Localização</mat-label>
           <input matInput [(ngModel)]="element.localizacao">
+        </mat-form-field>
+
+
+        <mat-form-field class="col-12">
+          <mat-label>Observação</mat-label>
+          <input matInput [(ngModel)]="element.observacao">
         </mat-form-field>
       </div>
       <div *ngIf="exibeDados" class="row justify-content-center mt-4">
