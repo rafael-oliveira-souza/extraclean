@@ -75,6 +75,10 @@
       <th mat-header-cell *matHeaderCellDef> Valor </th>
       <td mat-cell *matCellDef="let element"> {{exibeValor(element.valor, element.horas) | moeda}} </td>
     </ng-container>
+    <ng-container *ngIf="isNotXs()" matColumnDef="desconto">
+      <th mat-header-cell *matHeaderCellDef> Valor de Desconto </th>
+      <td mat-cell *matCellDef="let element"> {{ element.desconto | moeda}} </td>
+    </ng-container>
     <ng-container matColumnDef="valorProfissional">
       <th mat-header-cell *matHeaderCellDef> Valor Recebido </th>
       <td mat-cell *matCellDef="let element"> {{(!element.contratada ? (element.valorProfissional | moeda) : ' - ') }}
