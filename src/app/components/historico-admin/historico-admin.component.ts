@@ -171,9 +171,9 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
       if (map.has(key)) {
         const valor = this.exibeValor(map.get(key), value.horas);
-        map.set(key, valor);
+        map.set(key, valor - value.desconto);
       } else {
-        map.set(key, value.valor);
+        map.set(key, value.valor - value.desconto);
       }
     });
 
