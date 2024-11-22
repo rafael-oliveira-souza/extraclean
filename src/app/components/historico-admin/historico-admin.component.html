@@ -37,7 +37,8 @@
   </div>
   <mat-form-field class=" col-12 ">
     <mat-label>Selecionar Periodo</mat-label>
-    <input matInput [min]="dataMin" [max]="dataMax" [matDatepicker]="picker" [(ngModel)]="dataInicio">
+    <input id="idPeriodo" matInput [min]="dataMin" [max]="dataMax" (change)="setDate($event)" [matDatepicker]="picker"
+      [(ngModel)]="dataInicio">
     <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
     <mat-datepicker #picker startView="multi-year" (monthSelected)="setMonthAndYear($event, picker)">
     </mat-datepicker>

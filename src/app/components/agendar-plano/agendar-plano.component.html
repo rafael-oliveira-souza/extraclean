@@ -45,8 +45,9 @@
         </div>
 
         <div *ngIf="formaPagamento" id="idEmailCliente" class="col-12">
-          <app-auto-complete label="Email Cliente" [options]="clientes" [(value)]="emailAgendamento"
-            optionsDescription="email" (getOptionsSelected)="recuperarClienteSelecionado($event)"></app-auto-complete>
+          <app-auto-complete class="col-12" label="Cliente" [options]="clientes" [(value)]="emailAgendamento"
+            optionsValue="email" (getOptionsSelected)="recuperarClienteSelecionado($event)"
+            optionsLabel="[nome] [sobrenome] - [email]"></app-auto-complete>
         </div>
         <div *ngIf="formaPagamento">
           <div *ngFor="let agend of agendamentos; let ind = index;"

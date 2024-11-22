@@ -26,6 +26,10 @@ export class DateUtils {
         return moment(new Date()).locale(LinguagemEnum.PT);
     }
 
+    public static isValid(date: MomentInput): boolean {
+        return this.toMoment(date).isValid();
+    }
+
     public static newDate(): Date {
         return this.toMoment().toDate();
         // return new Date();

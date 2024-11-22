@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, Input, ViewChild } from '@angular/core';
-import { MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
+import { MatCalendarView, MatDatepicker, MatDatepickerModule } from '@angular/material/datepicker';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
 import { Moment } from 'moment';
@@ -140,6 +140,14 @@ export class HistoricoAdminComponent implements AfterViewInit {
     }
 
     return true;
+  }
+
+  public setDate(element: any) {
+    const date = element.target.value;
+    if (date && date.length == 7) {
+      this.dataInicio = DateUtils.toMoment(date, 'MM/YYYY').toDate();
+      this.buscarAgendamentos();
+    }
   }
 
   public setMonthAndYear(normalizedMonthAndYear: Moment, datepicker: MatDatepicker<Moment>) {
