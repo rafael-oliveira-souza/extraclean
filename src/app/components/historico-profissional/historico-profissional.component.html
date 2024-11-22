@@ -37,7 +37,8 @@
     </ng-container>
     <ng-container *ngIf="isNotXs()" matColumnDef="valor">
       <th mat-header-cell *matHeaderCellDef> Valor </th>
-      <td mat-cell *matCellDef="let element"> {{element.contratada ? '-' : (exibeValor(element.valor - valorProdutos, element.horas) | moeda )}} </td>
+      <td mat-cell *matCellDef="let element"> {{element.contratada ? '-' : ((element.valorRealAgendamento -
+        valorProdutos) | moeda )}} </td>
     </ng-container>
     <ng-container matColumnDef="valorProfissional">
       <th mat-header-cell *matHeaderCellDef> Valor Recebido </th>

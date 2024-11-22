@@ -33,5 +33,6 @@ export class InfoAgendamentoDTO {
     qtdProfissionais!: number;
     valorProfissional!: number;
     profissionalAtualizado!: number;
+    valorRealAgendamento!: number;
     horas: HorasEnum = HorasEnum.NAO_DEFINIDO;
 }

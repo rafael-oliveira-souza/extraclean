@@ -94,16 +94,16 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.recuperarProfissionais();
+    this.buscarAgendamentos();
   }
 
-  public recuperarProfissionais() {
-    this._profissionalService.todos()
-      .subscribe((prof: Array<ProfissionalDTO>) => {
-        this.profissionais = prof;
-        this.buscarAgendamentos();
-      });
-  }
+  // public recuperarProfissionais() {
+  //   this._profissionalService.todos()
+  //     .subscribe((prof: Array<ProfissionalDTO>) => {
+  //       this.profissionais = prof;
+  //       this.buscarAgendamentos();
+  //     });
+  // }
 
   public atualizarBusca() {
     const agendamentos = this.ordernarDecrescente(this.agendamentos)
@@ -131,10 +131,8 @@ export class HistoricoAdminComponent implements AfterViewInit {
         //   .map(agend => agend.nomeDiarista)
         //   .filter((value, index, self) => self.indexOf(value) === index);
 
-        this.agendamentos = this.ordernarDecrescente(agendamentos.filter(agend => agend.situacao == SituacaoDiariaEnum.FINALIZADA
-          || agend.situacao == SituacaoDiariaEnum.AGENDADA
-          || agend.situacao == SituacaoDiariaEnum.NAO_AGENDADA
-          || agend.situacao == SituacaoDiariaEnum.REAGENDADA));
+        this.agendamentos = this.ordernarDecrescente(agendamentos.filter(agend =>
+          agend.situacao != SituacaoDiariaEnum.CANCELADA));
 
         this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
         this.dataSource.paginator = this.paginator;
@@ -183,33 +181,20 @@ export class HistoricoAdminComponent implements AfterViewInit {
     let total = 0;
     let map = new Map<string, number>();
     this.dataSource.data.forEach(value => {
-      let key = value.codigoPagamento + "_" +
-        value.dataDiaria + "_" +
-        value.idCliente;
+      // let key = value.codigoPagamento + "_" +
+      //   value.dataDiaria + "_" +
+      //   value.idCliente;
 
-      if (map.has(key)) {
-        const valor = this.exibeValor(map.get(key), value.horas);
-        map.set(key, valor - value.desconto);
-      } else {
-        map.set(key, value.valor - value.desconto);
-      }
+      // if (map.has(key)) {
+      //   const valor = this.exibeValor(map.get(key), value.horas);
+      //   map.set(key, valor);
+      // } else {
+      //   map.set(key, value.valor);
+      // }
+      total += value.valorRealAgendamento;
     });
 
-    map.forEach((valor) => total += valor);
+    // map.forEach((valor) => total += valor);
     return total;
-  }
-
-  public exibeValor(valor: number | undefined | null, horas: HorasEnum): number {
-    if (valor) {
-      if (horas == HorasEnum.HORAS_16) {
-        return (valor / 2);
-      } else if (horas == HorasEnum.HORAS_24) {
-        return (valor / 3);
-      } else {
-        return (valor);
-      }
-    }
-
-    return 0;
   }
 }
