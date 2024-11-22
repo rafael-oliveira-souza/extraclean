@@ -59,10 +59,11 @@ export class ProfissionalAdminComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    if (this.profissionais.length == 0) {
-      this.recuperarProfissionais();
-    }
-    this.recuperarProfissional();
+    // if (this.profissionais.length == 0) {
+    //   this.recuperarProfissionais();
+    // }
+    // this.recuperarProfissional();
+    this.recuperarProfissionais();
   }
 
   public recuperarProfissionais() {
