@@ -62,6 +62,7 @@ export class ProfissionalAdminComponent implements OnInit {
     if (this.profissionais.length == 0) {
       this.recuperarProfissionais();
     }
+    this.recuperarProfissional();
   }
 
   public recuperarProfissionais() {
@@ -69,7 +70,7 @@ export class ProfissionalAdminComponent implements OnInit {
       .subscribe((prof: Array<ProfissionalDTO>) => {
         this.profissionais = prof;
         this.profissionais.forEach(profe => profe.inativo = profe.prioridade < 1);
-        this.recuperarProfissional()
+        this.recuperarProfissional();
       });
   }
 
