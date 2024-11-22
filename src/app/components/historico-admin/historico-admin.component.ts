@@ -23,6 +23,7 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalComponent } from '../profissional/profissional.component';
 import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
 import { HorasEnum } from '../../domains/enums/HorasEnum';
+import { ProfissionalService } from '../../services/profissional.service';
 
 @Component({
   selector: 'app-historico-admin',
@@ -79,6 +80,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public displayedColumns: string[] = [];
 
   constructor(private _agendamentoService: AgendamentoService,
+    private _profissionalService: ProfissionalService,
     private _notificacaoService: NotificacaoService) {
 
     if (this.isNotXs()) {
@@ -92,7 +94,15 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
-    this.buscarAgendamentos();
+    this.recuperarProfissionais();
+  }
+
+  public recuperarProfissionais() {
+    this._profissionalService.todos()
+      .subscribe((prof: Array<ProfissionalDTO>) => {
+        this.profissionais = prof;
+        this.buscarAgendamentos();
+      });
   }
 
   public atualizarBusca() {
