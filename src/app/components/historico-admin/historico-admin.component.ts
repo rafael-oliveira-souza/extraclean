@@ -24,6 +24,7 @@ import { ProfissionalComponent } from '../profissional/profissional.component';
 import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum';
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { ProfissionalService } from '../../services/profissional.service';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 @Component({
   selector: 'app-historico-admin',
@@ -39,10 +40,9 @@ import { ProfissionalService } from '../../services/profissional.service';
     MatDatepickerModule,
     MatPaginatorModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     MatInputModule,
     PipeModule,
-    TituloComponent,
-    ProfissionalComponent,
   ],
   templateUrl: './historico-admin.component.html',
   styleUrls: ['./historico-admin.component.scss']
