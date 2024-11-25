@@ -365,6 +365,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
     agend.dataReagendamento = diaria.dataReagendamento;
+    agend.idProfissional = diaria.idProfissional;
     agend.idDiaria = diaria.idDiaria;
 
     this._agendService
