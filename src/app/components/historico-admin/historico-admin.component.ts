@@ -56,6 +56,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
   public agendamentos: InfoAgendamentoDTO[] = [];
 
+  public exibeTotais: boolean = true;
   public indice: number = 0;
   public profissionalSelecionado: string = "";
   public situacao!: SituacaoDiariaEnum;
