@@ -59,6 +59,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public exibeTotais: boolean = true;
   public indice: number = 0;
   public profissionalSelecionado: string = "";
+  public clienteSelecionado: string = "";
   public situacao!: SituacaoDiariaEnum;
   public situacaoPagamento!: SituacaoPagamentoEnum;
   public dataSource = new MatTableDataSource<InfoAgendamentoDTO>();
@@ -109,7 +110,8 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public atualizarBusca() {
     const agendamentos = this.ordernarDecrescente(this.agendamentos)
       .filter(agend => !this.situacaoPagamento || agend.situacaoPagamento == this.situacaoPagamento)
-      .filter(agend => !this.profissionalSelecionado || agend.nomeDiarista == this.profissionalSelecionado)
+      .filter(agend => !this.clienteSelecionado || agend.nomeCliente.toLowerCase().includes(this.clienteSelecionado.toLowerCase()))
+      .filter(agend => !this.profissionalSelecionado || agend.nomeDiarista.toLowerCase() == this.profissionalSelecionado.toLowerCase())
       .filter(agend => !this.situacao || agend.situacao == this.situacao);
 
     this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(agendamentos);
