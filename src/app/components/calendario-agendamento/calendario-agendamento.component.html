@@ -63,77 +63,89 @@
       <div id="mat" *ngFor="let mat of proximoPeriodoSelecionado" class="col-12 col-xl-2 col-lg-2 col-md-2 col-sm-2">
         <div class="row justify-content-center">
           <div class="col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(mat, true)">
-            <div class="p-1" *ngIf="diaria">
-              <hr>
-              <div class="row justify-content-center">
-                <mat-form-field *ngIf="habilitaReagendamento" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 "
-                  style="">
-                  <mat-label>Reagendar</mat-label>
-                  <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
-                  <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                  <mat-datepicker #picker>
-                  </mat-datepicker>
-                </mat-form-field>
-                <div id="idEmailCliente" *ngIf="habilitaAlteracaoProfissional"
-                  class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 ">
-                  <app-auto-complete label="Novo Profissional" [options]="profissionaisAtuais" optionsValue="codigo"
-                    optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
+            <mat-accordion id="acord" *ngIf="diaria">
+              <mat-expansion-panel class="mt-2 mb-2" hideToggle (opened)="diaria.open = true"
+                (closed)="diaria.open = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{diaria.nomeCliente | ponto: 20}} - {{diaria.nomeDiarista}} - {{diaria.situacaoAgendamento |
+                    situacaoAgendamento}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header>
+                <div>
+                  <hr>
+                  <div class="row justify-content-center">
+                    <mat-form-field *ngIf="habilitaReagendamento" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 "
+                      style="">
+                      <mat-label>Reagendar</mat-label>
+                      <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
+                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker>
+                      </mat-datepicker>
+                    </mat-form-field>
+                    <div id="idEmailCliente" *ngIf="habilitaAlteracaoProfissional"
+                      class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 ">
+                      <app-auto-complete label="Novo Profissional" [options]="profissionaisAtuais" optionsValue="codigo"
+                        optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center">
+                    <small class="col-12"><strong>Data: </strong>{{diaria.dataDiaria | data}}</small><br>
+                    <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
+                    <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+                    <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
+                    <small class="col-6"><strong>Horas: </strong>{{diaria.horas |
+                      horasDiaria}}</small><br>
+                    <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor |
+                      moeda}}</small><br>
+                    <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto |
+                      moeda}}</small><br> <!-- -->
+                    <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                    <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
+                    <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento
+                      |
+                      situacaoPagamento}}<br></small>
+                    <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+                    <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
+                      </strong>{{diaria.observacao}}</small><br>
+                    <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
+                        [href]="diaria.localizacao">Localização</a></small><br>
+                    <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
+                      <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
+                    </small>
+                  </div>
+                  <div id="botoesMarcacao" *ngIf="!isAdm" class="col-12 row justify-content-center mt-3">
+                    <button *ngIf="isPagamentoEmAberto(diaria) && !diaria.entrada"
+                      (click)="marcarHorarioAtendimento(diaria, true)" class="col-8 btn btn-primary" mat-button>
+                      Marcar Chegada
+                    </button>
+                    <button *ngIf="isPagamentoEmAberto(diaria) && diaria.entrada && !diaria.saida"
+                      (click)="marcarHorarioAtendimento(diaria, false)" class="col-8 btn btn-primary" mat-button>
+                      Marcar Saída
+                    </button>
+                  </div>
+                  <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
+                    <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-primary">Finalizar
+                    </button>
+                    <button *ngIf="!this.isPagamentoAprovado(diaria) && !isPagamentoCancelado(diaria)"
+                      (click)="confirmarPagamento(diaria)" type="button" class="col-8 btn btn-success mt-2">Confirmar
+                      Pagamento
+                    </button>
+                    <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-danger mt-2">Cancelar
+                    </button>
+                    <button *ngIf="habilitaReagendamento" [disabled]="!diaria.dataReagendamento"
+                      (click)="reagendarAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-success mt-2">Reagendar</button>
+                    <button *ngIf="habilitaAlteracaoProfissional" [disabled]="!diaria.profissionalAtualizado"
+                      (click)="atualizarProfissionalAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
+                  </div>
+                  <hr>
                 </div>
-              </div>
-              <div class="row justify-content-center">
-                <small class="col-12"><strong>Data: </strong>{{diaria.dataDiaria | data}}</small><br>
-                <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
-                <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
-                <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
-                <small class="col-6"><strong>Horas: </strong>{{diaria.horas |
-                  horasDiaria}}</small><br>
-                <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor |
-                  moeda}}</small><br>
-                <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto |
-                  moeda}}</small><br> <!-- -->
-                <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
-                <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento |
-                  situacaoPagamento}}<br></small>
-                <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
-                <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
-                  </strong>{{diaria.observacao}}</small><br>
-                <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
-                    [href]="diaria.localizacao">Localização</a></small><br>
-                <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
-                  <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
-                </small>
-              </div>
-              <div id="botoesMarcacao" *ngIf="!isAdm" class="col-12 row justify-content-center mt-3">
-                <button *ngIf="isPagamentoEmAberto(diaria) && !diaria.entrada"
-                  (click)="marcarHorarioAtendimento(diaria, true)" class="col-8 btn btn-primary" mat-button>
-                  Marcar Chegada
-                </button>
-                <button *ngIf="isPagamentoEmAberto(diaria) && diaria.entrada && !diaria.saida"
-                  (click)="marcarHorarioAtendimento(diaria, false)" class="col-8 btn btn-primary" mat-button>
-                  Marcar Saída
-                </button>
-              </div>
-              <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
-                <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-primary">Finalizar
-                </button>
-                <button *ngIf="!this.isPagamentoAprovado(diaria) && !isPagamentoCancelado(diaria)"
-                  (click)="confirmarPagamento(diaria)" type="button" class="col-8 btn btn-success mt-2">Confirmar
-                  Pagamento
-                </button>
-                <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-danger mt-2">Cancelar
-                </button>
-                <button *ngIf="habilitaReagendamento" [disabled]="!diaria.dataReagendamento"
-                  (click)="reagendarAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-success mt-2">Reagendar</button>
-                <button *ngIf="habilitaAlteracaoProfissional" [disabled]="!diaria.profissionalAtualizado"
-                  (click)="atualizarProfissionalAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
-              </div>
-              <hr>
-            </div>
+              </mat-expansion-panel>
+            </mat-accordion>
           </div>
         </div>
       </div>
@@ -142,72 +154,89 @@
       <div id="vesp" *ngFor="let vesp of proximoPeriodoSelecionado" class="col-12 col-xl-2 col-lg-2 col-md-2 col-sm-2">
         <div class="row justify-content-center">
           <div class="col-12 align-items-center" *ngFor="let diaria of getListaDiariasDia(vesp, false)">
-            <div class="p-1" *ngIf="diaria">
-              <hr>
-              <mat-form-field *ngIf="habilitaReagendamento" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 " style="">
-                <mat-label>Reagendar</mat-label>
-                <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
-                <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-                <mat-datepicker #picker>
-                </mat-datepicker>
-              </mat-form-field>
-              <div id="idEmailCliente" *ngIf="habilitaAlteracaoProfissional"
-                class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 ">
-                <app-auto-complete label="Novo Profissional" [options]="profissionaisAtuais" optionsValue="codigo"
-                  optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
-              </div>
-              <div class="row justify-content-center">
-                <small class="col-12"><strong>Data: </strong>{{diaria.dataDiaria | data}}</small><br>
-                <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
-                <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
-                <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
-                <small class="col-6"><strong>Horas: </strong>{{diaria.horas | horasDiaria}}</small><br>
-                <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor | moeda}}</small><br>
-                <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto | moeda}}</small><br>
-                <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
-                <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento:
-                  </strong>{{diaria.situacaoPagamento |
-                  situacaoPagamento}}<br></small>
-                <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
-                <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
-                  </strong>{{diaria.observacao}}</small><br>
-                <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
-                    [href]="diaria.localizacao">Localização</a></small><br>
-                <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
-                  <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
-                </small>
-              </div>
-              <div id="botoesMarcacao" *ngIf="!isAdm" class="col-12 row justify-content-center mt-3">
-                <button *ngIf="isPagamentoEmAberto(diaria) && !diaria.entrada"
-                  (click)="marcarHorarioAtendimento(diaria, true)" class="col-8 btn btn-primary" mat-button>
-                  Marcar Chegada
-                </button>
-                <button *ngIf="isPagamentoEmAberto(diaria) && diaria.entrada && !diaria.saida"
-                  (click)="marcarHorarioAtendimento(diaria, false)" class="col-8 btn btn-primary" mat-button>
-                  Marcar Saída
-                </button>
-              </div>
-              <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
-                <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-primary">Finalizar
-                </button>
-                <button *ngIf="!this.isPagamentoAprovado(diaria) && !isPagamentoCancelado(diaria)"
-                  (click)="confirmarPagamento(diaria)" type="button" class="col-8 btn btn-success mt-2">Confirmar
-                  Pagamento
-                </button>
-                <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-danger mt-2">Cancelar
-                </button>
-                <button *ngIf="habilitaReagendamento" [disabled]="!diaria.dataReagendamento"
-                  (click)="reagendarAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-success mt-2">Reagendar</button>
-                <button *ngIf="habilitaAlteracaoProfissional" [disabled]="!diaria.profissionalAtualizado"
-                  (click)="atualizarProfissionalAgendamento(diaria)" type="button"
-                  class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
-              </div>
-              <hr>
-            </div>
+            <mat-accordion id="acord" *ngIf="diaria">
+              <mat-expansion-panel class="mt-2 mb-2" hideToggle (opened)="diaria.open = true"
+                (closed)="diaria.open = false">
+                <mat-expansion-panel-header>
+                  <mat-panel-title>
+                    {{diaria.nomeCliente | ponto: 20}} - {{diaria.nomeDiarista}} - {{diaria.situacaoAgendamento |
+                    situacaoAgendamento}}
+                  </mat-panel-title>
+                </mat-expansion-panel-header><br>
+                <div>
+                  <hr>
+                  <div class="row justify-content-center">
+                    <mat-form-field *ngIf="habilitaReagendamento" class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 "
+                      style="">
+                      <mat-label>Reagendar</mat-label>
+                      <input matInput [min]="hoje" [matDatepicker]="picker" [(ngModel)]="diaria.dataReagendamento">
+                      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                      <mat-datepicker #picker>
+                      </mat-datepicker>
+                    </mat-form-field>
+                    <div id="idEmailCliente" *ngIf="habilitaAlteracaoProfissional"
+                      class=" col-xl-10 col-lg-10 col-md-10 col-sm-12 ">
+                      <app-auto-complete label="Novo Profissional" [options]="profissionaisAtuais" optionsValue="codigo"
+                        optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
+                    </div>
+                  </div>
+                  <div class="row justify-content-center">
+                    <small class="col-12"><strong>Data: </strong>{{diaria.dataDiaria | data}}</small><br>
+                    <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
+                    <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+                    <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
+                    <small class="col-6"><strong>Horas: </strong>{{diaria.horas |
+                      horasDiaria}}</small><br>
+                    <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor |
+                      moeda}}</small><br>
+                    <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto |
+                      moeda}}</small><br> <!-- -->
+                    <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                    <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
+                    <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento
+                      |
+                      situacaoPagamento}}<br></small>
+                    <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
+                    <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
+                      </strong>{{diaria.observacao}}</small><br>
+                    <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
+                        [href]="diaria.localizacao">Localização</a></small><br>
+                    <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
+                      <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
+                    </small>
+                  </div>
+                  <div id="botoesMarcacao" *ngIf="!isAdm" class="col-12 row justify-content-center mt-3">
+                    <button *ngIf="isPagamentoEmAberto(diaria) && !diaria.entrada"
+                      (click)="marcarHorarioAtendimento(diaria, true)" class="col-8 btn btn-primary" mat-button>
+                      Marcar Chegada
+                    </button>
+                    <button *ngIf="isPagamentoEmAberto(diaria) && diaria.entrada && !diaria.saida"
+                      (click)="marcarHorarioAtendimento(diaria, false)" class="col-8 btn btn-primary" mat-button>
+                      Marcar Saída
+                    </button>
+                  </div>
+                  <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
+                    <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-primary">Finalizar
+                    </button>
+                    <button *ngIf="!this.isPagamentoAprovado(diaria) && !isPagamentoCancelado(diaria)"
+                      (click)="confirmarPagamento(diaria)" type="button" class="col-8 btn btn-success mt-2">Confirmar
+                      Pagamento
+                    </button>
+                    <button *ngIf="exibeBotoesModificacao(diaria)" (click)="cancelarAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-danger mt-2">Cancelar
+                    </button>
+                    <button *ngIf="habilitaReagendamento" [disabled]="!diaria.dataReagendamento"
+                      (click)="reagendarAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-success mt-2">Reagendar</button>
+                    <button *ngIf="habilitaAlteracaoProfissional" [disabled]="!diaria.profissionalAtualizado"
+                      (click)="atualizarProfissionalAgendamento(diaria)" type="button"
+                      class="col-8 btn btn-success mt-2">Atualizar Profissional</button>
+                  </div>
+                  <hr>
+                </div>
+              </mat-expansion-panel>
+            </mat-accordion>
           </div>
         </div>
       </div>

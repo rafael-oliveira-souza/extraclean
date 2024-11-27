@@ -25,6 +25,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 import { CodigoValorDTO } from '../../domains/dtos/CodigoValorDTO';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -42,6 +43,7 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
     PipeModule,
     ScrollComponent,
     AutoCompleteComponent,
+    MatExpansionModule,
   ],
   templateUrl: './calendario-agendamento.component.html',
   styleUrls: ['./calendario-agendamento.component.scss']
