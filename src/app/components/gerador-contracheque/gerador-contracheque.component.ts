@@ -59,11 +59,11 @@ export class GeradorContrachequeComponent implements OnInit {
 
   ngOnInit() {
     let calculo = new CalculoFuncionarioDTO();
-    calculo.grossSalary = this.salarioBase;
-    calculo.healthPlan = this.planoSaude;
-    calculo.mealTicket = this.valeAlimentacao;
-    calculo.otherBenefits = 0;
-    calculo.transportVoucher = this.valeTransporte;
+    // calculo.grossSalary = this.salarioBase;
+    // calculo.healthPlan = this.planoSaude;
+    // calculo.mealTicket = this.valeAlimentacao;
+    // calculo.otherBenefits = 0;
+    // calculo.transportVoucher = this.valeTransporte;
 
     // this.profissionalService.calcularGastosFuncionario(calculo)
     //   .subscribe(calculo => console.log(calculo))
