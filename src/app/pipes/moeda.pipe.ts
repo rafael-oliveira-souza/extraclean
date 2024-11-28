@@ -7,7 +7,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class MoedaPipe implements PipeTransform {
 
-  transform(value: string | number, format?: string): unknown {
+  transform(value: string | number | null, format?: string): unknown {
     const currencyPipe = new CurrencyPipe("pt-BR");
     if (!value) {
       return currencyPipe.transform(0, "BRL");

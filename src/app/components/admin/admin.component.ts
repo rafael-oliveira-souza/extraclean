@@ -45,6 +45,7 @@ import { AgendarPlanoComponent } from "../agendar-plano/agendar-plano.component"
 import { GeradorContrachequeComponent } from '../gerador-contracheque/gerador-contracheque.component';
 import { ClienteAdminComponent } from '../cliente-admin/cliente-admin.component';
 import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
+import { PagamentoProfissionalComponent } from "../pagamento-profissional/pagamento-profissional.component";
 
 @Component({
   selector: 'app-admin',
@@ -56,7 +57,7 @@ import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
-    AgendamentoComponent,
+    PagamentoProfissionalComponent,
     PlanosComponent,
     ServicosComponent,
     MatButtonModule,
@@ -77,7 +78,8 @@ import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
     ClienteAdminComponent,
     GeradorContrachequeComponent,
     DiariaAdminComponent,
-  ],
+    PagamentoProfissionalComponent
+],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })

@@ -11,6 +11,9 @@ import { ProfissionalService } from '../../services/profissional.service';
 import { CalculoFuncionarioDTO } from '../../domains/dtos/CalculoFuncionarioDTO';
 import { DateUtils } from '../../utils/DateUtils';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { ContraChequeProfissionalDTO } from '../../domains/dtos/ContraChequeProfissionalDTO';
+import { PagamentoProfissionalDTO } from '../../domains/dtos/PagamentoProfissionalDTO';
+import { PipeModule } from '../../pipes/pipe.module';
 
 @Component({
   selector: 'app-gerador-contracheque',
@@ -23,7 +26,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
     MatDatepickerModule,
     MatInputModule,
     MatCheckboxModule,
-    MoedaPipe
+    PipeModule
   ],
   templateUrl: './gerador-contracheque.component.html',
   styleUrls: ['./gerador-contracheque.component.scss']
@@ -32,15 +35,20 @@ export class GeradorContrachequeComponent implements OnInit {
 
   @Input('profissionais')
   public profissionais: ProfissionalDTO[] = [];
+  public readonly salarioBasePadrao: number = 1450;
+  public readonly planoSaudePadrao: number = 0;
+  public readonly valeTransportePadrao: number = 405;
+  public readonly valeAlimentacaoPadrao: number = 195;
 
   public hoje: Date = DateUtils.newDate();
   public periodo: number = this.hoje.getMonth();
   public horasExtras: number = 0;
-  public salarioBase: number = 1450;
-  public planoSaude: number = 0;
   public numFeriados: number = 0;
-  public valeTransporte: number = 405;
-  public valeAlimentacao: number = 195;
+  public pagamentos: PagamentoProfissionalDTO[] = [];
+  public salarioBase: number = this.salarioBasePadrao;
+  public planoSaude: number = this.planoSaudePadrao;
+  public valeTransporte: number = this.valeAlimentacaoPadrao;
+  public valeAlimentacao: number = this.valeAlimentacaoPadrao;
   public profissionalSelecionado!: ProfissionalDTO;
   public adicionalExtra = 1; // Adicional de 50% para horas extras durante a semana
   public horasMensais: number = this.calcularHorasTotais();
@@ -59,6 +67,37 @@ export class GeradorContrachequeComponent implements OnInit {
 
     // this.profissionalService.calcularGastosFuncionario(calculo)
     //   .subscribe(calculo => console.log(calculo))
+  }
+
+  public recuperarValores() {
+    const datas: Date[] = DateUtils.datesInMonth(new Date());
+    const dataIni = DateUtils.format(datas[0], DateUtils.ES);
+    const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
+    this.pagamentos = [];
+    this.salarioBase = 0;
+
+    if (this.profissionalSelecionado) {
+      this.profissionalService.recuperarValoresRecebidosProfissionalPorPeriodo(this.profissionalSelecionado.id, dataIni, dataF)
+        .subscribe((pagamento: ContraChequeProfissionalDTO) => {
+          this.pagamentos = pagamento.pagamentos;
+          this.salarioBase = pagamento.valor ? pagamento.valor : 0;
+
+          if (this.profissionalSelecionado.contratada) {
+            this.salarioBase = this.salarioBasePadrao;
+            this.planoSaude = this.planoSaudePadrao;
+            this.valeTransporte = this.valeTransportePadrao;
+            this.valeAlimentacao = this.valeAlimentacaoPadrao;
+          } else {
+            this.planoSaude = 0;
+            this.valeTransporte = 0;
+            this.valeAlimentacao = 0;
+          }
+        });
+    } else {
+      this.planoSaude = 0;
+      this.valeTransporte = 0;
+      this.valeAlimentacao = 0;
+    }
   }
 
   public addDesconto() {
@@ -129,7 +168,7 @@ export class GeradorContrachequeComponent implements OnInit {
   public calcularINSS(salarioBase: number): number {
     let inss: number = 0;
 
-    if (!this.ignorarDescontos) {
+    if (!this.ignorarDescontos && this.profissionalSelecionado && this.profissionalSelecionado.contratada) {
       if (salarioBase <= 1412.00) {
         inss = salarioBase * 0.075;  // 7.5%
       } else if (salarioBase <= 2666.68) {
@@ -146,7 +185,7 @@ export class GeradorContrachequeComponent implements OnInit {
   // Função para calcular o IRRF
   public calcularIRRF(salarioBase: number): number {
     let irrf = 0;
-    if (!this.ignorarDescontos) {
+    if (!this.ignorarDescontos && this.profissionalSelecionado && this.profissionalSelecionado.contratada) {
       const baseIRRF = salarioBase - this.calcularINSS(salarioBase); // Salário após o desconto do INSS
 
       if (baseIRRF <= 1903.98) {
@@ -171,7 +210,10 @@ export class GeradorContrachequeComponent implements OnInit {
     const inss = this.calcularINSS(salarioBase);
     const irrf = this.calcularIRRF(salarioBase);
     const horasNaoTrabalhadas = this.calcularDifHorasTrabalhadas(salarioBase);
-    const totalDescontos = inss + irrf + horasNaoTrabalhadas;
+
+    let totalDesconto = 0;
+    this.pagamentos.forEach(pag => totalDesconto += pag.valor ? pag.valor : 0);
+    const totalDescontos = inss + irrf + horasNaoTrabalhadas + totalDesconto;
     return { inss, irrf, horasNaoTrabalhadas, totalDescontos };
   }
 

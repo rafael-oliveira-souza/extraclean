@@ -2,14 +2,14 @@
   <div class="no-print">
     <mat-form-field class="col-12">
       <mat-label>Escolha uma profissional</mat-label>
-      <mat-select [(ngModel)]="profissionalSelecionado">
+      <mat-select [(ngModel)]="profissionalSelecionado" (ngModelChange)="recuperarValores()">
         <mat-option>Sem preferência</mat-option>
         @for (prof of profissionais; track prof) {
         <mat-option [value]="prof"> {{prof.nome}} {{prof.sobrenome }}</mat-option>
         }
       </mat-select>
     </mat-form-field>
-    <div class="row justify-content-between">
+    <div *ngIf="!profissionalSelecionado || profissionalSelecionado?.contratada" class="row justify-content-between">
       <mat-form-field class="col-2">
         <mat-label>Horas Mensais</mat-label>
         <input disabled type="text" matInput [(ngModel)]="horasMensais">
@@ -78,24 +78,28 @@
         <th>Descrição</th>
         <th>Valor</th>
       </tr>
-      <tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
         <td>Salário Base</td>
         <td>{{salarioBase | moeda}}</td>
       </tr>
-      <tr>
+      <tr *ngIf="!profissionalSelecionado?.contratada">
+        <td>Prestação de Serviços</td>
+        <td>{{salarioBase | moeda}}</td>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
         <td>Hora Extra ({{horasExtras}} horas)</td>
         <td>{{calcularHorasExtras(salarioBase, horasExtras) | moeda}}</td>
       </tr>
 
-      <tr *ngIf="planoSaude">
+      <tr *ngIf="profissionalSelecionado?.contratada && planoSaude">
         <td>Plano de Saúde</td>
         <td>{{planoSaude | moeda}}</td>
       </tr>
-      <tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
         <td>Vale Transporte</td>
         <td>{{valeTransporte | moeda}}</td>
       </tr>
-      <tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
         <td>Vale Alimentação</td>
         <td>{{valeAlimentacao | moeda}}</td>
       </tr>
@@ -111,17 +115,21 @@
         <th>Descrição</th>
         <th>Valor</th>
       </tr>
-      <tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
         <td>INSS</td>
         <td>{{calcularINSS(salarioBase) | moeda}}</td>
       </tr>
-      <tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
         <td>IRRF</td>
         <td>{{calcularIRRF(salarioBase) | moeda}}</td>
       </tr>
-      <tr *ngIf="(horasMensais-horasTrabalhadas) >= 0">
+      <tr *ngIf="profissionalSelecionado?.contratada && (horasMensais-horasTrabalhadas) >= 0">
         <td>Horas Não Trabalhadas: {{(horasMensais-horasTrabalhadas)}}</td>
         <td>{{calcularDifHorasTrabalhadas(salarioBase) | moeda}}</td>
+      </tr>
+      <tr *ngFor="let pag of pagamentos">
+        <td>{{pag.nome}} - {{pag.data | data}}</td>
+        <td>{{pag.valor | moeda}}</td>
       </tr>
     </table>
 

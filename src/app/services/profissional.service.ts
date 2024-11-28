@@ -6,6 +6,8 @@ import { environment } from '../../enviromment';
 import { AgendamentoDiariaDTO } from '../domains/dtos/AgendamentoDiariaDTO';
 import { TurnoEnum } from '../domains/enums/TurnoEnum';
 import { CalculoFuncionarioDTO } from '../domains/dtos/CalculoFuncionarioDTO';
+import { ContraChequeProfissionalDTO } from '../domains/dtos/ContraChequeProfissionalDTO';
+import { PagamentoProfissionalDTO } from '../domains/dtos/PagamentoProfissionalDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -31,9 +33,39 @@ export class ProfissionalService {
     return this._http.post<CalculoFuncionarioDTO>(url, obj);
   }
 
+  public salvarPagamentoProfissional(pagamento: PagamentoProfissionalDTO): Observable<PagamentoProfissionalDTO[]> {
+    const url = `${this.HOST_URL}/pagamentos/adicionar`;
+    return this._http.post<PagamentoProfissionalDTO[]>(url, pagamento);
+  }
+
+  public excluirPagamentoProfissional(pagamento: PagamentoProfissionalDTO): Observable<any> {
+    const url = `${this.HOST_URL}/pagamentos/excluir`;
+    return this._http.post(url, pagamento);
+  }
+
   public salvar(profs: ProfissionalDTO[]): Observable<ProfissionalDTO[]> {
     const url = `${this.HOST_URL}/salvar-lote`;
     return this._http.post<ProfissionalDTO[]>(url, profs);
+  }
+
+  public recuperarTodosPagamentosProfissionais(dataInicio: string, dataFim: string): Observable<Array<PagamentoProfissionalDTO>> {
+    const url = `${this.HOST_URL}/pagamentos/todos`;
+
+    let params = new HttpParams()
+      .set('dataInicio', dataInicio)
+      .set('dataFim', dataFim);
+
+    return this._http.get<Array<PagamentoProfissionalDTO>>(url, { params });
+  }
+
+  public recuperarValoresRecebidosProfissionalPorPeriodo(idProfissional: number, dataInicio: string, dataFim: string): Observable<ContraChequeProfissionalDTO> {
+    const url = `${this.HOST_URL}/pagamentos/${idProfissional}`;
+
+    let params = new HttpParams()
+      .set('dataInicio', dataInicio)
+      .set('dataFim', dataFim);
+
+    return this._http.get<ContraChequeProfissionalDTO>(url, { params });
   }
 
   public recuperarDiariasPorProfissional(idProfissional: number, turno: TurnoEnum, data: Date): Observable<Array<AgendamentoDiariaDTO>> {
