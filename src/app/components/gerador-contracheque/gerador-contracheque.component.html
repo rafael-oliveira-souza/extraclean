@@ -53,7 +53,7 @@
       <div class=" col"></div>
     </div>
   </div>
-  <div class="print-only">
+  <div id="idDemonstrativoPDF" class="print-only">
     <h1>Demonstrativo de Pagamento</h1>
     <p class="mt-4"><strong>Empresa: </strong>EXTRA CLEAN - LIMPEZAS PROFISSIONAIS LTDA. <br><strong>CNPJ:
       </strong>56.875.501/0001-76
@@ -82,12 +82,10 @@
         <td>Salário Base</td>
         <td>{{salarioBase | moeda}}</td>
       </tr>
-      <div *ngIf="!profissionalSelecionado?.contratada">
-        <tr *ngFor="let pag of servicos">
-          <td>{{pag.nome}}</td>
-          <td>{{pag.valor| moeda}}</td>
-        </tr>
-      </div>
+      <tr *ngFor="let pag of servicos">
+        <td *ngIf="!profissionalSelecionado?.contratada">{{pag.nome}}</td>
+        <td *ngIf="!profissionalSelecionado?.contratada">{{pag.valor| moeda}}</td>
+      </tr>
       <tr *ngIf="profissionalSelecionado?.contratada">
         <td>Hora Extra ({{horasExtras}} horas)</td>
         <td>{{calcularHorasExtras(salarioBase, horasExtras) | moeda}}</td>
@@ -155,5 +153,9 @@
       <p>Emitido por: EXTRA CLEAN - LIMPEZAS PROFISSIONAIS LTDA.</p>
       <p>Data de Emissão: {{hoje | date: 'dd/MM/yyyy'}}</p>
     </div>
+  </div>
+
+  <div class="row justify-content-center mt-5">
+    <button type="button" class="col-6 btn btn-primary" (click)="generatePDF()">Gerar PDF</button>
   </div>
 </div>

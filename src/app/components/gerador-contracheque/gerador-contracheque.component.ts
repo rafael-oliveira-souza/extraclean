@@ -6,7 +6,6 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { MatSelectModule } from '@angular/material/select';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatInputModule } from '@angular/material/input';
-import { MoedaPipe } from '../../pipes/moeda.pipe';
 import { ProfissionalService } from '../../services/profissional.service';
 import { CalculoFuncionarioDTO } from '../../domains/dtos/CalculoFuncionarioDTO';
 import { DateUtils } from '../../utils/DateUtils';
@@ -14,6 +13,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ContraChequeProfissionalDTO } from '../../domains/dtos/ContraChequeProfissionalDTO';
 import { PagamentoProfissionalDTO } from '../../domains/dtos/PagamentoProfissionalDTO';
 import { PipeModule } from '../../pipes/pipe.module';
+import jsPDF from 'jspdf';
 
 @Component({
   selector: 'app-gerador-contracheque',
@@ -287,4 +287,21 @@ export class GeradorContrachequeComponent implements OnInit {
     return `${mes}/${this.hoje.getFullYear()}`
   }
 
+  generatePDF() {
+    const doc = new jsPDF();
+    // Captura o conteúdo HTML de um elemento específico
+    const content = document.getElementById('idDemonstrativoPDF'); // ID do conteúdo HTML
+    if (content) {
+      let nomeProf = this.profissionalSelecionado?.nome;
+      doc.html(content, {
+        callback: function (doc: jsPDF) {
+          doc.save(`Pagamento_${nomeProf}_${DateUtils.format(new Date(), DateUtils.BR)}.pdf`);
+        },
+        margin: [10, 10, 10, 10], // Margens do PDF
+        html2canvas: {
+          scale: 0.1, // Ajusta a escala de renderização para maior qualidade
+        }
+      });
+    }
+  }
 }
