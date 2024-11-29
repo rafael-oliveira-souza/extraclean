@@ -295,7 +295,7 @@ export class GeradorContrachequeComponent implements OnInit {
       let nomeProf = this.profissionalSelecionado?.nome;
       doc.html(content, {
         callback: function (doc: jsPDF) {
-          doc.save(`Pagamento_${nomeProf}_${DateUtils.format(new Date(), DateUtils.BR)}.pdf`);
+          doc.save(`Pagamento_${nomeProf}_${DateUtils.format(new Date(), "MM/yyyy")}.pdf`);
         },
         margin: [10, 10, 10, 10], // Margens do PDF
         html2canvas: {
