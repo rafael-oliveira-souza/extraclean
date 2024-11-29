@@ -7,4 +7,5 @@ export class ContraChequeProfissionalDTO {
     dataFim!: Date | null;
     valor!: number | null;
     pagamentos: PagamentoProfissionalDTO[] = [];
+    valoresRecebidos: PagamentoProfissionalDTO[] = [];
 }

@@ -45,6 +45,7 @@ export class GeradorContrachequeComponent implements OnInit {
   public horasExtras: number = 0;
   public numFeriados: number = 0;
   public pagamentos: PagamentoProfissionalDTO[] = [];
+  public servicos: PagamentoProfissionalDTO[] = [];
   public salarioBase: number = this.salarioBasePadrao;
   public planoSaude: number = this.planoSaudePadrao;
   public valeTransporte: number = this.valeAlimentacaoPadrao;
@@ -80,6 +81,7 @@ export class GeradorContrachequeComponent implements OnInit {
       this.profissionalService.recuperarValoresRecebidosProfissionalPorPeriodo(this.profissionalSelecionado.id, dataIni, dataF)
         .subscribe((pagamento: ContraChequeProfissionalDTO) => {
           this.pagamentos = pagamento.pagamentos;
+          this.servicos = pagamento.valoresRecebidos;
           this.salarioBase = pagamento.valor ? pagamento.valor : 0;
 
           if (this.profissionalSelecionado.contratada) {

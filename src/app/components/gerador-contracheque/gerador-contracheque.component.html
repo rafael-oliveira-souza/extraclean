@@ -82,10 +82,12 @@
         <td>Salário Base</td>
         <td>{{salarioBase | moeda}}</td>
       </tr>
-      <tr *ngIf="!profissionalSelecionado?.contratada">
-        <td>Prestação de Serviços</td>
-        <td>{{salarioBase | moeda}}</td>
-      </tr>
+      <div *ngIf="!profissionalSelecionado?.contratada">
+        <tr *ngFor="let pag of servicos">
+          <td>{{pag.nome}}</td>
+          <td>{{pag.valor| moeda}}</td>
+        </tr>
+      </div>
       <tr *ngIf="profissionalSelecionado?.contratada">
         <td>Hora Extra ({{horasExtras}} horas)</td>
         <td>{{calcularHorasExtras(salarioBase, horasExtras) | moeda}}</td>
