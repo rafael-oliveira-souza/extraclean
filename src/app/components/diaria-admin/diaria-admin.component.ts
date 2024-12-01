@@ -24,6 +24,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalService } from '../../services/profissional.service';
 import { FinalizacaoAgendamentoDTO } from '../../domains/dtos/FinalizacaoAgendamentoDTO';
+import { SituacaoDiariaEnum } from '../../domains/enums/SituacaoDiariaEnum';
 
 @Component({
   selector: 'app-diaria-admin',
@@ -134,7 +135,8 @@ export class DiariaAdminComponent implements OnInit {
     agend.codigoPagamento = diaria.codigoPagamento;
 
     this._agendamentoService.cancelarAgendamento(agend)
-      .subscribe((diaria: InfoDiariaDTO) => {
+      .subscribe((diariaRec: InfoDiariaDTO) => {
+        diaria.situacao = SituacaoDiariaEnum.CANCELADA;
         this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CANCELADO_SUCESSO);
         this._changes.detectChanges();
       }, (error: any) => {
@@ -151,6 +153,11 @@ export class DiariaAdminComponent implements OnInit {
       }, (error: any) => {
         this._notificacaoService.erro(error);
       });
-
   }
+
+
+  public isCancelada(diaria: InfoDiariaDTO) {
+    return diaria.situacao == SituacaoDiariaEnum.CANCELADA;
+  }
+
 }

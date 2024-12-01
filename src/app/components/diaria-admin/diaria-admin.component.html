@@ -23,7 +23,8 @@
         </mat-panel-title>
 
         <mat-panel-description>
-          {{element.tipoLimpeza | tipoServico}} - {{element.turno | turno}} - {{element.dataDiaria | data}} -
+          {{element.situacao | situacaoDiaria}} - {{element.tipoLimpeza | tipoServico}} - {{element.turno | turno}} -
+          {{element.dataDiaria | data}} -
           {{element.endereco}}
         </mat-panel-description>
 
@@ -110,7 +111,8 @@
       </div>
       <div *ngIf="exibeDados" class="row justify-content-center mt-4">
         <button class="col-4 btn btn-primary" (click)="salvarAtualizacoes(element)">Salvar</button>
-        <button class="col-4 btn btn-danger" (click)="cancelarAgendamento(element)">Excluir</button>
+        <button [disabled]="isCancelada(element)" class="ml-2 col-4 btn btn-danger"
+          (click)="cancelarAgendamento(element)">Cancelar</button>
       </div>
 
     </mat-expansion-panel>

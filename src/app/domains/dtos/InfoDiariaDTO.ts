@@ -1,3 +1,5 @@
+import { SituacaoDiariaEnum } from "../enums/SituacaoDiariaEnum";
+
 export class InfoDiariaDTO {
     nomeCliente: string = '';
     email: string = '';
@@ -11,6 +13,7 @@ export class InfoDiariaDTO {
     desconto: number = 0;
     turno: string = '';
     horas: string = '';
+    situacao!: SituacaoDiariaEnum;
     tipoLimpeza: string = '';
     idDiarista!: number;
     dataDiaria!: Date;
