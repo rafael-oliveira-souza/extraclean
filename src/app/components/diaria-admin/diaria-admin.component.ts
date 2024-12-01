@@ -23,6 +23,7 @@ import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalService } from '../../services/profissional.service';
+import { FinalizacaoAgendamentoDTO } from '../../domains/dtos/FinalizacaoAgendamentoDTO';
 
 @Component({
   selector: 'app-diaria-admin',
@@ -122,6 +123,24 @@ export class DiariaAdminComponent implements OnInit {
 
   public recuperarDiaria(diarias: InfoDiariaDTO[]) {
     this.dataSource = new MatTableDataSource<InfoDiariaDTO>(diarias);
+  }
+
+  public cancelarAgendamento(diaria: InfoDiariaDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.idDiaria = diaria.idDiaria;
+    agend.idProfissional = diaria.idDiarista;
+    agend.codigoPagamento = diaria.codigoPagamento;
+
+    this._agendamentoService.cancelarAgendamento(agend)
+      .subscribe((diaria: InfoDiariaDTO) => {
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CANCELADO_SUCESSO);
+        this._changes.detectChanges();
+      }, (error: any) => {
+        this._notificacaoService.erro(error);
+      });
+
   }
 
   public salvarAtualizacoes(diaria: InfoDiariaDTO) {

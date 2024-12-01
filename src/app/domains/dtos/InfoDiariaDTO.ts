@@ -14,4 +14,7 @@ export class InfoDiariaDTO {
     tipoLimpeza: string = '';
     idDiarista!: number;
     dataDiaria!: Date;
+    codigoPagamento: string = '';
+    idDiaria !: number;
+    idCliente !: number;
 }
