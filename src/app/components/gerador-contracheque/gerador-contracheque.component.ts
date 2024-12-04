@@ -71,7 +71,7 @@ export class GeradorContrachequeComponent implements OnInit {
   }
 
   public recuperarValores() {
-    const datas: Date[] = DateUtils.datesInMonth(new Date());
+    const datas: Date[] = DateUtils.datesInMonth(this.periodo);
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
     this.pagamentos = [];
@@ -94,11 +94,14 @@ export class GeradorContrachequeComponent implements OnInit {
             this.valeTransporte = 0;
             this.valeAlimentacao = 0;
           }
+
+          this.calcularHorasTotais();
         });
     } else {
       this.planoSaude = 0;
       this.valeTransporte = 0;
       this.valeAlimentacao = 0;
+      this.calcularHorasTotais();
     }
   }
 
