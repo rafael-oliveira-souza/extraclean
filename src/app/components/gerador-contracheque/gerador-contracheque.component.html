@@ -16,7 +16,7 @@
       </mat-form-field>
       <mat-form-field class="col-3">
         <mat-label>Escolha o Período</mat-label>
-        <mat-select [(ngModel)]="periodo" (modelChange)="calcularHorasTotais()">
+        <mat-select [(ngModel)]="periodo" (modelChange)="recuperarValores()">
           <mat-option [value]="0">Janeiro</mat-option>
           <mat-option [value]="1">Fevereiro</mat-option>
           <mat-option [value]="2">Março</mat-option>
