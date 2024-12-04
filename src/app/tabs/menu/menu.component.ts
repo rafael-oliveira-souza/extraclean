@@ -227,8 +227,8 @@ export class MenuComponent {
       const documentWidth = document.documentElement.clientWidth;
       const documentHeigth = document.documentElement.clientHeight;
       dialogRef = this.dialog.open(component, {
-        minWidth: `${documentWidth * 0.8}px`,
-        maxWidth: `${documentWidth * 0.9}px`,
+        minWidth: `${documentWidth * 0.9}px`,
+        maxWidth: `${documentWidth * 1}px`,
         minHeight: `${documentHeigth * 0.9}px`,
         maxHeight: `${documentHeigth * 0.95}px`,
         data: {
