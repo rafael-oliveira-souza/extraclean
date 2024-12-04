@@ -47,6 +47,7 @@ export class GeradorContrachequeComponent implements OnInit {
   public pagamentos: PagamentoProfissionalDTO[] = [];
   public servicos: PagamentoProfissionalDTO[] = [];
   public salarioBase: number = this.salarioBasePadrao;
+  public FGTS: number = 116;
   public planoSaude: number = this.planoSaudePadrao;
   public valeTransporte: number = this.valeAlimentacaoPadrao;
   public valeAlimentacao: number = this.valeAlimentacaoPadrao;
@@ -133,8 +134,8 @@ export class GeradorContrachequeComponent implements OnInit {
 
   public calcularTotais(salarioBase: number): number {
     let total = salarioBase;
-    total += this.calcularINSS(salarioBase);
-    total += this.calcularIRRF(salarioBase);
+    // total += this.calcularINSS(salarioBase);
+    // total += this.calcularIRRF(salarioBase);
     total += this.calcularHorasExtras(salarioBase, this.horasExtras);
     total += this.planoSaude;
     total += this.valeAlimentacao;
@@ -176,15 +177,17 @@ export class GeradorContrachequeComponent implements OnInit {
     let inss: number = 0;
 
     if (!this.ignorarDescontos && this.profissionalSelecionado && this.profissionalSelecionado.contratada) {
-      if (salarioBase <= 1412.00) {
-        inss = salarioBase * 0.075;  // 7.5%
-      } else if (salarioBase <= 2666.68) {
-        inss = salarioBase * 0.09;   // 9%
-      } else if (salarioBase <= 4000.03) {
-        inss = salarioBase * 0.12;   // 12%
-      } else if (salarioBase <= 7786.49) {
-        inss = salarioBase * 0.14;   // 14%
-      }
+      // if (salarioBase <= 1412.00) {
+      //   inss = salarioBase * 0.075;  // 7.5%
+      // } else if (salarioBase <= 2666.68) {
+      //   inss = salarioBase * 0.09;   // 9%
+      // } else if (salarioBase <= 4000.03) {
+      //   inss = salarioBase * 0.12;   // 12%
+      // } else if (salarioBase <= 7786.49) {
+      //   inss = salarioBase * 0.14;   // 14%
+      // }
+
+      inss = 109.32;
     }
     return inss;
   }

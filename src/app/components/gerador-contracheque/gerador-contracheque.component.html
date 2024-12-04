@@ -61,14 +61,22 @@
     <p><strong>Período de Pagamento:</strong> {{getPeriodo()}} </p>
 
     <h3 class="mt-3">Dados do Funcionário</h3>
-    <table>
-      <tr *ngIf="profissionalSelecionado">
+    <table *ngIf="profissionalSelecionado">
+      <tr >
         <th>Nome</th>
-        <td>{{profissionalSelecionado.nome}} {{profissionalSelecionado.sobrenome}}</td>
+        <th>Cargo</th>
+        <th *ngIf="profissionalSelecionado?.contratada">Data de Admissão</th>
+        <th>CBO</th>
+        <th>Departamento</th>
+        <th>Filial</th>
       </tr>
       <tr>
-        <th>Cargo</th>
+        <td>{{profissionalSelecionado.nome}} {{profissionalSelecionado.sobrenome}}</td>
         <td>Auxiliar de Limpeza</td>
+        <td *ngIf="profissionalSelecionado?.contratada">{{profissionalSelecionado.dataContratacao | data}}</td>
+        <td>514120</td>
+        <td>1</td>
+        <td>1</td>
       </tr>
     </table>
 
@@ -79,11 +87,15 @@
         <th>Valor</th>
       </tr>
       <tr *ngIf="profissionalSelecionado?.contratada">
-        <td>Salário Base</td>
+        <td>8781 - Salário Base</td>
         <td>{{salarioBase | moeda}}</td>
       </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>8781 - INSS</td>
+        <td>{{calcularINSS(salarioBase) | moeda}}</td>
+      </tr>
       <tr *ngFor="let pag of servicos">
-        <td *ngIf="!profissionalSelecionado?.contratada">{{pag.nome}}</td>
+        <td *ngIf="!profissionalSelecionado?.contratada">981 - {{pag.nome}}</td>
         <td *ngIf="!profissionalSelecionado?.contratada">{{pag.valor| moeda}}</td>
       </tr>
       <tr *ngIf="profissionalSelecionado?.contratada">
@@ -96,11 +108,11 @@
         <td>{{planoSaude | moeda}}</td>
       </tr>
       <tr *ngIf="profissionalSelecionado?.contratada">
-        <td>Vale Transporte</td>
+        <td>9382 - Vale Transporte</td>
         <td>{{valeTransporte | moeda}}</td>
       </tr>
       <tr *ngIf="profissionalSelecionado?.contratada">
-        <td>Vale Alimentação</td>
+        <td>306 - Vale Alimentação</td>
         <td>{{valeAlimentacao | moeda}}</td>
       </tr>
       <!-- <tr>
@@ -130,6 +142,26 @@
       <tr *ngFor="let pag of pagamentos">
         <td>{{pag.nome}} - {{pag.data | data}}</td>
         <td>{{pag.valor | moeda}}</td>
+      </tr>
+    </table>
+
+    <h3 class="mt-3">FGTS</h3>
+    <table id="tabelaFGTS">
+      <tr>
+        <th>Salário Base</th>
+        <th>Salário Contribuição INSS</th>
+        <th>Base Cálculo FGTS</th>
+        <th>FGTS do mês</th>
+        <th>Base Cálculo IRRF</th>
+        <th>Faixa IRRF</th>
+      </tr>
+      <tr>
+        <td>{{salarioBase | moeda}}</td>
+        <td>{{salarioBase | moeda}}</td>
+        <td>{{salarioBase | moeda}}</td>
+        <td>{{FGTS | moeda}}</td>
+        <td>{{calcularIRRF(salarioBase) | moeda}}</td>
+        <td>{{calcularIRRF(salarioBase) | moeda}}</td>
       </tr>
     </table>
 
