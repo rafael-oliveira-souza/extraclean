@@ -71,7 +71,9 @@ export class GeradorContrachequeComponent implements OnInit {
   }
 
   public recuperarValores() {
-    const datas: Date[] = DateUtils.datesInMonth(this.periodo);
+    let date = new Date();
+    date.setMonth(this.periodo);
+    const datas: Date[] = DateUtils.datesInMonth(date);
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
     this.pagamentos = [];

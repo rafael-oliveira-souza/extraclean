@@ -16,19 +16,19 @@
       </mat-form-field>
       <mat-form-field class="col-3">
         <mat-label>Escolha o Período</mat-label>
-        <mat-select [(ngModel)]="periodo" (modelChange)="recuperarValores()">
-          <mat-option [value]="0">Janeiro</mat-option>
-          <mat-option [value]="1">Fevereiro</mat-option>
-          <mat-option [value]="2">Março</mat-option>
-          <mat-option [value]="3">Abril</mat-option>
-          <mat-option [value]="4">Maio</mat-option>
-          <mat-option [value]="5">Junho</mat-option>
-          <mat-option [value]="6">Julho</mat-option>
-          <mat-option [value]="7">Agosto</mat-option>
-          <mat-option [value]="8">Setembro</mat-option>
-          <mat-option [value]="9">Outubro</mat-option>
-          <mat-option [value]="10">Novembro</mat-option>
-          <mat-option [value]="11">Dezembro</mat-option>
+        <mat-select [(ngModel)]="periodo" (ngModelChange)="recuperarValores()">
+          <mat-option value="0">Janeiro</mat-option>
+          <mat-option value="1">Fevereiro</mat-option>
+          <mat-option value="2">Março</mat-option>
+          <mat-option value="3">Abril</mat-option>
+          <mat-option value="4">Maio</mat-option>
+          <mat-option value="5">Junho</mat-option>
+          <mat-option value="6">Julho</mat-option>
+          <mat-option value="7">Agosto</mat-option>
+          <mat-option value="8">Setembro</mat-option>
+          <mat-option value="9">Outubro</mat-option>
+          <mat-option value="10">Novembro</mat-option>
+          <mat-option value="11">Dezembro</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="col-3">
