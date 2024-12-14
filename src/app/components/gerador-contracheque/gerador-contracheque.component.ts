@@ -75,10 +75,15 @@ export class GeradorContrachequeComponent implements OnInit {
     let date = new Date();
     date.setMonth(this.periodo);
     const datas: Date[] = DateUtils.datesInMonth(date);
-    const dataIni = DateUtils.format(datas[0], DateUtils.ES);
-    const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
+    let dataIni = DateUtils.format(datas[0], DateUtils.ES);
+    let dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
     this.pagamentos = [];
     this.salarioBase = 0;
+
+    if (date.getDate() <= 15) {
+      dataIni = DateUtils.format(datas[0], DateUtils.ES);
+      dataF = DateUtils.format(datas[14], DateUtils.ES);
+    }
 
     if (this.profissionalSelecionado) {
       this.profissionalService.recuperarValoresRecebidosProfissionalPorPeriodo(this.profissionalSelecionado.id, dataIni, dataF)
