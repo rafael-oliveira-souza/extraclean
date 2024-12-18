@@ -14,6 +14,7 @@ import { ContraChequeProfissionalDTO } from '../../domains/dtos/ContraChequeProf
 import { PagamentoProfissionalDTO } from '../../domains/dtos/PagamentoProfissionalDTO';
 import { PipeModule } from '../../pipes/pipe.module';
 import jsPDF from 'jspdf';
+import { MomentInput } from 'moment';
 
 @Component({
   selector: 'app-gerador-contracheque',
@@ -71,21 +72,39 @@ export class GeradorContrachequeComponent implements OnInit {
 
     // this.profissionalService.calcularGastosFuncionario(calculo)
     //   .subscribe(calculo => console.log(calculo))
+    let date = new Date();
+    this.periodo = date.getMonth();
+    this.datasNoMes = DateUtils.datesInMonth(date);
+    this.diaSelecionado = this.datasNoMes.length;
+    this.pagamentos = [];
+    this.salarioBase = 0;
+
+  }
+
+  public recuperarValoresPorPeriodo() {
+    let date = new Date();
+    date.setDate(1);
+    date.setMonth(this.periodo);
+    this.datasNoMes = DateUtils.datesInMonth(date);
+    this.diaSelecionado = this.datasNoMes.length;
+
+    this.recuperarValores();
   }
 
   public recuperarValores() {
     let date = new Date();
+    date.setDate(1);
     date.setMonth(this.periodo);
     this.datasNoMes = DateUtils.datesInMonth(date);
     this.pagamentos = [];
     this.salarioBase = 0;
 
-    if (this.diaSelecionado == 0) {
-      this.diaSelecionado = this.datasNoMes[this.datasNoMes.length - 1].getDate();
-    }
+    this.recalcularValores();
+  }
 
+  public recalcularValores() {
     let dataIni = DateUtils.format(this.datasNoMes[0], DateUtils.ES);
-    let dataF = DateUtils.format(this.diaSelecionado, DateUtils.ES);
+    let dataF = DateUtils.format(this.datasNoMes[this.diaSelecionado - 1], DateUtils.ES);
     if (this.profissionalSelecionado) {
       this.profissionalService.recuperarValoresRecebidosProfissionalPorPeriodo(this.profissionalSelecionado.id, dataIni, dataF)
         .subscribe((pagamento: ContraChequeProfissionalDTO) => {
