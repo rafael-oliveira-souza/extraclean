@@ -15,12 +15,6 @@
         <input disabled type="text" matInput [(ngModel)]="horasMensais">
       </mat-form-field>
       <mat-form-field class="col-2">
-        <mat-label>Escolha a Data Fim</mat-label>
-        <mat-select [(ngModel)]="diaSelecionado" (ngModelChange)="recuperarValores()">
-          <mat-option *ngFor="let data of datasNoMes" [value]="data.getDate()">{{data.getDate()}}</mat-option>
-        </mat-select>
-      </mat-form-field>
-      <mat-form-field class="col-2">
         <mat-label>Escolha o Período</mat-label>
         <mat-select [(ngModel)]="periodo" (ngModelChange)="recuperarValoresPorPeriodo()">
           <mat-option [value]="0">Janeiro</mat-option>
@@ -35,6 +29,12 @@
           <mat-option [value]="9">Outubro</mat-option>
           <mat-option [value]="10">Novembro</mat-option>
           <mat-option [value]="11">Dezembro</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-2">
+        <mat-label>Escolha a Data Fim</mat-label>
+        <mat-select [(ngModel)]="diaSelecionado" (ngModelChange)="recuperarValores()">
+          <mat-option *ngFor="let data of datasNoMes" [value]="data.getDate()">{{data.getDate()}}</mat-option>
         </mat-select>
       </mat-form-field>
       <mat-form-field class="col-2">
