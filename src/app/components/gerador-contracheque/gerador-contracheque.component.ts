@@ -55,7 +55,9 @@ export class GeradorContrachequeComponent implements OnInit {
   public adicionalExtra = 1; // Adicional de 50% para horas extras durante a semana
   public horasMensais: number = this.calcularHorasTotais();
   public horasTrabalhadas: number = this.horasMensais;
+  public diaSelecionado: number = 0;
   public ignorarDescontos: boolean = false;
+  public datasNoMes: Date[] = [];
 
   constructor(public profissionalService: ProfissionalService) { }
 
@@ -74,17 +76,16 @@ export class GeradorContrachequeComponent implements OnInit {
   public recuperarValores() {
     let date = new Date();
     date.setMonth(this.periodo);
-    const datas: Date[] = DateUtils.datesInMonth(date);
-    let dataIni = DateUtils.format(datas[0], DateUtils.ES);
-    let dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
+    this.datasNoMes = DateUtils.datesInMonth(date);
     this.pagamentos = [];
     this.salarioBase = 0;
 
-    if (date.getDate() <= 15) {
-      dataIni = DateUtils.format(datas[0], DateUtils.ES);
-      dataF = DateUtils.format(datas[14], DateUtils.ES);
+    if (this.diaSelecionado == 0) {
+      this.diaSelecionado = this.datasNoMes[this.datasNoMes.length - 1].getDate();
     }
 
+    let dataIni = DateUtils.format(this.datasNoMes[0], DateUtils.ES);
+    let dataF = DateUtils.format(this.diaSelecionado, DateUtils.ES);
     if (this.profissionalSelecionado) {
       this.profissionalService.recuperarValoresRecebidosProfissionalPorPeriodo(this.profissionalSelecionado.id, dataIni, dataF)
         .subscribe((pagamento: ContraChequeProfissionalDTO) => {

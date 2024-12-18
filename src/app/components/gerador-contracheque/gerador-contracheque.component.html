@@ -14,7 +14,13 @@
         <mat-label>Horas Mensais</mat-label>
         <input disabled type="text" matInput [(ngModel)]="horasMensais">
       </mat-form-field>
-      <mat-form-field class="col-3">
+      <mat-form-field class="col-2">
+        <mat-label>Escolha a Data Fim</mat-label>
+        <mat-select [(ngModel)]="diaSelecionado" (ngModelChange)="recuperarValores()">
+          <mat-option *ngFor="let data of datasNoMes" [value]="data.getDate()">{{data.getDate()}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-2">
         <mat-label>Escolha o Período</mat-label>
         <mat-select [(ngModel)]="periodo" (ngModelChange)="recuperarValores()">
           <mat-option value="0">Janeiro</mat-option>
@@ -31,7 +37,7 @@
           <mat-option value="11">Dezembro</mat-option>
         </mat-select>
       </mat-form-field>
-      <mat-form-field class="col-3">
+      <mat-form-field class="col-2">
         <mat-label>Horas Trabalhadas</mat-label>
         <input type="text" matInput [(ngModel)]="horasTrabalhadas">
       </mat-form-field>
@@ -62,7 +68,7 @@
 
     <h3 class="mt-3">Dados do Funcionário</h3>
     <table *ngIf="profissionalSelecionado">
-      <tr >
+      <tr>
         <th>Nome</th>
         <th>Cargo</th>
         <th *ngIf="profissionalSelecionado?.contratada">Data de Admissão</th>
