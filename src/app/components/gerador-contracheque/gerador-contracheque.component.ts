@@ -57,6 +57,7 @@ export class GeradorContrachequeComponent implements OnInit {
   public horasMensais: number = this.calcularHorasTotais();
   public horasTrabalhadas: number = this.horasMensais;
   public diaSelecionado: number = 0;
+  public ano: number = 2025;
   public ignorarDescontos: boolean = false;
   public datasNoMes: Date[] = [];
 
@@ -74,11 +75,23 @@ export class GeradorContrachequeComponent implements OnInit {
     //   .subscribe(calculo => console.log(calculo))
     let date = new Date();
     this.periodo = date.getMonth();
+    this.ano = date.getFullYear();
     this.datasNoMes = DateUtils.datesInMonth(date);
     this.diaSelecionado = this.datasNoMes.length;
     this.pagamentos = [];
     this.salarioBase = 0;
 
+  }
+
+  public recuperarValoresPorAno() {
+    let date = new Date();
+    date.setDate(1);
+    date.setMonth(this.periodo);
+    date.setFullYear(this.ano);
+    this.datasNoMes = DateUtils.datesInMonth(date);
+    this.diaSelecionado = this.datasNoMes.length;
+
+    this.recuperarValores();
   }
 
   public recuperarValoresPorPeriodo() {
