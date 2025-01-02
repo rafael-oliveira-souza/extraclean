@@ -43,6 +43,7 @@ export class PagamentoProfissionalComponent implements OnInit {
   public displayedColumns: string[] = ['nomeDiarista', 'nome', 'data', 'valor', 'acao'];
   public profissionalSelecionado: number | null = null;
   public valor: number | null = null;
+  public periodoPagamento: Date | null = new Date();
   public data: Date | null = null;
   public nome: string = "";
 
@@ -59,7 +60,7 @@ export class PagamentoProfissionalComponent implements OnInit {
 
   public salvar() {
     let pagamento = new PagamentoProfissionalDTO();
-    pagamento.data = new Date();
+    pagamento.data = this.periodoPagamento;
     pagamento.diaristaId = this.profissionalSelecionado;
     pagamento.valor = this.valor;
     pagamento.nome = this.nome;

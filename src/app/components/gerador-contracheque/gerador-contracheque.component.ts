@@ -98,6 +98,7 @@ export class GeradorContrachequeComponent implements OnInit {
     let date = new Date();
     date.setDate(1);
     date.setMonth(this.periodo);
+    date.setFullYear(this.ano);
     this.datasNoMes = DateUtils.datesInMonth(date);
     this.diaSelecionado = this.datasNoMes.length;
 
@@ -108,6 +109,7 @@ export class GeradorContrachequeComponent implements OnInit {
     let date = new Date();
     date.setDate(1);
     date.setMonth(this.periodo);
+    date.setFullYear(this.ano);
     this.datasNoMes = DateUtils.datesInMonth(date);
     this.pagamentos = [];
     this.salarioBase = 0;
