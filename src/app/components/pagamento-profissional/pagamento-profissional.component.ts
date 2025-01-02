@@ -60,7 +60,7 @@ export class PagamentoProfissionalComponent implements OnInit {
 
   public salvar() {
     let pagamento = new PagamentoProfissionalDTO();
-    pagamento.data = this.periodoPagamento;
+    pagamento.data = new Date();
     pagamento.diaristaId = this.profissionalSelecionado;
     pagamento.valor = this.valor;
     pagamento.nome = this.nome;
@@ -106,7 +106,7 @@ export class PagamentoProfissionalComponent implements OnInit {
   }
 
   public recuperarValores() {
-    const datas: Date[] = DateUtils.datesInMonth(new Date());
+    const datas: Date[] = DateUtils.datesInMonth(this.periodoPagamento);
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
     this.profissionalService.recuperarTodosPagamentosProfissionais(dataIni, dataF)
