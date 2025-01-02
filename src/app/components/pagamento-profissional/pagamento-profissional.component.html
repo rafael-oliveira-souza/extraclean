@@ -32,10 +32,10 @@
     </div>
   </div>
   <div>
-    <div>
+    <div class="row justify-content-center">
       <mat-form-field class="col-12" class="mt-5">
         <mat-label>Período de Pagamento</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="periodoPagamento">
+        <input matInput [matDatepicker]="picker" [(ngModel)]="periodoPagamento" (change)="recuperarValores()">
         <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
         <mat-datepicker #picker></mat-datepicker>
       </mat-form-field>
