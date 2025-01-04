@@ -332,7 +332,7 @@ export class GeradorContrachequeComponent implements OnInit {
         mes = "Dezembro";
         break;
     }
-    return `${mes}/${this.hoje.getFullYear()}`
+    return `${mes}/${this.ano}`
   }
 
   generatePDF() {
@@ -340,11 +340,16 @@ export class GeradorContrachequeComponent implements OnInit {
     // Captura o conteúdo HTML de um elemento específico
     const content = document.getElementById('idDemonstrativoPDF'); // ID do conteúdo HTML
     if (content) {
+      let date = new Date();
+      date.setDate(1);
+      date.setMonth(this.periodo);
+      date.setFullYear(this.ano);
       let nomeProf = this.profissionalSelecionado?.nome;
       doc.html(content, {
         callback: function (doc: jsPDF) {
-          doc.save(`Pagamento_${nomeProf}_${DateUtils.format(new Date(), "MM/yyyy")}.pdf`);
+          doc.save();
         },
+        filename: `Pagamento_${nomeProf}_${this.periodo}/${this.ano}.pdf`,
         margin: [10, 10, 10, 10], // Margens do PDF
         html2canvas: {
           scale: 0.1, // Ajusta a escala de renderização para maior qualidade
