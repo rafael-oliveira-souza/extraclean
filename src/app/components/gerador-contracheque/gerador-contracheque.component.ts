@@ -259,7 +259,10 @@ export class GeradorContrachequeComponent implements OnInit {
   public calcularDescontos(salarioBase: number): { inss: number, irrf: number, horasNaoTrabalhadas: number, totalDescontos: number } {
     const inss = this.calcularINSS(salarioBase);
     const irrf = this.calcularIRRF(salarioBase);
-    const horasNaoTrabalhadas = this.calcularDifHorasTrabalhadas(salarioBase);
+    let horasNaoTrabalhadas = 0;
+    if (this.profissionalSelecionado && this.profissionalSelecionado.contratada) {
+      horasNaoTrabalhadas = this.calcularDifHorasTrabalhadas(salarioBase);
+    }
 
     let totalDesconto = 0;
     this.pagamentos.forEach(pag => totalDesconto += pag.valor ? pag.valor : 0);
@@ -347,7 +350,7 @@ export class GeradorContrachequeComponent implements OnInit {
       let nomeProf = this.profissionalSelecionado?.nome;
       doc.html(content, {
         callback: function (doc: jsPDF) {
-          doc.save();
+          doc.save(`Pagamento_${nomeProf}.pdf`);
         },
         filename: `Pagamento_${nomeProf}_${this.periodo}/${this.ano}.pdf`,
         margin: [10, 10, 10, 10], // Margens do PDF
