@@ -59,6 +59,10 @@ export class PagamentoProfissionalComponent implements OnInit {
   }
 
   public salvar() {
+    if (this.valor) {
+      this.valor = parseFloat(this.valor.toString().replaceAll(",", "."));
+    }
+
     let pagamento = new PagamentoProfissionalDTO();
     pagamento.data = new Date();
     pagamento.diaristaId = this.profissionalSelecionado;
@@ -79,6 +83,10 @@ export class PagamentoProfissionalComponent implements OnInit {
   }
 
   public atualizar(pagamento: PagamentoProfissionalDTO) {
+    if (pagamento && pagamento.valor) {
+      pagamento.valor = parseFloat(pagamento.valor.toString().replaceAll(",", "."));
+    }
+
     this.profissionalService.salvarPagamentoProfissional(pagamento)
       .subscribe((result: any) => {
         this._notificacaoService.alerta("Pagamento atualizado com sucesso!");
