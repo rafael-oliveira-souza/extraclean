@@ -110,10 +110,25 @@ export class CalendarioAgendamentoComponent implements OnInit {
   }
 
   private atualizarInfos(dataAtual: MomentInput) {
+    let map = new Map<string, InfoAgendamentoDTO>();
     this._agendService
       .recuperarInfoAgendamentos(this.formatarData(dataAtual), null, null)
       .subscribe((infos: InfoAgendamentoDTO[]) => {
-        this.infos = infos.filter(agend => agend.situacao != SituacaoDiariaEnum.CANCELADA);
+        infos.forEach(agend => {
+          let key = agend.codigoPagamento + "_" +
+            agend.dataDiaria + "_" +
+            agend.idProfissional + "_" +
+            agend.idCliente;
+
+          if (map.has(key)) {
+          } else {
+            map.set(key, agend);
+          }
+        });
+
+        this.infos = [];
+        map.forEach((agend) => this.infos.push(agend));
+        this.infos = this.infos.filter(agend => agend.situacao != SituacaoDiariaEnum.CANCELADA);
         if (this.profissional) {
           this.infos = this.filtrarProfissional();
         }

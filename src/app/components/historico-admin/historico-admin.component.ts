@@ -127,14 +127,30 @@ export class HistoricoAdminComponent implements AfterViewInit {
     const datas: Date[] = DateUtils.datesInMonth(this.dataInicio);
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
+    let map = new Map<string, InfoAgendamentoDTO>();
+
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, null)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {
-        this.agendamentos = agendamentos;
+        agendamentos.forEach(agend => {
+          let key = agend.codigoPagamento + "_" +
+            agend.dataDiaria + "_" +
+            agend.idProfissional + "_" +
+            agend.idCliente;
+
+          if (map.has(key)) {
+          } else {
+            map.set(key, agend);
+          }
+        });
+
+        this.agendamentos = [];
+        map.forEach((agend) => this.agendamentos.push(agend));
+        // this.agendamentos = agendamentos;
         // this.profissionaisSelecionados = this.agendamentos
         //   .map(agend => agend.nomeDiarista)
         //   .filter((value, index, self) => self.indexOf(value) === index);
 
-        this.agendamentos = this.ordernarDecrescente(agendamentos.filter(agend =>
+        this.agendamentos = this.ordernarDecrescente(this.agendamentos.filter(agend =>
           agend.situacao != SituacaoDiariaEnum.CANCELADA));
 
         this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
@@ -182,22 +198,29 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
   public calcularTotal() {
     let total = 0;
-    let map = new Map<string, number>();
     this.dataSource.data.forEach(value => {
-      // let key = value.codigoPagamento + "_" +
-      //   value.dataDiaria + "_" +
-      //   value.idCliente;
-
-      // if (map.has(key)) {
-      //   const valor = this.exibeValor(map.get(key), value.horas);
-      //   map.set(key, valor);
-      // } else {
-      //   map.set(key, value.valor);
-      // }
       total += value.valorRealAgendamento;
     });
 
-    // map.forEach((valor) => total += valor);
     return total;
   }
+
+  public calcularDescontos() {
+    let total = 0;
+    this.dataSource.data.forEach(value => {
+      total += value.desconto;
+    });
+
+    return total;
+  }
+
+  public calcularTotalComDescontos() {
+    let total = 0;
+    this.dataSource.data.forEach(value => {
+      total += value.valorRealAgendamento - value.desconto;
+    });
+
+    return total;
+  }
+
 }
