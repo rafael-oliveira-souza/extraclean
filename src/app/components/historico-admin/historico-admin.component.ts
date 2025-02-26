@@ -131,7 +131,9 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, null)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {
-        agendamentos.forEach(agend => {
+        agendamentos
+        .filter(agend => agend.situacao != SituacaoDiariaEnum.CANCELADA)
+        .forEach(agend => {
           let key = agend.codigoPagamento + "_" +
             agend.dataDiaria + "_" +
             agend.idProfissional + "_" +
