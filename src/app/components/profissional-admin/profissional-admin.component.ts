@@ -52,7 +52,7 @@ export class ProfissionalAdminComponent implements OnInit {
     private _profissionalService: ProfissionalService) {
 
     this.displayedColumns = [
-      'nome', 'sobrenome', 'telefone', 'dataNascimento', 'porcentagem',
+      'nome', 'sobrenome', 'cpfCnpj', 'telefone', 'dataNascimento', 'porcentagem',
       'segundaDisponivel', 'tercaDisponivel', 'quartaDisponivel', 'quintaDisponivel',
       'sextaDisponivel', 'sabadoDisponivel', 'domingoDisponivel', 'contratada', 'inativado'
     ];
