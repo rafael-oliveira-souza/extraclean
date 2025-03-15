@@ -126,6 +126,24 @@ export class DiariaAdminComponent implements OnInit {
     this.dataSource = new MatTableDataSource<InfoDiariaDTO>(diarias);
   }
 
+  public excluirAgendamento(diaria: InfoDiariaDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.idDiaria = diaria.idDiaria;
+    agend.idProfissional = diaria.idDiarista;
+    agend.codigoPagamento = diaria.codigoPagamento;
+
+    this._agendamentoService.excluirAgendamento(agend)
+      .subscribe((diariaRec: InfoDiariaDTO) => {
+        this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_EXCLUIDO_SUCESSO);
+        this.buscarDiarias();
+        this._changes.detectChanges();
+      }, (error: any) => {
+        this._notificacaoService.erro(error);
+      });
+  }
+
   public cancelarAgendamento(diaria: InfoDiariaDTO) {
     let agend = new FinalizacaoAgendamentoDTO();
     agend.dataDiaria = diaria.dataDiaria;

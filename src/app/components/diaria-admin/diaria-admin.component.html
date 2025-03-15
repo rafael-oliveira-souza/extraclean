@@ -113,6 +113,8 @@
         <button class="col-4 btn btn-primary" (click)="salvarAtualizacoes(element)">Salvar</button>
         <button [disabled]="isCancelada(element)" class="ml-2 col-4 btn btn-danger"
           (click)="cancelarAgendamento(element)">Cancelar</button>
+        <button class="ml-2 col-4 btn btn-danger"
+          (click)="excluirAgendamento(element)">Excluir</button>
       </div>
 
     </mat-expansion-panel>
