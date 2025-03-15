@@ -110,10 +110,12 @@
         </mat-form-field>
       </div>
       <div *ngIf="exibeDados" class="row justify-content-center mt-4">
-        <button class="col-4 btn btn-primary" (click)="salvarAtualizacoes(element)">Salvar</button>
-        <button [disabled]="isCancelada(element)" class="ml-2 col-4 btn btn-danger"
+        <button class="col-3 btn btn-primary" (click)="salvarAtualizacoes(element)">Salvar</button>
+        <div class="col-1"></div>
+        <button [disabled]="isCancelada(element)" class="col-3 btn btn-warning"
           (click)="cancelarAgendamento(element)">Cancelar</button>
-        <button class="ml-2 col-4 btn btn-danger"
+          <div class="col-1"></div>
+          <button class="col-3 btn btn-danger"
           (click)="excluirAgendamento(element)">Excluir</button>
       </div>
 
