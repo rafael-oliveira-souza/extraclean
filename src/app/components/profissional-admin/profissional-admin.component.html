@@ -1,0 +1,122 @@
+<div class="container-fluid mt-5">
+  <div class="text-center mb-5 mt-2">
+    <h5></h5>
+  </div>
+  <div class="col-12">
+    <mat-form-field class="col-12">
+      <mat-label>Escolha uma profissional</mat-label>
+      <select matNativeControl [(ngModel)]="profissionalSelecionado" (ngModelChange)="recuperarProfissional()">
+        <option [value]="0">Sem preferência</option>
+        <option *ngFor="let prof of profissionais" [value]="prof.id">
+          {{prof.nome | ponto: 20}}
+        </option>
+      </select>
+    </mat-form-field>
+  </div>
+  <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
+    <ng-container matColumnDef="nome">
+      <th mat-header-cell *matHeaderCellDef> Nome </th>
+      <td mat-cell *matCellDef="let element">
+        <input matInput [(ngModel)]="element.nome">
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="sobrenome">
+      <th mat-header-cell *matHeaderCellDef> Sobrenome </th>
+      <td mat-cell *matCellDef="let element">
+        <input matInput [(ngModel)]="element.sobrenome">
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="cpfCnpj">
+      <th mat-header-cell *matHeaderCellDef> Cpf </th>
+      <td mat-cell *matCellDef="let element">
+        <input matInput [(ngModel)]="element.cpfCnpj">
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="dataNascimento">
+      <th mat-header-cell *matHeaderCellDef> Data de Nascimento </th>
+      <td mat-cell *matCellDef="let element">
+        <input matInput [matDatepicker]="picker" [(ngModel)]="element.dataNascimento">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker>
+        </mat-datepicker>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="telefone">
+      <th mat-header-cell *matHeaderCellDef> Telefone </th>
+      <td mat-cell *matCellDef="let element">
+        <input matInput [(ngModel)]="element.telefone">
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="porcentagem">
+      <th mat-header-cell *matHeaderCellDef> Porcentagem </th>
+      <td mat-cell *matCellDef="let element">
+        <input matInput [(ngModel)]="element.porcentagem">
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="segundaDisponivel">
+      <th mat-header-cell *matHeaderCellDef> Segunda </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.segundaDisponivel"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="tercaDisponivel">
+      <th mat-header-cell *matHeaderCellDef> Terça </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.tercaDisponivel"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="quartaDisponivel">
+      <th mat-header-cell *matHeaderCellDef> Quarta </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.quartaDisponivel"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="quintaDisponivel">
+      <th mat-header-cell *matHeaderCellDef> Quinta </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.quintaDisponivel"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="sextaDisponivel">
+      <th mat-header-cell *matHeaderCellDef> Sexta </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.sextaDisponivel"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="sabadoDisponivel">
+      <th mat-header-cell *matHeaderCellDef> Sabado </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.sabadoDisponivel"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="domingoDisponivel">
+      <th mat-header-cell *matHeaderCellDef> Domingo </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.domingoDisponivel"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="contratada">
+      <th mat-header-cell *matHeaderCellDef> Contratada </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.contratada"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="inativado">
+      <th mat-header-cell *matHeaderCellDef> Inativar </th>
+      <td mat-cell *matCellDef="let element">
+        <mat-checkbox [(ngModel)]="element.inativo"></mat-checkbox> <br>
+      </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+  </table>
+  <mat-paginator [hidePageSize]="true" #paginator [length]="dataSource.data.length" [pageSize]="10"
+    [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecionar Profissional">
+  </mat-paginator>
+
+  <div class="row justify-content-center mt-4">
+    <button [disabled]="dataSource.data && dataSource.data.length == 0" class="col-4 btn btn-primary"
+      (click)="salvarAtualizacoesProf()">Salvar</button>
+  </div>
+</div>

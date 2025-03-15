@@ -28,6 +28,7 @@ import { TipoClienteEnum } from '../../domains/enums/TipoClienteEnum';
 import { InfoAgendamentoDTO } from '../../domains/dtos/InfoAgendamentoDTO';
 import { HistoricoProfissionalComponent } from '../../components/historico-profissional/historico-profissional.component';
 import { DateUtils } from '../../utils/DateUtils';
+import { PontoProfissionalComponent } from '../../components/ponto-profissional/ponto-profissional.component';
 
 @Component({
   selector: 'app-menu',
@@ -101,10 +102,13 @@ export class MenuComponent {
           this.menusHamb.push({ label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() });
         } else if (auth.tipoUsuario == TipoClienteEnum.DIARISTA) {
           this.menusHamb.push({ label: "Historico de Limpezas", icon: "admin_panel_settings", method: () => this.abrirHistoricoLimpeza() });
+          this.menusHamb.push({ label: "Agendamentos da Semana", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
+          this.menusHamb.push({ label: "Registro de Ponto", icon: "schedule", method: () => this.abrirRegistroPonto() });
+        } else if (auth.tipoUsuario == TipoClienteEnum.CLIENTE) {
+          this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
         }
       }
 
-      this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
       this.menusHamb.push({ label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() });
       this.menusHamb.push({ label: "Sair", icon: "logout", method: () => this.logout() });
     } else {
@@ -186,6 +190,18 @@ export class MenuComponent {
       this._router.navigate([Rota.ADMIN]);
     }
   }
+  public abrirRegistroPonto() {
+    if (this.authService.isLoggedIn()) {
+      const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+      if (auth == null) {
+        return;
+      }
+      this.abrirPagina(PontoProfissionalComponent, [], auth.username, auth.nome, auth.tipoUsuario);
+
+    } else {
+      this._router.navigate([Rota.LOGIN]);
+    }
+  }
 
   public abrirHistoricoLimpeza() {
     if (this.authService.isLoggedIn()) {
@@ -211,8 +227,8 @@ export class MenuComponent {
       const documentWidth = document.documentElement.clientWidth;
       const documentHeigth = document.documentElement.clientHeight;
       dialogRef = this.dialog.open(component, {
-        minWidth: `${documentWidth * 0.8}px`,
-        maxWidth: `${documentWidth * 0.9}px`,
+        minWidth: `${documentWidth * 0.9}px`,
+        maxWidth: `${documentWidth * 1}px`,
         minHeight: `${documentHeigth * 0.9}px`,
         maxHeight: `${documentHeigth * 0.95}px`,
         data: {

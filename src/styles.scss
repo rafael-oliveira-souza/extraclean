@@ -48,6 +48,31 @@ body {
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
 
+/* Estilo para impressão */
+@media print {
+
+  /* Oculta todos os elementos com a classe 'no-print' durante a impressão */
+  .no-print {
+    margin: 0;
+    display: none;
+  }
+
+  .print-only {
+    width: 100%;
+    max-width: 100%;
+    height: 100vh;
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  .scroll-custom {
+    overflow-y: hidden !important;
+  }
+}
+
+
 .notificacao-alerta {
   background-color: $laranja !important;
   color: $white !important;
@@ -75,7 +100,7 @@ body {
 }
 
 strong {
-    color: $primary;
+  color: $primary;
 }
 
 .link {

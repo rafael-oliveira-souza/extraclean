@@ -32,6 +32,51 @@
                             {{horaEnum.descricao}}</option>
                     </select>
                 </mat-form-field>
+
+                <div *ngIf="isAdmin">
+                    <div id="idEmailCliente" class="col-11 ">
+                        <app-auto-complete label="Email Cliente" [options]="clientes" [(value)]="pagamento.email"
+                            optionsDescription="email" optionsValue="email"></app-auto-complete>
+                    </div>
+                    <div id="idProfissional" class="col-12" *ngIf="agendamento.turno"
+                        (click)="recuperarProfissionais()">
+                        <app-profissional [multiplo]="true" [profissionais]="profissionais"
+                            (atualizarProfissional)="recuperarProfissional($event)"
+                            [(profissionaisSelecionados)]="profissionaisSelecionados">
+                        </app-profissional>
+                    </div>
+                    <div id="idTipoLimpeza" class="col-11" *ngIf="pagamento.email">
+                        <mat-form-field class="col-12">
+                            <mat-label>Tipo de Limpeza</mat-label>
+                            <select matNativeControl [(ngModel)]="pagamento.tipoLimpeza">
+                                <option value="4">Residencial</option>
+                                <option value="5">Empresarial</option>
+                                <option value="6">Passadoria</option>
+                                <option value="3">Pré Mudança</option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                    <div id="idPeriodo" class="col-11" *ngIf="pagamento.email">
+                        <mat-form-field class="col-12">
+                            <mat-label>Escolha um Período</mat-label>
+                            <select matNativeControl [(ngModel)]="turno">
+                                <option value="3">Integral</option>
+                                <option value="1">Matutino</option>
+                                <option value="2">Vespertino</option>
+                            </select>
+                        </mat-form-field>
+                    </div>
+                    <div *ngFor="let dia of qtdDias">
+                        <mat-form-field class=" col-11 ">
+                            <mat-label>Limpeza {{dia}}</mat-label>
+                            <input matInput [min]="dataMin" [max]="dataMax" [matDatepicker]="picker"
+                                [(ngModel)]="diasSelecionados[dia-1]">
+                            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+
+                        </mat-form-field>
+                    </div>
+                </div>
                 <!-- <section class="example-section">
                     <mat-checkbox [(ngModel)]="pagamento.isDetalhada"
                         (ngModelChange)="atualizarValores(planoSelecionado)">DETALHADA</mat-checkbox> <br>
@@ -52,7 +97,7 @@
                         {{VALOR_PROFISSIONAL_SELECIONADO | moeda}}</small><br>
                     <br><br>
                 </div>
-                <div *ngIf="pagamento.horas">
+                <div *ngIf="pagamento.horas" id="idDadosAgendamento">
                     <small class="cor-branca">Valor Total : {{agendamentoInfo.total| moeda}}</small><br>
                     <small class="cor-branca">Valor Diária : {{agendamentoInfo.valor| moeda}}</small><br>
                     <small class="cor-branca">Valor Desconto : {{agendamentoInfo.desconto | moeda}}</small><br>
@@ -65,10 +110,15 @@
                         moeda}}</small><br>
                 </div>
                 <div class="d-flex justify-content-end">
-                    <button [disabled]="!pagamento.horas" mat-button class="mt-3 p-4 mb-3"
-                        (click)="comprar(planoSelecionado)">Selecionar</button>
+                    <button *ngIf="isAdmin" [disabled]="!pagamento.horas || !pagamento.email" mat-button
+                        class="mt-3 p-4 mb-3" (click)="agendar(planoSelecionado)">Comprar Plano</button>
                     <!-- <button *ngIf="isAdmin" [disabled]="!pagamento.horas" mat-button class="mt-3 p-4 mb-3"
                         (click)="agendar(planoSelecionado)">Agendar</button> -->
+                    <div *ngIf="!isAdmin">
+                        <button mat-button class="mt-3 p-4 mb-3" (click)="solicitarPlano(planoSelecionado)">
+                            <i style="margin-top:16px" class="fa fa-whatsapp whatsapp-aux"></i>Solicitar
+                            Plano</button>
+                    </div>
                 </div>
             </div>
         </div>

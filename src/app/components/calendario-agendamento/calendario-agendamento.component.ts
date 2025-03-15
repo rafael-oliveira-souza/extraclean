@@ -20,6 +20,12 @@ import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { AgendamentoDiariaDTO } from '../../domains/dtos/AgendamentoDiariaDTO';
 import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDTO';
+import { SituacaoAgendamentoEnum } from '../../domains/enums/SituacaoAgendamentoEnum';
+import { MatCheckboxModule } from '@angular/material/checkbox';
+import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
+import { CodigoValorDTO } from '../../domains/dtos/CodigoValorDTO';
+import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
+import { MatExpansionModule } from '@angular/material/expansion';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -31,10 +37,13 @@ import { RegistroAgendamentoDTO } from '../../domains/dtos/RegistroAgendamentoDT
     MatInputModule,
     MatGridListModule,
     MatFormFieldModule,
+    MatCheckboxModule,
     FormsModule,
     CommonModule,
     PipeModule,
-    ScrollComponent
+    ScrollComponent,
+    AutoCompleteComponent,
+    MatExpansionModule,
   ],
   templateUrl: './calendario-agendamento.component.html',
   styleUrls: ['./calendario-agendamento.component.scss']
@@ -47,6 +56,9 @@ export class CalendarioAgendamentoComponent implements OnInit {
   @Input('profissional')
   public profissional: string = "";
 
+  @Input('profissionais')
+  public profissionais: ProfissionalDTO[] = [];
+
   public mapMat: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public mapVesp: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
   public map: Map<string, Array<InfoAgendamentoDTO | null>> = new Map();
@@ -56,10 +68,12 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public periodo: number = 0;
   public qtdInfo: string = "1:1";
   public infos: InfoAgendamentoDTO[] = [];
-  public profissionais: Set<string> = new Set<string>();
+  public profissionaisAtuais: Array<CodigoValorDTO> = [];
   public turno: number = TurnoEnum.NAO_DEFINIDO;
-  public periodoUnico: Date = new Date();
-  public hoje: Date = new Date();
+  public periodoUnico: Date = DateUtils.newDate();
+  public hoje: Date = DateUtils.newDate();
+  public habilitaAlteracaoProfissional: boolean = false;
+  public habilitaReagendamento: boolean = false;
 
   constructor(private _agendService: AgendamentoService,
     private _notificacaoService: NotificacaoService,
@@ -92,10 +106,29 @@ export class CalendarioAgendamentoComponent implements OnInit {
       this.mapMat.set(dataDiaria, [null]);
     });
 
+    this.atualizarInfos(dataAtual);
+  }
+
+  private atualizarInfos(dataAtual: MomentInput) {
+    let map = new Map<string, InfoAgendamentoDTO>();
     this._agendService
       .recuperarInfoAgendamentos(this.formatarData(dataAtual), null, null)
       .subscribe((infos: InfoAgendamentoDTO[]) => {
-        this.infos = infos;
+        infos.forEach(agend => {
+          let key = agend.codigoPagamento + "_" +
+            agend.dataDiaria + "_" +
+            agend.idProfissional + "_" +
+            agend.idCliente;
+
+          if (map.has(key)) {
+          } else {
+            map.set(key, agend);
+          }
+        });
+
+        this.infos = [];
+        map.forEach((agend) => this.infos.push(agend));
+        this.infos = this.infos.filter(agend => agend.situacao != SituacaoDiariaEnum.CANCELADA);
         if (this.profissional) {
           this.infos = this.filtrarProfissional();
         }
@@ -104,13 +137,28 @@ export class CalendarioAgendamentoComponent implements OnInit {
       });
   }
 
+  public convertToList(profissionais: Set<string>) {
+    return Array.from(profissionais);
+  }
+
   private atualizarCalendario(infos: InfoAgendamentoDTO[]) {
+    this.profissionaisAtuais = [];
+    this.profissionais.forEach(prof => {
+      this.profissionaisAtuais.push(new CodigoValorDTO(prof.id, prof.nome));
+    });
+
     infos.forEach(info => {
-      this.profissionais.add(info.nomeDiarista);
+      // this.profissionais.push(info.nomeDiarista);
+      // if (this.profissionaisAtuais.filter(prof => prof.codigo == info.idProfissional).length == 0) {
+      //   this.profissionaisAtuais.push(new CodigoValorDTO(info.idProfissional, info.nomeDiarista));
+      // }
+
       if (info.turno == TurnoEnum.MATUTINO) {
         this.atualizarMap(info, this.mapMat);
-      }
-      else if (info.turno == TurnoEnum.VESPERTINO) {
+      } else if (info.turno == TurnoEnum.VESPERTINO) {
+        this.atualizarMap(info, this.mapVesp);
+      } else if (info.turno == TurnoEnum.INTEGRAL) {
+        this.atualizarMap(info, this.mapMat);
         this.atualizarMap(info, this.mapVesp);
       }
     });
@@ -192,11 +240,11 @@ export class CalendarioAgendamentoComponent implements OnInit {
     this.proximosPeriodos = [];
 
     if (this.isXs()) {
-      DateUtils.getNextDays(new Date(), 7).forEach(data => {
+      DateUtils.getNextDays(DateUtils.newDate(), 7).forEach(data => {
         this.proximosPeriodos.push(data);
       });
     } else {
-      const ultimaSegunda: moment.Moment = DateUtils.toMoment(new Date()).day(1);
+      const ultimaSegunda: moment.Moment = DateUtils.toMoment(DateUtils.newDate()).day(1);
       this.proximosPeriodos.push(ultimaSegunda.toDate());
       for (let i = 0; i < 4; i++) {
         ultimaSegunda.add(7, 'day');
@@ -230,12 +278,34 @@ export class CalendarioAgendamentoComponent implements OnInit {
     return DateUtils.getDiasSemana(date);
   }
 
+  public exibeBotoesModificacao(diaria: InfoAgendamentoDTO) {
+    return this.exibeBotoes(diaria) && !this.isPagamentoAprovado(diaria);
+  }
+
   public exibeBotoes(diaria: InfoAgendamentoDTO) {
     return this.isAdm && this.isPagamentoEmAberto(diaria);
   }
 
+  public isAgendamentoNaoFinalizado(diaria: InfoAgendamentoDTO) {
+    return this.isDiariaEmAdamento(diaria) && !this.isPagamentoAprovado(diaria);
+  }
+
+  public isDiariaEmAdamento(diaria: InfoAgendamentoDTO) {
+    return diaria.situacao != SituacaoDiariaEnum.FINALIZADA && diaria.situacao != SituacaoDiariaEnum.CANCELADA;
+  }
+
+  public isPagamentoAprovado(diaria: InfoAgendamentoDTO) {
+    return diaria.situacaoPagamento == SituacaoPagamentoEnum.APROVADO;
+  }
+
+  public isPagamentoCancelado(diaria: InfoAgendamentoDTO) {
+    return diaria.situacaoPagamento == SituacaoPagamentoEnum.CANCELADO;
+  }
+
   public isPagamentoEmAberto(diaria: InfoAgendamentoDTO) {
-    return diaria.situacaoPagamento == 1 || diaria.situacaoPagamento == 0 || diaria.situacaoPagamento == 2;
+    return diaria.situacaoPagamento == SituacaoPagamentoEnum.CRIADO
+      || diaria.situacaoPagamento == SituacaoPagamentoEnum.EM_ANALISE
+      || diaria.situacaoPagamento == SituacaoPagamentoEnum.EM_PROCESSO;
   }
 
   public atualizarProfissionalAgendamento(diaria: InfoAgendamentoDTO) {
@@ -245,11 +315,30 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.codigoPagamento = diaria.codigoPagamento;
     agend.idProfissional = diaria.idProfissional;
     agend.idProfissionalAtualizado = diaria.profissionalAtualizado;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .atualizarProfissionalAgendamento(agend)
       .subscribe((info: any) => {
+        this.atualizarPeriodo();
+        this._changes.detectChanges();
         this._notificacaoService.alerta(MensagemEnum.PROFISSIONAL_ATUALIZADO_SUCESSO);
+      }, (error) => this._notificacaoService.erro(error));
+  }
+
+  public confirmarPagamento(diaria: InfoAgendamentoDTO) {
+    let agend = new FinalizacaoAgendamentoDTO();
+    agend.dataDiaria = diaria.dataDiaria;
+    agend.idCliente = diaria.idCliente;
+    agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idDiaria = diaria.idDiaria;
+
+    this._agendService
+      .confirmarPagamento(agend)
+      .subscribe((info: any) => {
+        diaria.situacaoPagamento = SituacaoPagamentoEnum.APROVADO;
+        this._changes.detectChanges();
+        this._notificacaoService.alerta(MensagemEnum.PAGAMENTO_FINALIZADO_SUCESSO);
       }, (error) => this._notificacaoService.erro(error));
   }
 
@@ -258,6 +347,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.dataDiaria = diaria.dataDiaria;
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .finalizarAgendamento(agend)
@@ -274,6 +364,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.dataDiaria = diaria.dataDiaria;
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .cancelarAgendamento(agend)
@@ -291,6 +382,8 @@ export class CalendarioAgendamentoComponent implements OnInit {
     agend.idCliente = diaria.idCliente;
     agend.codigoPagamento = diaria.codigoPagamento;
     agend.dataReagendamento = diaria.dataReagendamento;
+    agend.idProfissional = diaria.idProfissional;
+    agend.idDiaria = diaria.idDiaria;
 
     this._agendService
       .reagendarAgendamento(agend)
@@ -307,12 +400,14 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
   public marcarHorarioAtendimento(diaria: InfoAgendamentoDTO, entrada: boolean) {
     let registro = new RegistroAgendamentoDTO();
-    registro.horario = new Date();
+    registro.horario = DateUtils.newDate();
     registro.idCliente = diaria.idCliente;
     registro.dataDiaria = diaria.dataDiaria;
+    registro.idDiaria = diaria.idDiaria;
 
     this._agendService.registrarHorarioAtendimento(registro)
       .subscribe((result: any) => {
+        this._changes.detectChanges();
         this._notificacaoService.alerta(entrada ? "Entrada Registrada!" : "Saída Registrada!");
       }, (error: any) => {
         this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");

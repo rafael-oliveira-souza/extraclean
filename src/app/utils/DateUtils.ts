@@ -1,5 +1,5 @@
-import { DurationInputArg2, MomentInput } from "moment";
-import moment from "moment";
+import { DurationInputArg2, MomentInput } from 'moment';
+import moment from 'moment';
 import { InclusividadeEnum } from "../domains/enums/InclusividadeEnum";
 import { LinguagemEnum } from "../domains/enums/LinguagemEnum";
 import { DiaSemanaEnum } from "../domains/enums/DiaSemanaEnum";
@@ -8,11 +8,9 @@ export class DateUtils {
     public static BR: string = "DD/MM/yyyy";
     public static ES: string = "yyyy-MM-DD";
     public static ES_LOCALDATETIME: string = "YYYY-MM-DDTHH:mm:ss.SSSSSS";
+    public static TIMEZONE_SAO_PAULO: string = 'America/Sao_Paulo';
 
     public static toMoment(date?: MomentInput, format?: moment.MomentFormatSpecification, language = LinguagemEnum.PT): moment.Moment {
-        if (moment.isMoment(date)) {
-            return date;
-        }
 
         if (date && format && language) {
             return moment(date, format, language);
@@ -25,13 +23,23 @@ export class DateUtils {
         }
 
 
-        return moment().locale(LinguagemEnum.PT);
+        return moment(new Date()).locale(LinguagemEnum.PT);
     }
+
+    public static isValid(date: MomentInput): boolean {
+        return this.toMoment(date).isValid();
+    }
+
     public static newDate(): Date {
         return this.toMoment().toDate();
+        // return new Date();
     }
 
     public static format(date: MomentInput, format: moment.MomentFormatSpecification): string {
+        if (!date) {
+            return "";
+        }
+
         if (moment.isMoment(date)) {
             return date.format(format.toString());
         }
@@ -40,10 +48,6 @@ export class DateUtils {
     }
 
     public static toDate(date: MomentInput, format?: moment.MomentFormatSpecification): Date {
-        if (moment.isMoment(date)) {
-            return date.toDate();
-        }
-
         return this.toMoment(date, format).toDate();
     }
 
@@ -116,9 +120,8 @@ export class DateUtils {
         let datesInMonth: Array<Date> = [];
 
         for (let i = 1; i <= daysInMonth; i++) {
-            let day: Date = this.toMoment().date(i).month(date.month()).year(date.year()).toDate();
-            datesInMonth.push(day);
-
+            const data: Date = date.clone().date(i).toDate();
+            datesInMonth.push(data);
         }
 
         return datesInMonth;
@@ -134,7 +137,7 @@ export class DateUtils {
 
     public static diffMinutes(dateA: MomentInput, dateB: MomentInput): number {
         const diffInMs = this.toDate(dateA).getTime() - this.toDate(dateB).getTime(); // Diferença em milissegundos
-        return Math.floor(diffInMs / (1000 * 60))
+        return Math.floor(diffInMs / (1000 * 60));
     }
 
     public static getDiasSemana(dateA: MomentInput) {

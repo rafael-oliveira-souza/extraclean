@@ -8,6 +8,8 @@ export class ClienteDTO {
     numero!: string;
     localizacao!: string;
     cep!: string;
+    cpf!: string;
+    dataNascimento!: Date;
     tipo!: number;
 
     public isValido() {

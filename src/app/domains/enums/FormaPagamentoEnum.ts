@@ -1,6 +1,7 @@
 export enum FormaPagamentoEnum {
-    VISA,
-    MASTERCARD,
-    ELO,
-    PIX
+    VISA = "VISA",
+    MASTERCARD = "MASTERCARD",
+    ELO = "ELO",
+    PIX = "PIX",
+    CARTAO = "CARTAO",
 }

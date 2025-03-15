@@ -7,14 +7,11 @@ import { CommonModule } from '@angular/common';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
-import { MatTabsModule } from '@angular/material/tabs';
 import { AgendamentoComponent } from '../../tabs/agendamento/agendamento.component';
-import { HomeComponent } from '../../tabs/home/home.component';
 import { PlanosComponent } from '../../tabs/planos/planos.component';
 import { ServicosComponent } from '../../tabs/servicos/servicos.component';
-import { PerfilComponent } from '../perfil/perfil.component';
 import { ScrollComponent } from '../scroll/scroll.component';
-import { FormBuilder, FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { CepComponent } from '../cep/cep.component';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { EnderecoDTO } from '../../domains/dtos/EnderecoDTO';
@@ -35,9 +32,20 @@ import { AgendamentoService } from '../../services/agendamento.service';
 import { PagamentoMpDTO } from '../../domains/dtos/PagamentoMpDto';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { CalendarioAgendamentoComponent } from '../calendario-agendamento/calendario-agendamento.component';
-import { TipoServicoEnum } from '../../domains/enums/TipoServicoEnum';
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { HistoricoAdminComponent } from '../historico-admin/historico-admin.component';
+import { ProfissionalAdminComponent } from '../profissional-admin/profissional-admin.component';
+import { DateUtils } from '../../utils/DateUtils';
+import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
+import { CepService } from '../../services/cep.service';
+import { PipeModule } from '../../pipes/pipe.module';
+import { MatSelectModule } from '@angular/material/select';
+import { AgendarPlanoComponent } from "../agendar-plano/agendar-plano.component";
+import { GeradorContrachequeComponent } from '../gerador-contracheque/gerador-contracheque.component';
+import { ClienteAdminComponent } from '../cliente-admin/cliente-admin.component';
+import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
+import { PagamentoProfissionalComponent } from "../pagamento-profissional/pagamento-profissional.component";
 
 @Component({
   selector: 'app-admin',
@@ -49,7 +57,7 @@ import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConst
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
-    AgendamentoComponent,
+    PagamentoProfissionalComponent,
     PlanosComponent,
     ServicosComponent,
     MatButtonModule,
@@ -58,11 +66,20 @@ import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConst
     CommonModule,
     ScrollComponent,
     PlanosComponent,
-    ProfissionalComponent,
     MatButtonToggleModule,
     MatCheckboxModule,
-    CalendarioAgendamentoComponent
-  ],
+    CalendarioAgendamentoComponent,
+    HistoricoAdminComponent,
+    ProfissionalAdminComponent,
+    AutoCompleteComponent,
+    MatSelectModule,
+    PipeModule,
+    AgendarPlanoComponent,
+    ClienteAdminComponent,
+    GeradorContrachequeComponent,
+    DiariaAdminComponent,
+    PagamentoProfissionalComponent
+],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
@@ -70,9 +87,12 @@ export class AdminComponent implements OnInit {
   public readonly ATTR_SELECTED: string = "selected";
   public width: number | null = null;
   public menus: MenuDTO[] = [
+    { label: "Agendar Plano", id: "idEnvioAgendamentoPlano", index: 0 },
     { label: "Enviar Agendamento", id: "idEnvioAgendamento", index: 1 },
     { label: "Criar Cliente", id: "idCriarCliente", index: 2 },
     { label: "Gerenciar Agendamentos", id: "idCalendAgend", index: 3 },
+    { label: "Gerenciar Clientes/Profissionais", id: "idGerencProf", index: 4 },
+    { label: "Gerar Contra Cheque", id: "idGerencContraCheque", index: 5 },
   ];
   public readonly VALORES_HORAS: { id: HorasEnum, valor: number, descricao: string, numProfissionais: number }[] = AgendamentoConstantes.VALORES_HORAS;
 
@@ -82,13 +102,20 @@ export class AdminComponent implements OnInit {
   public profissionais: Array<ProfissionalDTO> = [];
   public profissionaisSelecionados: number[] = [0];
   public agendamento: AgendamentoDTO = new AgendamentoDTO();
+  public clientes: ClienteDTO[] = [];
   public cliente: ClienteDTO = new ClienteDTO();
   public tipoCliente: TipoClienteEnum = TipoClienteEnum.CLIENTE;
+  public desabilitarEndereco: boolean = false;
+  public agendamentoManual: boolean = true;
+  public showTable: boolean = true;
+  public isPlano: boolean = false;
+  public editaDados: number = 3;
   public url!: string;
 
   constructor(
     public authService: AutenticacaoService,
     public clienteService: ClienteService,
+    public _cepService: CepService,
     public _agendamentoService: AgendamentoService,
     private _router: Router,
     private _notificacaoService: NotificacaoService,
@@ -96,8 +123,9 @@ export class AdminComponent implements OnInit {
     private route: ActivatedRoute) { }
 
   ngOnInit() {
+    this.agendamento.enviarEmail = true;
     this.route.queryParams.subscribe(params => {
-      this.selectedIndex = 1;
+      this.selectedIndex = 0;
       const tab = params['tab'];
       if (tab && tab > 0 && tab <= this.menus.length) {
         this.selectedIndex = tab;
@@ -107,17 +135,45 @@ export class AdminComponent implements OnInit {
     if (!this.authService.isAdminLoggedIn()) {
       this._router.navigate([Rota.LOGIN]);
     }
-
+    this.recuperarClientes();
     this.recuperarProfissionais();
   }
 
-  public recuperarProfissional(profissional: ProfissionalDTO) {
+  public recuperarClientes() {
+    this.clienteService.recuperarTodos()
+      .subscribe((clientes: Array<ClienteDTO>) => {
+        this.clientes = clientes;
+      });
+  }
+
+  public atualizarEndereco() {
+    this.recuperarClientes();
+    this.agendamento.endereco = "";
+    this.endereco = new EnderecoDTO();
+    if (this.agendamento.email) {
+      this.clienteService.recuperarTodos()
+        .subscribe((clientes: Array<ClienteDTO>) => {
+          this.clientes = clientes;
+          const clientesSelecionados = this.clientes.filter(cli => cli.email.toLowerCase().trim() == this.agendamento.email?.toLowerCase().trim());
+          if (clientesSelecionados && clientesSelecionados.length > 0) {
+            this.agendamento.endereco = clientesSelecionados[0].endereco;
+            this.endereco.valido = true;
+          }
+        });
+    }
+  }
+
+  public recuperarProfissional(profissional: ProfissionalDTO[]) {
     this.agendamento.profissionais = this.profissionaisSelecionados;
   }
 
   public getEndereco(endereco: EnderecoDTO) {
     this.endereco = endereco;
     this.agendamento.endereco = EnderecoUtils.montarEndereco(endereco);
+  }
+
+  public isEnderecoValido() {
+    return this.endereco.valido || this.agendamento.endereco != undefined || this.agendamento.endereco != null;
   }
 
   public updateSelectedMenu(): void {
@@ -139,19 +195,28 @@ export class AdminComponent implements OnInit {
   }
 
   public select(index: number) {
+    if (this.selectedIndex == 0 || this.selectedIndex == 1) {
+      this.recuperarProfissionais();
+      this.recuperarClientes();
+    }
+
     this.selectedIndex = index;
     this._router.navigate([Rota.ADMIN], { queryParams: { tab: index } });
   }
 
   public agendar() {
-    this.agendamento.diasSelecionados = [this.agendamento.dataHora];
-    this.agendamento.dataHora = new Date();
+    if (this.agendamento.dataExpiracaoPagamento == null) {
+      this.agendamento.dataExpiracaoPagamento = DateUtils.add(this.agendamento.dataHora, 1, 'day').toDate();
+    }
+
+    this.agendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora)];
     this.agendamento.ignoreQtdProfissionais = true;
     this.agendamento.tipoLimpeza = this.agendamento.tipoLimpeza;
     this._agendamentoService.agendar(this.agendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.url = result.url;
         this.agendamento = new AgendamentoDTO();
+        this.agendamento.profissionais = [];
         this._notificacaoService.alerta(MensagemEnum.AGENDAMENTO_CONCLUIDO_SUCESSO);
       }, (error) => this._notificacaoService.erro(error));
   }
@@ -167,7 +232,32 @@ export class AdminComponent implements OnInit {
         this._notificacaoService.alerta("Cliente Criado com sucesso.");
         this.cliente = new ClienteDTO();
         this._notificacaoService.alerta(MensagemEnum.CLIENTE_CRIADO_CONCLUIDO_SUCESSO);
+        this.recuperarProfissionais();
+        this.recuperarClientes();
       }, (error) => this._notificacaoService.erro(error));
+  }
+
+  public recuperarClienteSelecionado(clientes: ClienteDTO[]) {
+    if (clientes.length == 1) {
+      const clienteSelec = clientes[0];
+      this.agendamento.endereco = clienteSelec.endereco;
+      this._cepService.getCep(clienteSelec.cep)
+        .subscribe((cepRecuperado: EnderecoDTO) => {
+          if (cepRecuperado['erro']) {
+            this.endereco = EnderecoUtils.montarEnderecoPorValores(clienteSelec.endereco, clienteSelec.numero, clienteSelec.cep);
+          } else {
+            this.endereco = cepRecuperado;
+            this.endereco.logradouro = clienteSelec.endereco;
+            this.endereco.numero = clienteSelec.numero;
+            this.endereco.valido = true;
+          }
+          this.desabilitarEndereco = true;
+        });
+    } else {
+      this.agendamento.endereco = "";
+      this.endereco = new EnderecoDTO();
+      this.desabilitarEndereco = false;
+    }
   }
 }
 

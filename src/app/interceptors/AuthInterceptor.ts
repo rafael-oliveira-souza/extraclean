@@ -29,7 +29,7 @@ export class AuthInterceptor implements HttpInterceptor {
   }
 
   private scheduleTokenExpiryCheck(tokenExpiryTime: Date, callback: Function) {
-    const currentTime = new Date().getTime(); // Pega o tempo atual em milissegundos
+    const currentTime = DateUtils.newDate().getTime(); // Pega o tempo atual em milissegundos
     const expiryTime = new Date(tokenExpiryTime).getTime(); // Converte o tempo de expiração do token para milissegundos
 
     // Calcula o tempo restante até a expiração do token

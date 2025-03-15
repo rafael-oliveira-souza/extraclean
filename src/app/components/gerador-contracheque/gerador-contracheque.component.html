@@ -1,0 +1,212 @@
+<div class="container-fluid" style="overflow-y:hidden;">
+  <div class="no-print">
+    <mat-form-field class="col-12">
+      <mat-label>Escolha uma profissional</mat-label>
+      <mat-select [(ngModel)]="profissionalSelecionado" (ngModelChange)="recuperarValores()">
+        <mat-option>Sem preferência</mat-option>
+        @for (prof of profissionais; track prof) {
+        <mat-option [value]="prof"> {{prof.nome}} {{prof.sobrenome }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <div *ngIf="profissionalSelecionado " class="row justify-content-between">
+      <mat-form-field class="col-2">
+        <mat-label>Horas Mensais</mat-label>
+        <input disabled type="text" matInput [(ngModel)]="horasMensais">
+      </mat-form-field>
+      <mat-form-field class="col-2">
+        <mat-label>Escolha o Ano</mat-label>
+        <mat-select [(ngModel)]="ano" (ngModelChange)="recuperarValoresPorAno()">
+          <mat-option [value]="2024">2024</mat-option>
+          <mat-option [value]="2025">2025</mat-option>
+          <mat-option [value]="2026">2026</mat-option>
+          <mat-option [value]="2027">2027</mat-option>
+          <mat-option [value]="2028">2028</mat-option>
+          <mat-option [value]="2029">2029</mat-option>
+          <mat-option [value]="2030">2030</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-2">
+        <mat-label>Escolha o Mes</mat-label>
+        <mat-select [(ngModel)]="periodo" (ngModelChange)="recuperarValoresPorPeriodo()">
+          <mat-option [value]="0">Janeiro</mat-option>
+          <mat-option [value]="1">Fevereiro</mat-option>
+          <mat-option [value]="2">Março</mat-option>
+          <mat-option [value]="3">Abril</mat-option>
+          <mat-option [value]="4">Maio</mat-option>
+          <mat-option [value]="5">Junho</mat-option>
+          <mat-option [value]="6">Julho</mat-option>
+          <mat-option [value]="7">Agosto</mat-option>
+          <mat-option [value]="8">Setembro</mat-option>
+          <mat-option [value]="9">Outubro</mat-option>
+          <mat-option [value]="10">Novembro</mat-option>
+          <mat-option [value]="11">Dezembro</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-2">
+        <mat-label>Escolha a Data Fim</mat-label>
+        <mat-select [(ngModel)]="diaSelecionado" (ngModelChange)="recuperarValores()">
+          <mat-option *ngFor="let data of datasNoMes" [value]="data.getDate()">{{data.getDate()}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <mat-form-field class="col-2">
+        <mat-label>Horas Trabalhadas</mat-label>
+        <input [disabled]="!profissionalSelecionado.contratada" type="text" matInput [(ngModel)]="horasTrabalhadas">
+      </mat-form-field>
+      <mat-form-field class="col-1">
+        <mat-label>Horas Extras</mat-label>
+        <input [disabled]="!profissionalSelecionado.contratada" type="text" matInput [(ngModel)]="horasExtras">
+      </mat-form-field>
+      <mat-form-field class="col-1">
+        <mat-label>Numero de Feriados</mat-label>
+        <input [disabled]="!profissionalSelecionado.contratada" type="text" matInput [(ngModel)]="numFeriados"
+          (modelChange)="calcularHorasTotais()">
+      </mat-form-field>
+    </div>
+    <div class="row justify-content-center">
+      <section id="idExtraClean" class="example-section col-4">
+        <mat-checkbox [(ngModel)]="ignorarDescontos">Ignorar Descontos</mat-checkbox> <br>
+      </section>
+
+      <!-- <button class="col-4 btn btn-primary" (click)="addDesconto()">Adicionar Desconto</button> -->
+      <div class=" col"></div>
+    </div>
+  </div>
+  <div id="idDemonstrativoPDF" class="print-only">
+    <h1>Demonstrativo de Pagamento</h1>
+    <p class="mt-4"><strong>Empresa: </strong>EXTRA CLEAN - LIMPEZAS PROFISSIONAIS LTDA. <br><strong>CNPJ:
+      </strong>56.875.501/0001-76
+    </p>
+    <p><strong>Período de Pagamento:</strong> {{getPeriodo()}} </p>
+
+    <h3 class="mt-3">Dados do Funcionário</h3>
+    <table *ngIf="profissionalSelecionado">
+      <tr>
+        <th>Nome</th>
+        <th>Cargo</th>
+        <th *ngIf="profissionalSelecionado?.contratada">Data de Admissão</th>
+        <th>CBO</th>
+        <th>Departamento</th>
+        <th>Filial</th>
+      </tr>
+      <tr>
+        <td>{{profissionalSelecionado.nome}} {{profissionalSelecionado.sobrenome}}</td>
+        <td>Auxiliar de Limpeza</td>
+        <td *ngIf="profissionalSelecionado?.contratada">{{profissionalSelecionado.dataContratacao | data}}</td>
+        <td>514120</td>
+        <td>1</td>
+        <td>1</td>
+      </tr>
+    </table>
+
+    <h3 class="mt-3">Resumo de Proventos</h3>
+    <table>
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>8781 - Salário Base</td>
+        <td>{{salarioBase | moeda}}</td>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>8781 - INSS</td>
+        <td>{{calcularINSS(salarioBase) | moeda}}</td>
+      </tr>
+      <tr *ngFor="let pag of servicos">
+        <td *ngIf="!profissionalSelecionado?.contratada">981 - {{pag.nome}}</td>
+        <td *ngIf="!profissionalSelecionado?.contratada">{{pag.valor| moeda}}</td>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>Hora Extra ({{horasExtras}} horas)</td>
+        <td>{{calcularHorasExtras(salarioBase, horasExtras) | moeda}}</td>
+      </tr>
+
+      <tr *ngIf="profissionalSelecionado?.contratada && planoSaude">
+        <td>Plano de Saúde</td>
+        <td>{{planoSaude | moeda}}</td>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>9382 - Vale Transporte</td>
+        <td>{{valeTransporte | moeda}}</td>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>306 - Vale Alimentação</td>
+        <td>{{valeAlimentacao | moeda}}</td>
+      </tr>
+      <!-- <tr>
+        <td>Bonus de Performance</td>
+        <td>R$ 500,00</td>
+      </tr> -->
+    </table>
+
+    <h3 class="mt-3">Resumo de Descontos</h3>
+    <table id="tabelaDescontos">
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>INSS</td>
+        <td>{{calcularINSS(salarioBase) | moeda}}</td>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada">
+        <td>IRRF</td>
+        <td>{{calcularIRRF(salarioBase) | moeda}}</td>
+      </tr>
+      <tr *ngIf="profissionalSelecionado?.contratada && (horasMensais-horasTrabalhadas) >= 0">
+        <td>Horas Não Trabalhadas: {{(horasMensais-horasTrabalhadas)}}</td>
+        <td>{{calcularDifHorasTrabalhadas(salarioBase) | moeda}}</td>
+      </tr>
+      <tr *ngFor="let pag of pagamentos">
+        <td>{{pag.nome}} - {{pag.data | data}}</td>
+        <td>{{pag.valor | moeda}}</td>
+      </tr>
+    </table>
+
+    <h3 class="mt-3" *ngIf="profissionalSelecionado && profissionalSelecionado.contratada">FGTS</h3>
+    <table id="tabelaFGTS" *ngIf="profissionalSelecionado && profissionalSelecionado.contratada">
+      <tr>
+        <th>Salário Base</th>
+        <th>Salário Contribuição INSS</th>
+        <th>Base Cálculo FGTS</th>
+        <th>FGTS do mês</th>
+        <th>Base Cálculo IRRF</th>
+        <th>Faixa IRRF</th>
+      </tr>
+      <tr>
+        <td>{{salarioBase | moeda}}</td>
+        <td>{{salarioBase | moeda}}</td>
+        <td>{{salarioBase | moeda}}</td>
+        <td>{{FGTS | moeda}}</td>
+        <td>{{calcularIRRF(salarioBase) | moeda}}</td>
+        <td>{{calcularIRRF(salarioBase) | moeda}}</td>
+      </tr>
+    </table>
+
+    <h3 class="mt-3">Total a Receber</h3>
+    <table>
+      <tr>
+        <th>Total Bruto</th>
+        <td>{{calcularTotais(salarioBase) | moeda}}</td>
+      </tr>
+      <tr>
+        <th>Total Descontos</th>
+        <td>{{calcularDescontos(salarioBase).totalDescontos| moeda}}</td>
+      </tr>
+      <tr class="total">
+        <th>Total Líquido</th>
+        <td>{{calcularSalarioLiquido(salarioBase) | moeda}}</td>
+      </tr>
+    </table>
+
+    <div class="footer">
+      <p>Emitido por: EXTRA CLEAN - LIMPEZAS PROFISSIONAIS LTDA.</p>
+      <p>Data de Emissão: {{hoje | date: 'dd/MM/yyyy'}}</p>
+    </div>
+  </div>
+
+  <div class="row justify-content-center mt-5">
+    <button type="button" class="col-6 btn btn-primary" (click)="generatePDF()">Gerar PDF</button>
+  </div>
+</div>

@@ -20,6 +20,8 @@ import { provideMomentDateAdapter } from '@angular/material-moment-adapter';
 import { Moment } from 'moment';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import { LinguagemEnum } from '../../domains/enums/LinguagemEnum';
+import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { HorasEnum } from '../../domains/enums/HorasEnum';
 
 export const MY_FORMATS = {
   parse: {
@@ -57,8 +59,9 @@ export const MY_FORMATS = {
 export class HistoricoProfissionalComponent implements AfterViewInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
-
+  
   readonly data: any = inject<InfoAgendamentoDTO[]>(MAT_DIALOG_DATA);
+  readonly valorProdutos: number = AgendamentoConstantes.VALOR_PRODUTOS;
   public agendamentos: InfoAgendamentoDTO[] = [];
   public nomeProfissional: string = this.data['nomeProfissional'];
   public tipoCliente: number = this.data['tipoCliente'];
@@ -66,7 +69,7 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
 
   public indice: number = 0;
   public dataSource = new MatTableDataSource<InfoAgendamentoDTO>();
-  public dataInicio: Date = new Date();
+  public dataInicio: Date = DateUtils.newDate();
   public dataMin: Date = DateUtils.toMoment().add(-3, 'month').toDate();
   public dataMax: Date = DateUtils.toMoment().add(1, 'year').toDate();
 
@@ -78,10 +81,10 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
     if (this.isNotXs()) {
       this.displayedColumns = [
         'nomeCliente', 'dataDiaria', 'situacao',
-        'tipoLimpeza', 'turno', 'valor', 'valorProfissional'
+        'tipoLimpeza', 'horas', 'turno', 'valor', 'valorProfissional'
       ];
     } else {
-      this.displayedColumns = ['dataDiaria', 'valorProfissional'];
+      this.displayedColumns = ['nomeCliente', 'dataDiaria', 'valorProfissional'];
     }
   }
 
@@ -125,8 +128,24 @@ export class HistoricoProfissionalComponent implements AfterViewInit {
 
   public calcularTotal() {
     let total = 0;
-    this.agendamentos.forEach(agend => total += agend.valorProfissional);
+    this.agendamentos.forEach(agend => {
+      total += agend.valorProfissional;
+    });
     return total;
+  }
+
+  public exibeValor(valor: number | undefined | null, horas: HorasEnum): number {
+    if (valor) {
+      if (horas == HorasEnum.HORAS_16) {
+        return (valor / 2);
+      } else if (horas == HorasEnum.HORAS_24) {
+        return (valor / 3);
+      } else {
+        return (valor);
+      }
+    }
+
+    return 0;
   }
 
 }

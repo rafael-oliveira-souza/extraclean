@@ -1,0 +1,95 @@
+<div class="container-fluid mt-5">
+  <div class="text-center mb-5 mt-2">
+    <h5>Pagamentos de Profissionais</h5>
+  </div>
+  <div class="row justify-content-center">
+    <mat-form-field class="col-2">
+      <mat-label>Escolha uma profissional</mat-label>
+      <mat-select [(ngModel)]="profissionalSelecionado" (ngModelChange)="filtrarTabela()">
+        <mat-option>Sem preferência</mat-option>
+        @for (prof of profissionais; track prof) {
+        <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome }}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="col-4">
+      <mat-label>Nome</mat-label>
+      <input type="text" matInput [(ngModel)]="nome">
+    </mat-form-field>
+    <mat-form-field class="col-2">
+      <mat-label>Data</mat-label>
+      <input matInput [matDatepicker]="picker" [(ngModel)]="data">
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+    </mat-form-field>
+    <mat-form-field class="col-2">
+      <mat-label>Valor</mat-label>
+      <input type="text" matInput [(ngModel)]="valor">
+    </mat-form-field>
+    <div class="col-2 row justify-content-center">
+      <button style="margin-right: 10px;" class="col btn btn-success" (click)="salvar()">Salvar</button>
+      <button class="col btn btn-primary" (click)="limpar()">Limpar</button>
+    </div>
+  </div>
+  <div>
+    <div class="row justify-content-center">
+      <mat-form-field class="col-12" class="mt-5">
+        <mat-label>Período de Pagamento</mat-label>
+        <input matInput [matDatepicker]="picker" [(ngModel)]="periodoPagamento" (ngModelChange)="recuperarValores()">
+        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+        <mat-datepicker #picker></mat-datepicker>
+      </mat-form-field>
+    </div>
+    <table mat-table [dataSource]="dataSource" class="mt-5">
+      <ng-container matColumnDef="nomeDiarista">
+        <th mat-header-cell *matHeaderCellDef> Nome Diarista</th>
+        <td mat-cell *matCellDef="let element">
+          <p>{{getNome(element.diaristaId)}}</p>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="nome">
+        <th mat-header-cell *matHeaderCellDef> Nome </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-form-field>
+            <mat-label>Nome</mat-label>
+            <input matInput [(ngModel)]="element.nome">
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="data">
+        <th mat-header-cell *matHeaderCellDef> Data </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-form-field>
+            <mat-label>Data</mat-label>
+            <input matInput [matDatepicker]="picker" [(ngModel)]="element.data">
+            <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="valor">
+        <th mat-header-cell *matHeaderCellDef> Valor </th>
+        <td mat-cell *matCellDef="let element">
+          <mat-form-field>
+            <mat-label>Valor</mat-label>
+            <input matInput [(ngModel)]="element.valor">
+          </mat-form-field>
+        </td>
+      </ng-container>
+      <ng-container matColumnDef="acao">
+        <th mat-header-cell *matHeaderCellDef> Ações</th>
+        <td mat-cell *matCellDef="let element">
+          <button style="margin-right: 10px;" class="col-5 btn btn-primary"
+            (click)="atualizar(element)">Atualizar</button>
+          <button style="margin-right: 10px;" class="col-5 btn btn-danger" (click)="excluir(element)">Excluir</button>
+        </td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [hidePageSize]="true" #paginator [length]="dataSource.data.length" [pageSize]="10"
+      [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecionar cliente">
+    </mat-paginator>
+  </div>
+</div>

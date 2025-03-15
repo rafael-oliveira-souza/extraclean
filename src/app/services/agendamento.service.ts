@@ -8,6 +8,7 @@ import { HistoricoAgendamentoDTO } from '../domains/dtos/HistoricoAgendamentoDTO
 import { RegistroAgendamentoDTO } from '../domains/dtos/RegistroAgendamentoDTO';
 import { InfoAgendamentoDTO } from '../domains/dtos/InfoAgendamentoDTO';
 import { FinalizacaoAgendamentoDTO } from '../domains/dtos/FinalizacaoAgendamentoDTO';
+import { InfoDiariaDTO } from '../domains/dtos/InfoDiariaDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -30,6 +31,20 @@ export class AgendamentoService {
     return this._http.get<Array<HistoricoAgendamentoDTO>>(url, { params });
   }
 
+  public atualizarInfoDiaria(diaria: InfoDiariaDTO): Observable<InfoDiariaDTO> {
+    const url = `${this.HOST_URL}/info/diaria`;
+    return this._http.post<InfoDiariaDTO>(url, diaria);
+  }
+
+  public buscarInfoDiarias(dataDiaria: string | null, email: string | null): Observable<Array<InfoDiariaDTO>> {
+    const url = `${this.HOST_URL}/info/diarias`;
+    let params = new HttpParams()
+      .set('dataDiaria', dataDiaria ? dataDiaria : "")
+      .set('email', email ? email : "");
+
+    return this._http.get<Array<InfoDiariaDTO>>(url, { params });
+  }
+
   public registrarHorarioAtendimento(registro: RegistroAgendamentoDTO): Observable<any> {
     const url = `${this.HOST_URL}/registrar-horario`;
     return this._http.patch<any>(url, registro);
@@ -50,8 +65,18 @@ export class AgendamentoService {
     return this._http.post<any>(url, obj);
   }
 
+  public confirmarPagamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
+    const url = `${this.HOST_URL}/confirmar-pagamento`;
+    return this._http.post<any>(url, obj);
+  }
+
   public atualizarProfissionalAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
     const url = `${this.HOST_URL}/atualizar-profissional`;
+    return this._http.post<any>(url, obj);
+  }
+
+  public excluirAgendamento(obj: FinalizacaoAgendamentoDTO): Observable<any> {
+    const url = `${this.HOST_URL}/excluir`;
     return this._http.post<any>(url, obj);
   }
 

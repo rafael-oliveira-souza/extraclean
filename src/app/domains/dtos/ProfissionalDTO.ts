@@ -8,6 +8,7 @@ export class ProfissionalDTO {
     telefone: string = '';
     endereco: string = '';
     dataNascimento!: Date;
+    prioridade!: number;
     segundaDisponivel: boolean = true;
     tercaDisponivel: boolean = true;
     quartaDisponivel: boolean = true;
@@ -15,6 +16,9 @@ export class ProfissionalDTO {
     sextaDisponivel: boolean = true;
     sabadoDisponivel: boolean = false;
     domingoDisponivel: boolean = false;
+    contratada: boolean = false;
+    dataContratacao!: Date;
+    inativo: boolean = false;
 
     constructor(id: number, nome: string) {
         this.id = id;

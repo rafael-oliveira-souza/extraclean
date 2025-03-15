@@ -1,0 +1,41 @@
+<div class="container">
+  <div class="row justify-content-center align-items-center text-center ">
+    <div class="col-12 mt-4">
+      <div class="container">
+        <app-titulo titulo="Controle de Ponto"></app-titulo>
+      </div>
+    </div>
+    <div *ngIf="!ponto.entrada && !ponto.saida && !ponto.intervalo" class=" status-text mt-5" id="status">Você não bateu
+      o
+      ponto ainda.</div>
+
+    <div class="row mt-5">
+      <div class="col-12">
+        <button [disabled]="ponto.entrada" id="btnEntrada" class="btn btn-success btn-action"
+          (click)="registrarEntrada()">
+          <i class="fas fa-sign-in-alt"></i> Registrar Entrada
+        </button>
+      </div>
+      <div class="col-12">
+        <button [disabled]="ponto.intervalo" id="btnIntervalo" class="btn btn-info btn-action"
+          (click)="registrarIntervalo()">
+          <i class="fas fa-coffee"></i> Registrar Intervalo
+        </button>
+      </div>
+      <div class="col-12">
+        <button [disabled]="ponto.saida" id="btnSaida" class="btn btn-warning btn-action" (click)="registrarSaida()">
+          <i class="fas fa-sign-out-alt"></i> Registrar Saída
+        </button>
+      </div>
+    </div>
+
+    <div class="registro-lista mt-5">
+      <h5>Registros de Horários</h5>
+      <div id="listaRegistros">
+        <p *ngIf="ponto.entrada"> Entrada: {{ponto.entrada | data: 'DD/MM/yyyy HH:mm'}}</p>
+        <p *ngIf="ponto.intervalo"> Intervalo: {{ponto.intervalo | data: 'DD/MM/yyyy HH:mm'}}</p>
+        <p *ngIf=" ponto.saida"> Saida: {{ponto.saida | data: 'DD/MM/yyyy HH:mm'}}</p>
+      </div>
+    </div>
+  </div>
+</div>

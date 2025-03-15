@@ -46,7 +46,7 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   public dataSource = new MatTableDataSource<HistoricoAgendamentoDTO>(this.agendamentos);
   public agendamentoSelecionado: HistoricoAgendamentoDTO | null = this.getAgendamentoSelecionado();
 
-  public displayedColumns: string[] = ['endereco', 'tipoLimpeza', 'turno', 'metragem',
+  public displayedColumns: string[] = ['endereco', 'tipoLimpeza', 'turno', 'horas',
     'valor', 'desconto', 'dataHora'];
 
   constructor(private _agendamentoService: AgendamentoService,
@@ -88,7 +88,7 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   }
 
   public mostrarBotaoSaida(): boolean {
-    let agora = new Date();
+    let agora = DateUtils.newDate();
     if (DateUtils.isBefore(agora, this.agendamentoSelecionado?.dataHora, 'yyyy-MM-dd') && !this.agendamentoSelecionado?.horaSaida && this.agendamentoSelecionado?.situacao == 1) {
       if (this.agendamentoSelecionado.turno == 1 && agora.getHours() > 10) {
         return true;
@@ -104,7 +104,7 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   }
 
   public mostrarBotaoChegada(): boolean {
-    let agora = new Date();
+    let agora = DateUtils.newDate();
     if (DateUtils.isBefore(agora, this.agendamentoSelecionado?.dataHora, 'yyyy-MM-dd') && !this.agendamentoSelecionado?.horaEntrada && this.agendamentoSelecionado?.situacao == 1) {
       if (this.agendamentoSelecionado.turno == 1 && agora.getHours() >= 8 && agora.getHours() <= 10) {
         return true;
@@ -124,13 +124,13 @@ export class HistoricoAgendamentoComponent implements AfterViewInit {
   }
 
   public isAdmin() {
-    return !this.isDiarista() && !this.isCliente();
+    return this.tipoCliente == TipoClienteEnum.ADMIN;
   }
 
   public marcarHorarioAtendimento(entrada: boolean) {
     if (this.agendamentoSelecionado) {
       let registro = new RegistroAgendamentoDTO();
-      registro.horario = new Date();
+      registro.horario = DateUtils.newDate();
       registro.idCliente = this.agendamentoSelecionado.idCliente;
       registro.dataDiaria = this.agendamentoSelecionado.dataHora;
 
