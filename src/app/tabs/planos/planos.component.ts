@@ -92,8 +92,8 @@ export class PlanosComponent {
   public diasSelecionados: MomentInput[] = [];
   public qtdDias: number[] = [];
   public clientes: Array<ClienteDTO> = [];
-  public profissionais:Array<ProfissionalDTO> = [];
-  public profissionaisSelecionados:Array<number> = [];
+  public profissionais: Array<ProfissionalDTO> = [];
+  public profissionaisSelecionados: Array<number> = [];
   public turno: TurnoEnum = TurnoEnum.INTEGRAL;
 
   constructor(private planoService: PlanoService,
@@ -199,6 +199,10 @@ export class PlanosComponent {
     window.open(`https://api.whatsapp.com/send?phone=5561998657077&text=Ol%C3%A1,%20vim%20pelo%20site%20e%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es! \n\n Infos:${this.montarInfo()}`, '_blank');
   }
 
+  public formatarData(data: MomentInput) {
+    return DateUtils.format(data, 'DD/MM/YYYY');
+  }
+
   private montarInfo(): string {
     let infos: string = "";
     const moedaPipe = new MoedaPipe();
@@ -208,7 +212,7 @@ export class PlanosComponent {
       if (this.diasSelecionados.length > 0) {
         infos = infos.concat(`Dias Selecionados: `);
         this.diasSelecionados.forEach(data => {
-          infos = infos.concat(`[${DateUtils.format(data, 'DD/MM/YYYY')}] `);
+          infos = infos.concat(`[${this.formatarData(data)}] `);
         });
       }
 
@@ -270,7 +274,7 @@ export class PlanosComponent {
         this.profissionais = prof;
       });
   }
-  
+
   public recuperarProfissional(profissional: ProfissionalDTO) {
     this.agendamento.profissionais = this.profissionaisSelecionados;
   }

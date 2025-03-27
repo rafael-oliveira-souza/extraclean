@@ -163,6 +163,22 @@ export class DiariaAdminComponent implements OnInit {
 
   }
 
+  public finalizar(diaria: InfoDiariaDTO) {
+    let diariaFim: FinalizacaoAgendamentoDTO = new FinalizacaoAgendamentoDTO();
+    diariaFim.codigoPagamento = diaria.codigoPagamento;
+    diariaFim.dataDiaria = diaria.dataDiaria;
+    diariaFim.idCliente = diaria.idCliente;
+    diariaFim.idDiaria = diaria.idDiaria;
+    diariaFim.idProfissional = diaria.idDiarista;
+    this._agendamentoService.finalizarAgendamento(diariaFim)
+      .subscribe((diaria: InfoDiariaDTO) => {
+        this._notificacaoService.alerta(MensagemEnum.DIARIA_ATUALIZADA_SUCESSO);
+        this._changes.detectChanges();
+      }, (error: any) => {
+        this._notificacaoService.erro(error);
+      });
+  }
+
   public salvarAtualizacoes(diaria: InfoDiariaDTO) {
     this._agendamentoService.atualizarInfoDiaria(diaria)
       .subscribe((diaria: InfoDiariaDTO) => {

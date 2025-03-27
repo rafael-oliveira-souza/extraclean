@@ -42,6 +42,7 @@ import { PontoPipe } from '../../pipes/ponto.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { FormaPagamentoEnum } from '../../domains/enums/FormaPagamentoEnum';
 import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
+import { PipeModule } from '../../pipes/pipe.module';
 
 @Component({
   selector: 'app-agendar-plano',
@@ -62,7 +63,7 @@ import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
     DialogModule,
     MatButtonModule,
     AutoCompleteComponent,
-    ProfissionalComponent,
+    PipeModule,
   ],
   templateUrl: './agendar-plano.component.html',
   styleUrls: ['./agendar-plano.component.scss']
@@ -117,6 +118,10 @@ export class AgendarPlanoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+  }
+
+  public formatarData(data: MomentInput) {
+    return DateUtils.format(data, 'DD/MM/YYYY');
   }
 
   recuperarClienteSelecionado(clientes: any[]) {
