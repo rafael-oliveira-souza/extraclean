@@ -15,7 +15,7 @@
       <mat-label>Escolha uma profissional</mat-label>
       <select matNativeControl [(ngModel)]="profissionalSelecionado" (ngModelChange)="atualizarBusca()">
         <option value="">Sem preferência</option>
-        <option *ngFor="let prof of profissionais" [value]="prof.nome">
+        <option *ngFor="let prof of ordenarProfissionais(profissionais)" [value]="prof.nome">
           {{prof.nome | ponto: 20}}
         </option>
       </select>

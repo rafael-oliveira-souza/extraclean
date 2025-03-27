@@ -210,6 +210,7 @@ export class AgendarPlanoComponent implements OnInit {
   }
 
   public selecionarPlano() {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.planos.forEach(plano => {
       if (this.tipoPlano == plano.id) {
         this.planoSelecionado = plano;

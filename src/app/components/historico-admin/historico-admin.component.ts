@@ -97,6 +97,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.buscarAgendamentos();
   }
 
@@ -139,8 +140,6 @@ export class HistoricoAdminComponent implements AfterViewInit {
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
     let map = new Map<string, InfoAgendamentoDTO>();
-
-    this.profissionais = this.ordenarProfissionais(this.profissionais);
 
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, null)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {

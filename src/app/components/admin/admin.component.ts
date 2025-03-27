@@ -46,6 +46,7 @@ import { GeradorContrachequeComponent } from '../gerador-contracheque/gerador-co
 import { ClienteAdminComponent } from '../cliente-admin/cliente-admin.component';
 import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
 import { PagamentoProfissionalComponent } from "../pagamento-profissional/pagamento-profissional.component";
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 
 @Component({
   selector: 'app-admin',
@@ -191,6 +192,16 @@ export class AdminComponent implements OnInit {
       .subscribe((prof: Array<ProfissionalDTO>) => {
         this.profissionais = prof;
         this.agendamento.ignoreQtdProfissionais = true;
+      });
+  }
+
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
       });
   }
 

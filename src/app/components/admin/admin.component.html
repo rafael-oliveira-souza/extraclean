@@ -108,7 +108,7 @@
                     <mat-select [(ngModel)]="profissionaisSelecionados" multiple
                       (ngModelChange)="recuperarProfissional(profissionais)">
                       <mat-option value="0">Sem preferência</mat-option>
-                      @for (prof of profissionais; track prof) {
+                      @for (prof of ordenarProfissionais(profissionais); track prof) {
                       <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome | ponto: 20}}</mat-option>
                       }
                     </mat-select>
