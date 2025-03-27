@@ -100,12 +100,12 @@
   <mat-paginator [hidePageSize]="true" #paginator [length]="dataSource.data.length" [pageSize]="10"
     [pageSizeOptions]="[5, 10, 25, 100]" aria-label="Selecionar Agendamento">
   </mat-paginator>
-  <h5 *ngIf="exibeTotais && calcularTotal() > 0" class="text-center">Total: {{calcularTotal() | moeda}}</h5>
-  <h5 *ngIf="exibeTotais" class="text-center">Descontos: {{calcularDescontos() | moeda}}</h5>
-  <h5 *ngIf="calcularTotalProfissional() > 0" class="text-center">Total Profissionais: {{calcularTotalProfissional() |
+  <h5 *ngIf="exibeTotais && totais.total" class="text-center">Total: {{totais.total | moeda}}</h5>
+  <h5 *ngIf="exibeTotais" class="text-center">Descontos: {{totais.totalDescontos | moeda}}</h5>
+  <h5 *ngIf="totais.totalProfissionais > 0" class="text-center">Total Profissionais: {{totais.totalProfissionais |
     moeda}}</h5>
-  <h5 *ngIf="exibeTotais && calcularTotal() > 0" class="text-center">Lucro: {{
-    (calcularTotalComDescontos() - calcularTotalProfissional()) | moeda}}
+  <h5 *ngIf="exibeTotais && totais.total > 0" class="text-center">Lucro: {{
+    totais.totalRecebido | moeda}}
   </h5>
 
 </div>
