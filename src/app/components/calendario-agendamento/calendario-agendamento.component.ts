@@ -26,6 +26,7 @@ import { AutoCompleteComponent } from '../auto-complete/auto-complete.component'
 import { CodigoValorDTO } from '../../domains/dtos/CodigoValorDTO';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -80,10 +81,21 @@ export class CalendarioAgendamentoComponent implements OnInit {
     private _changes: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.getProximosPeriodos();
     this.atualizarPeriodo();
   }
 
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
+      });
+  }
+  
   public atualizarPeriodo() {
     this.proximoPeriodoSelecionado = [];
     const dataAtual: Date = this.proximosPeriodos[this.periodo];

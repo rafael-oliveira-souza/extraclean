@@ -43,6 +43,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { FormaPagamentoEnum } from '../../domains/enums/FormaPagamentoEnum';
 import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
 import { PipeModule } from '../../pipes/pipe.module';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 
 @Component({
   selector: 'app-agendar-plano',
@@ -118,6 +119,17 @@ export class AgendarPlanoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
+  }
+
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
+      });
   }
 
   public formatarData(data: MomentInput) {

@@ -25,6 +25,7 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { ProfissionalService } from '../../services/profissional.service';
 import { FinalizacaoAgendamentoDTO } from '../../domains/dtos/FinalizacaoAgendamentoDTO';
 import { SituacaoDiariaEnum } from '../../domains/enums/SituacaoDiariaEnum';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 
 @Component({
   selector: 'app-diaria-admin',
@@ -84,6 +85,7 @@ export class DiariaAdminComponent implements OnInit {
       this.recuperarProfissionais()
     }
 
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
     if (this.clientes.length == 0) {
       this.recuperarClientes();
     }
@@ -92,7 +94,17 @@ export class DiariaAdminComponent implements OnInit {
   public recuperarProfissionais() {
     this._profissionalService.get()
       .subscribe((prof: Array<ProfissionalDTO>) => {
-        this.profissionais = prof;
+        this.profissionais = this.ordenarProfissionais(prof);
+      });
+  }
+
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
       });
   }
 

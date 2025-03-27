@@ -25,6 +25,7 @@ import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { ProfissionalService } from '../../services/profissional.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 
 @Component({
   selector: 'app-historico-admin',
@@ -107,6 +108,16 @@ export class HistoricoAdminComponent implements AfterViewInit {
   //     });
   // }
 
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
+      });
+  }
+  
   public atualizarBusca() {
     const agendamentos = this.ordernarDecrescente(this.agendamentos)
       .filter(agend => !this.situacaoPagamento || agend.situacaoPagamento == this.situacaoPagamento)
@@ -128,6 +139,8 @@ export class HistoricoAdminComponent implements AfterViewInit {
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
     let map = new Map<string, InfoAgendamentoDTO>();
+
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
 
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, null)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {

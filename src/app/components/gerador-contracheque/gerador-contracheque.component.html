@@ -91,7 +91,7 @@
       </tr>
       <tr>
         <td>{{profissionalSelecionado.nome}} {{profissionalSelecionado.sobrenome}}</td>
-        <td>Auxiliar de Limpeza</td>
+        <td>{{getCargo(profissionalSelecionado)}}</td>
         <td *ngIf="profissionalSelecionado?.contratada">{{profissionalSelecionado.dataContratacao | data}}</td>
         <td>514120</td>
         <td>1</td>
@@ -109,6 +109,19 @@
         <td>8781 - Salário Base</td>
         <td>{{salarioBase | moeda}}</td>
       </tr>
+      <tr *ngIf="ehGerente">
+        <td>8781 - Total Arrecadado</td>
+        <td>{{totais.total | moeda}}</td>
+      </tr>
+      <tr *ngIf="ehGerente">
+        <td>8280 - Fixo</td>
+        <td>{{VL_FIXO_GERENTE | moeda}}</td>
+      </tr>
+      <tr *ngIf="ehGerente">
+        <td>8281 - Comissão</td>
+        <td>{{totais.total * PORCENTAGEM_GERENTE | moeda}}</td>
+      </tr>
+
       <tr *ngIf="profissionalSelecionado?.contratada">
         <td>8781 - INSS</td>
         <td>{{calcularINSS(salarioBase) | moeda}}</td>
