@@ -89,28 +89,28 @@
                         optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
                     </div>
                   </div>
-                  <div class="row justify-content-center">
-                    <small class="col-12"><strong>Data: </strong>{{diaria.dataDiaria | data}}</small><br>
-                    <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
-                    <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
-                    <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
-                    <small class="col-6"><strong>Horas: </strong>{{diaria.horas |
+                  <div id="formAgendamento" class="row justify-content-center">
+                    <small class="col-12"><strong> | Data: </strong>{{diaria.dataDiaria | data}}</small><br>
+                    <small class="col-6"><strong> | Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
+                    <small class="col-6"><strong> | Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+                    <small class="col-6"><strong> | Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
+                    <small class="col-6"><strong> | Horas: </strong>{{diaria.horas |
                       horasDiaria}}</small><br>
-                    <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor |
+                    <small class="col-6" *ngIf="isAdm"><strong> | Valor: </strong>{{diaria.valor |
                       moeda}}</small><br>
-                    <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto |
+                    <small class="col-6" *ngIf="isAdm"><strong> | Desconto: </strong>{{diaria.desconto |
                       moeda}}</small><br> <!-- -->
-                    <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
-                    <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                    <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento
+                    <small class="col-6"><strong> | Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                    <small class="col-6"><strong> | Turno: </strong>{{diaria.turno | turno}}</small><br>
+                    <small class="col-12" *ngIf="isAdm"><strong> | Situação Pagamento: </strong>{{diaria.situacaoPagamento
                       |
                       situacaoPagamento}}<br></small>
-                    <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
-                    <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
+                    <small class="col-12"><strong> | Endereço: </strong>{{diaria.endereco}}</small><br>
+                    <small class="col-12" *ngIf="diaria.observacao"><strong> | Observação:
                       </strong>{{diaria.observacao}}</small><br>
-                    <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
+                    <small class="col-12"><strong> | Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                         [href]="diaria.localizacao">Localização</a></small><br>
-                    <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
+                    <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong> | Pagamento: </strong>
                       <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
                     </small>
                   </div>
@@ -124,7 +124,12 @@
                       Marcar Saída
                     </button>
                   </div>
-                  <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
+                  <div *ngIf="isAdm " class="row justify-content-center mt-3">
+                    <button (click)="copiarAgendamento('formAgendamento')" type="button" class="col-8 btn mt-2"
+                      style="background-color: rgb(199, 199, 46); color: white;">Copiar Agendamento
+                    </button>
+                  </div>
+                  <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center">
                     <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
                       class="col-8 btn btn-primary">Finalizar
                     </button>
@@ -180,28 +185,28 @@
                         optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
                     </div>
                   </div>
-                  <div class="row justify-content-center">
-                    <small class="col-12"><strong>Data: </strong>{{diaria.dataDiaria | data}}</small><br>
-                    <small class="col-6"><strong>Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
-                    <small class="col-6"><strong>Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
-                    <small class="col-6"><strong>Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
-                    <small class="col-6"><strong>Horas: </strong>{{diaria.horas |
+                  <div id="formAgendamento" class="row justify-content-center">
+                    <small class="col-12"><strong> | Data: </strong>{{diaria.dataDiaria | data}}</small><br>
+                    <small class="col-6"><strong> | Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
+                    <small class="col-6"><strong> | Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
+                    <small class="col-6"><strong> | Tipo: </strong>{{diaria.tipoLimpeza | tipoServico}}</small><br>
+                    <small class="col-6"><strong> | Horas: </strong>{{diaria.horas |
                       horasDiaria}}</small><br>
-                    <small class="col-6" *ngIf="isAdm"><strong>Valor: </strong>{{diaria.valor |
+                    <small class="col-6" *ngIf="isAdm"><strong> | Valor: </strong>{{diaria.valor |
                       moeda}}</small><br>
-                    <small class="col-6" *ngIf="isAdm"><strong>Desconto: </strong>{{diaria.desconto |
+                    <small class="col-6" *ngIf="isAdm"><strong> | Desconto: </strong>{{diaria.desconto |
                       moeda}}</small><br> <!-- -->
-                    <small class="col-6"><strong>Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
-                    <small class="col-6"><strong>Turno: </strong>{{diaria.turno | turno}}</small><br>
-                    <small class="col-12" *ngIf="isAdm"><strong>Situação Pagamento: </strong>{{diaria.situacaoPagamento
+                    <small class="col-6"><strong> | Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
+                    <small class="col-6"><strong> | Turno: </strong>{{diaria.turno | turno}}</small><br>
+                    <small class="col-12" *ngIf="isAdm"><strong> | Situação Pagamento: </strong>{{diaria.situacaoPagamento
                       |
                       situacaoPagamento}}<br></small>
-                    <small class="col-12"><strong>Endereço: </strong>{{diaria.endereco}}</small><br>
-                    <small class="col-12" *ngIf="diaria.observacao"><strong>Observação:
+                    <small class="col-12"><strong> | Endereço: </strong>{{diaria.endereco}}</small><br>
+                    <small class="col-12" *ngIf="diaria.observacao"><strong> | Observação:
                       </strong>{{diaria.observacao}}</small><br>
-                    <small class="col-12"><strong>Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
+                    <small class="col-12"><strong> | Localização: </strong> <a *ngIf="diaria.localizacao" target="_blank"
                         [href]="diaria.localizacao">Localização</a></small><br>
-                    <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong>Pagamento: </strong>
+                    <small class="col-12" *ngIf="isAdm && exibeBotoesModificacao(diaria)"><strong> | Pagamento: </strong>
                       <a target="_blank" [href]="diaria.linkPagamento">Link Pagamento</a><br>
                     </small>
                   </div>
@@ -215,7 +220,12 @@
                       Marcar Saída
                     </button>
                   </div>
-                  <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center mt-3">
+                  <div *ngIf="isAdm " class="row justify-content-center mt-3">
+                    <button (click)="copiarAgendamento('formAgendamento')" type="button" class="col-8 btn mt-2"
+                      style="background-color: rgb(199, 199, 46); color: white;">Copiar Agendamento
+                    </button>
+                  </div>
+                  <div *ngIf="isAdm && isDiariaEmAdamento(diaria)" class="row justify-content-center">
                     <button *ngIf="!isPagamentoCancelado(diaria)" (click)="finalizarAgendamento(diaria)" type="button"
                       class="col-8 btn btn-primary">Finalizar
                     </button>
