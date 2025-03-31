@@ -89,7 +89,7 @@
                         optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
                     </div>
                   </div>
-                  <div id="formAgendamento" class="row justify-content-center">
+                  <div [id]="'formAgendamento_' + diaria.idDiaria" class="row justify-content-center">
                     <small class="col-12"><strong> | Data: </strong>{{diaria.dataDiaria | data}}</small><br>
                     <small class="col-6"><strong> | Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
                     <small class="col-6"><strong> | Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
@@ -124,8 +124,8 @@
                       Marcar Saída
                     </button>
                   </div>
-                  <div *ngIf="isAdm " class="row justify-content-center mt-3">
-                    <button (click)="copiarAgendamento('formAgendamento')" type="button" class="col-8 btn mt-2"
+                  <div *ngIf="isAdm " class="row justify-content-center mt-3 mb-2">
+                    <button (click)="copiarAgendamento('formAgendamento_' + diaria.idDiaria)" type="button" class="col-8 btn mt-2"
                       style="background-color: rgb(199, 199, 46); color: white;">Copiar Agendamento
                     </button>
                   </div>
@@ -185,7 +185,7 @@
                         optionsDescription="valor" [(value)]="diaria.profissionalAtualizado"></app-auto-complete>
                     </div>
                   </div>
-                  <div id="formAgendamento" class="row justify-content-center">
+                  <div [id]="'formAgendamento_' + diaria.idDiaria" class="row justify-content-center">
                     <small class="col-12"><strong> | Data: </strong>{{diaria.dataDiaria | data}}</small><br>
                     <small class="col-6"><strong> | Cliente: </strong>{{diaria.nomeCliente | ponto: 15}}</small><br>
                     <small class="col-6"><strong> | Profissional: </strong>{{diaria.nomeDiarista}}</small><br>
@@ -220,8 +220,8 @@
                       Marcar Saída
                     </button>
                   </div>
-                  <div *ngIf="isAdm " class="row justify-content-center mt-3">
-                    <button (click)="copiarAgendamento('formAgendamento')" type="button" class="col-8 btn mt-2"
+                  <div *ngIf="isAdm " class="row justify-content-center mt-3 mb-2">
+                    <button (click)="copiarAgendamento('formAgendamento_' + diaria.idDiaria)" type="button" class="col-8 btn mt-2"
                       style="background-color: rgb(199, 199, 46); color: white;">Copiar Agendamento
                     </button>
                   </div>
