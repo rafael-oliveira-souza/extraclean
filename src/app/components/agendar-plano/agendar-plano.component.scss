@@ -6,6 +6,28 @@ small {
     font-size: 17px;
 }
 
+::ng-deep .mat-radio-button.mat-radio-checked .mat-radio-inner {
+    background-color: #4caf50;
+    /* Cor do círculo quando selecionado */
+    border-color: #4caf50;
+    color: $white;
+    /* Cor da borda quando selecionado */
+}
+
+::ng-deep .mat-mdc-radio-button {
+    .mdc-label {
+        color: $white;
+    }
+
+    .mdc-radio__outer-circle {
+        border-color: white !important;
+    }
+
+    .mdc-radio__inner-circle {
+        border-color: white !important;
+    }
+}
+
 ::ng-deep mat-icon {
     text-align: justify;
     color: $white;
@@ -28,7 +50,7 @@ small {
     }
 }
 
-::ng-deep .mdc-checkbox__background{
+::ng-deep .mdc-checkbox__background {
     border: 1px solid $white !important;
 }
 
@@ -43,5 +65,5 @@ small {
 }
 
 .whatsapp-aux {
-  background-color: $verde;
+    background-color: $verde;
 }

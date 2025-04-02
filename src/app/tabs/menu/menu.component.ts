@@ -98,7 +98,7 @@ export class MenuComponent {
       this.menusHamb = [];
       const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
       if (auth != null) {
-        if (auth.tipoUsuario == TipoClienteEnum.ADMIN) {
+        if (auth.tipoUsuario == TipoClienteEnum.ADMIN || auth.tipoUsuario == TipoClienteEnum.GERENTE) {
           this.menusHamb.push({ label: "Administração", icon: "admin_panel_settings", method: () => this.abrirAdministrador() });
         } else if (auth.tipoUsuario == TipoClienteEnum.DIARISTA) {
           this.menusHamb.push({ label: "Historico de Limpezas", icon: "admin_panel_settings", method: () => this.abrirHistoricoLimpeza() });

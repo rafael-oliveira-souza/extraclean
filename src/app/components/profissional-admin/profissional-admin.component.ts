@@ -14,6 +14,7 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { DateUtils } from '../../utils/DateUtils';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 
 @Component({
   selector: 'app-profissional-admin',
@@ -69,9 +70,18 @@ export class ProfissionalAdminComponent implements OnInit {
   public recuperarProfissionais() {
     this._profissionalService.todos()
       .subscribe((prof: Array<ProfissionalDTO>) => {
-        this.profissionais = prof;
+        this.profissionais = this.ordenarProfissionais(prof);
         this.profissionais.forEach(profe => profe.inativo = profe.prioridade < 1);
         this.recuperarProfissional();
+      });
+  }
+  
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
       });
   }
 

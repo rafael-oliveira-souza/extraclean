@@ -29,7 +29,7 @@ import { MoedaPipe } from '../../pipes/moeda.pipe';
 import { TurnoPipe } from '../../pipes/turno.pipe';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { AutenticacaoService } from '../../services/autenticacao.service';
-import { ClienteService } from '../../services/cliente.service';
+import { MatRadioModule } from '@angular/material/radio';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { PlanoService } from '../../services/plano.service';
 import { ProfissionalService } from '../../services/profissional.service';
@@ -42,6 +42,8 @@ import { PontoPipe } from '../../pipes/ponto.pipe';
 import { MatSelectModule } from '@angular/material/select';
 import { FormaPagamentoEnum } from '../../domains/enums/FormaPagamentoEnum';
 import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
+import { PipeModule } from '../../pipes/pipe.module';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 
 @Component({
   selector: 'app-agendar-plano',
@@ -62,7 +64,8 @@ import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
     DialogModule,
     MatButtonModule,
     AutoCompleteComponent,
-    ProfissionalComponent,
+    PipeModule,
+    MatRadioModule,
   ],
   templateUrl: './agendar-plano.component.html',
   styleUrls: ['./agendar-plano.component.scss']
@@ -100,6 +103,8 @@ export class AgendarPlanoComponent implements OnInit {
   public extraPlus: boolean = false;
   public qtdDias: number[] = [];
   public formaPagamento!: number;
+  public isTaxaCartao: number = 1;
+  public taxaCartao: number = 5;
   public qtdParcelas: number = 1;
   public profissionaisSelecionados: Array<number> = [];
   public turno: TurnoEnum = TurnoEnum.INTEGRAL;
@@ -117,6 +122,21 @@ export class AgendarPlanoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
+  }
+
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
+      });
+  }
+
+  public formatarData(data: MomentInput) {
+    return DateUtils.format(data, 'DD/MM/YYYY');
   }
 
   recuperarClienteSelecionado(clientes: any[]) {
@@ -148,22 +168,23 @@ export class AgendarPlanoComponent implements OnInit {
       agend.tipoPlano = this.planoSelecionado ? this.planoSelecionado.tipoPlano : TipoPlanoEnum.DIARIA;
 
       if (agend.valor > 0) {
-        let valorComDesconto = agend.valor;
+        let valorAgendamento = agend.valor;
         if (this.extraPlus) {
-          valorComDesconto = agend.valor + this.VALOR_PROFISSIONAL_SELECIONADO;
+          valorAgendamento = agend.valor + this.VALOR_PROFISSIONAL_SELECIONADO;
         }
 
-        let desconto = AgendamentoConstantes.aplicarDesconto(valorComDesconto, plano.desconto);
+        let desconto = AgendamentoConstantes.aplicarDesconto(valorAgendamento, plano.desconto);
         totais.desconto += desconto;
-        totais.valor += valorComDesconto;
+        totais.valor += valorAgendamento;
       }
     });
 
+    let valorComDesconto = totais.valor - totais.desconto;
     if (this.formaPagamento == 2) {
-      let porcentCartao = this.calcularTaxaCartao(totais.valor);
-      totais.total = totais.valor - totais.desconto + porcentCartao;
+      let porcentCartao = this.calcularTaxaCartao(valorComDesconto);
+      totais.total = valorComDesconto + porcentCartao;
     } else {
-      totais.total = totais.valor - totais.desconto;
+      totais.total = valorComDesconto;
     }
     return totais;
   }
@@ -193,6 +214,7 @@ export class AgendarPlanoComponent implements OnInit {
   }
 
   public selecionarPlano() {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.planos.forEach(plano => {
       if (this.tipoPlano == plano.id) {
         this.planoSelecionado = plano;
@@ -207,6 +229,9 @@ export class AgendarPlanoComponent implements OnInit {
     this.agendamentoInfo = this.calcularTotal(plano);
   }
 
+  public atualizarValoresTaxa(plano: PlanoDTO) {
+    this.agendamentoInfo = this.calcularTotal(plano);
+  }
 
   public comprar(plano: PlanoDTO) {
     if (!this.planoSelecionado) {
@@ -252,9 +277,8 @@ export class AgendarPlanoComponent implements OnInit {
     }
   }
 
-  public calcularTaxaCartao(valor: number) {
-    const taxaCartaoPipe = new TaxaCartaoPipe();
-    return valor * taxaCartaoPipe.transform(this.qtdParcelas) / 100;
+  public calcularTaxaCartao(valorComDesconto: number): number {
+    return this.isTaxaCartao == 1 ? Number(this.taxaCartao) : Number(valorComDesconto * this.taxaCartao / 100);
   }
 
   public recuperarProfissionais() {

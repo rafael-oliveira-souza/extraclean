@@ -25,6 +25,8 @@ import { SituacaoPagamentoEnum } from '../../domains/enums/SituacaoPagamentoEnum
 import { HorasEnum } from '../../domains/enums/HorasEnum';
 import { ProfissionalService } from '../../services/profissional.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
+import { TotaisDTO } from '../../domains/dtos/TotaisDTO';
 
 @Component({
   selector: 'app-historico-admin',
@@ -80,7 +82,8 @@ export class HistoricoAdminComponent implements AfterViewInit {
   ];
 
   public displayedColumns: string[] = [];
-
+  public totais: TotaisDTO = new TotaisDTO();
+  
   constructor(private _agendamentoService: AgendamentoService,
     private _profissionalService: ProfissionalService,
     private _notificacaoService: NotificacaoService) {
@@ -96,6 +99,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   ngAfterViewInit() {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.buscarAgendamentos();
   }
 
@@ -107,6 +111,16 @@ export class HistoricoAdminComponent implements AfterViewInit {
   //     });
   // }
 
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
+      });
+  }
+
   public atualizarBusca() {
     const agendamentos = this.ordernarDecrescente(this.agendamentos)
       .filter(agend => !this.situacaoPagamento || agend.situacaoPagamento == this.situacaoPagamento)
@@ -114,6 +128,10 @@ export class HistoricoAdminComponent implements AfterViewInit {
       .filter(agend => !this.profissionalSelecionado || agend.nomeDiarista.toLowerCase() == this.profissionalSelecionado.toLowerCase())
       .filter(agend => !this.situacao || agend.situacao == this.situacao);
 
+    const datas: Date[] = DateUtils.datesInMonth(this.dataInicio);
+    const dataIni = DateUtils.format(datas[0], DateUtils.ES);
+    const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
+    this.recuperarTotais(dataIni, dataF);
     this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(agendamentos);
     this.dataSource.paginator = this.paginator;
   }
@@ -121,6 +139,13 @@ export class HistoricoAdminComponent implements AfterViewInit {
   private ordernarDecrescente(agendamentos: InfoAgendamentoDTO[]) {
     return agendamentos;
     // return agendamentos.sort((a, b) => DateUtils.toDate(b.dataDiaria).getTime() - DateUtils.toDate(a.dataDiaria).getTime());
+  }
+
+  private recuperarTotais(dataIni: string, dataF: string) {
+    this._agendamentoService.recuperarTotais(dataIni, dataF)
+      .subscribe((totais: TotaisDTO) => {
+        this.totais = totais;
+      });
   }
 
   private buscarAgendamentos() {
@@ -131,19 +156,20 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
     this._agendamentoService.recuperarInfoAgendamentos(dataIni, dataF, null)
       .subscribe((agendamentos: InfoAgendamentoDTO[]) => {
+        this.recuperarTotais(dataIni, dataF);
         agendamentos
-        .filter(agend => agend.situacao != SituacaoDiariaEnum.CANCELADA)
-        .forEach(agend => {
-          let key = agend.codigoPagamento + "_" +
-            agend.dataDiaria + "_" +
-            agend.idProfissional + "_" +
-            agend.idCliente;
+          .filter(agend => agend.situacao != SituacaoDiariaEnum.CANCELADA)
+          .forEach(agend => {
+            let key = agend.codigoPagamento + "_" +
+              agend.dataDiaria + "_" +
+              agend.idProfissional + "_" +
+              agend.idCliente;
 
-          if (map.has(key)) {
-          } else {
-            map.set(key, agend);
-          }
-        });
+            if (map.has(key)) {
+            } else {
+              map.set(key, agend);
+            }
+          });
 
         this.agendamentos = [];
         map.forEach((agend) => this.agendamentos.push(agend));
@@ -187,42 +213,4 @@ export class HistoricoAdminComponent implements AfterViewInit {
     datepicker.close();
     this.buscarAgendamentos();
   }
-
-  public calcularTotalProfissional() {
-    let total = 0;
-    this.dataSource.data.forEach(agend => {
-      if (!agend.contratada) {
-        total += agend.valorProfissional;
-      }
-    });
-    return total;
-  }
-
-  public calcularTotal() {
-    let total = 0;
-    this.dataSource.data.forEach(value => {
-      total += value.valorRealAgendamento;
-    });
-
-    return total;
-  }
-
-  public calcularDescontos() {
-    let total = 0;
-    this.dataSource.data.forEach(value => {
-      total += value.desconto;
-    });
-
-    return total;
-  }
-
-  public calcularTotalComDescontos() {
-    let total = 0;
-    this.dataSource.data.forEach(value => {
-      total += value.valorRealAgendamento - value.desconto;
-    });
-
-    return total;
-  }
-
 }

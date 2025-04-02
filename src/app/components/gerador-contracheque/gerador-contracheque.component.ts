@@ -15,6 +15,9 @@ import { PagamentoProfissionalDTO } from '../../domains/dtos/PagamentoProfission
 import { PipeModule } from '../../pipes/pipe.module';
 import jsPDF from 'jspdf';
 import { MomentInput } from 'moment';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
+import { AgendamentoService } from '../../services/agendamento.service';
+import { TotaisDTO } from '../../domains/dtos/TotaisDTO';
 
 @Component({
   selector: 'app-gerador-contracheque',
@@ -40,6 +43,8 @@ export class GeradorContrachequeComponent implements OnInit {
   public readonly planoSaudePadrao: number = 0;
   public readonly valeTransportePadrao: number = 405;
   public readonly valeAlimentacaoPadrao: number = 195;
+  public readonly PORCENTAGEM_GERENTE: number = 0.3;
+  public readonly VL_FIXO_GERENTE: number = 500;
 
   public hoje: Date = DateUtils.newDate();
   public periodo: number = this.hoje.getMonth();
@@ -48,6 +53,7 @@ export class GeradorContrachequeComponent implements OnInit {
   public pagamentos: PagamentoProfissionalDTO[] = [];
   public servicos: PagamentoProfissionalDTO[] = [];
   public salarioBase: number = this.salarioBasePadrao;
+  public totais: TotaisDTO = new TotaisDTO();
   public FGTS: number = 116;
   public planoSaude: number = this.planoSaudePadrao;
   public valeTransporte: number = this.valeAlimentacaoPadrao;
@@ -60,8 +66,9 @@ export class GeradorContrachequeComponent implements OnInit {
   public ano: number = 2025;
   public ignorarDescontos: boolean = false;
   public datasNoMes: Date[] = [];
+  public ehGerente: boolean = false;
 
-  constructor(public profissionalService: ProfissionalService) { }
+  constructor(public profissionalService: ProfissionalService, public agendamentoService: AgendamentoService) { }
 
   ngOnInit() {
     let calculo = new CalculoFuncionarioDTO();
@@ -126,18 +133,29 @@ export class GeradorContrachequeComponent implements OnInit {
           this.pagamentos = pagamento.pagamentos;
           this.servicos = pagamento.valoresRecebidos;
           this.salarioBase = pagamento.valor ? pagamento.valor : 0;
+          this.ehGerente = this.isGerente(this.profissionalSelecionado);
 
-          if (this.profissionalSelecionado.contratada) {
-            this.salarioBase = this.salarioBasePadrao;
-            this.planoSaude = this.planoSaudePadrao;
-            this.valeTransporte = this.valeTransportePadrao;
-            this.valeAlimentacao = this.valeAlimentacaoPadrao;
+          if (this.ehGerente) {
+            this.agendamentoService.recuperarTotais(dataIni, dataF)
+              .subscribe((totais: TotaisDTO) => {
+                this.totais = totais;
+                this.salarioBase = (this.totais.total * this.PORCENTAGEM_GERENTE) + this.VL_FIXO_GERENTE;
+                this.planoSaude = 0;
+                this.valeTransporte = 0;
+                this.valeAlimentacao = 0;
+              });
           } else {
-            this.planoSaude = 0;
-            this.valeTransporte = 0;
-            this.valeAlimentacao = 0;
+            if (this.profissionalSelecionado.contratada) {
+              this.salarioBase = this.salarioBasePadrao;
+              this.planoSaude = this.planoSaudePadrao;
+              this.valeTransporte = this.valeTransportePadrao;
+              this.valeAlimentacao = this.valeAlimentacaoPadrao;
+            } else {
+              this.planoSaude = 0;
+              this.valeTransporte = 0;
+              this.valeAlimentacao = 0;
+            }
           }
-
           this.calcularHorasTotais();
         });
     } else {
@@ -276,6 +294,21 @@ export class GeradorContrachequeComponent implements OnInit {
     return this.calcularTotais(salarioBase) - descontos.totalDescontos;
   }
 
+  public getCargo(profissionalSelecionado: ProfissionalDTO): string {
+    let cargo: string = '';
+    switch (profissionalSelecionado.tipo) {
+      case TipoProfissionalEnum.GERENTE:
+        cargo = 'Gerente';
+        break;
+      default:
+        cargo = 'Auxiliar de Limpeza'
+        break;
+    }
+
+    return cargo;
+  }
+
+
   public calcularHoraNormal(salarioBase: number): number {
     const horasTrabalhadasPorMes = this.calcularHorasTotais(); // Considerando 44 horas semanais (5 dias de 8 horas)
     return salarioBase / horasTrabalhadasPorMes;
@@ -359,5 +392,9 @@ export class GeradorContrachequeComponent implements OnInit {
         }
       });
     }
+  }
+
+  public isGerente(profissionalSelecionado: ProfissionalDTO) {
+    return profissionalSelecionado?.tipo == TipoProfissionalEnum.GERENTE;
   }
 }

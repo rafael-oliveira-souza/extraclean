@@ -108,7 +108,7 @@
                     <mat-select [(ngModel)]="profissionaisSelecionados" multiple
                       (ngModelChange)="recuperarProfissional(profissionais)">
                       <mat-option value="0">Sem preferência</mat-option>
-                      @for (prof of profissionais; track prof) {
+                      @for (prof of ordenarProfissionais(profissionais); track prof) {
                       <mat-option [value]="prof.id"> {{prof.nome}} {{prof.sobrenome | ponto: 20}}</mat-option>
                       }
                     </mat-select>
@@ -194,6 +194,7 @@
                   <mat-button-toggle-group [(ngModel)]="tipoCliente" required>
                     <mat-button-toggle value="1">Cliente</mat-button-toggle>
                     <mat-button-toggle value="2">Diarista</mat-button-toggle>
+                    <mat-button-toggle value="3">Administração</mat-button-toggle>
                   </mat-button-toggle-group>
                 </div>
                 <div class="col-12 mt-2">
@@ -263,7 +264,7 @@
               </div>
               <div class="row justify-content-center">
                 <button [disabled]="!cliente.isValido()" class="btn btn-primary" type="button"
-                  (click)="criarCliente()">Criar Cliente</button>
+                  (click)="criarCliente()">Criar</button>
               </div>
             </div>
           </div>

@@ -26,6 +26,8 @@ import { AutoCompleteComponent } from '../auto-complete/auto-complete.component'
 import { CodigoValorDTO } from '../../domains/dtos/CodigoValorDTO';
 import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { MatExpansionModule } from '@angular/material/expansion';
+import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
+import { WindowsUtils } from '../../utils/WindowsUtils';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -80,8 +82,19 @@ export class CalendarioAgendamentoComponent implements OnInit {
     private _changes: ChangeDetectorRef) { }
 
   ngOnInit(): void {
+    this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.getProximosPeriodos();
     this.atualizarPeriodo();
+  }
+
+  public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
+    return prof
+      .filter(profi => profi.tipo == TipoProfissionalEnum.DIARISTA)
+      .sort((a1, a2) => {
+        if (a1.nome < a2.nome) return -1;
+        if (a1.nome > a2.nome) return 1;
+        return 0;
+      });
   }
 
   public atualizarPeriodo() {
@@ -340,6 +353,15 @@ export class CalendarioAgendamentoComponent implements OnInit {
         this._changes.detectChanges();
         this._notificacaoService.alerta(MensagemEnum.PAGAMENTO_FINALIZADO_SUCESSO);
       }, (error) => this._notificacaoService.erro(error));
+  }
+
+  public copiarAgendamento(id: string): void {
+    let inputData: HTMLElement | null = document.getElementById(id);
+
+    if (inputData) {
+      const info: string = "Informações do seu agendamento!! \n"
+      WindowsUtils.copyText(inputData.textContent ? info + inputData.textContent.replaceAll("|", "\n") : '');
+    }
   }
 
   public finalizarAgendamento(diaria: InfoAgendamentoDTO) {

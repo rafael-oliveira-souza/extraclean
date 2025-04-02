@@ -19,6 +19,7 @@ export class ProfissionalDTO {
     contratada: boolean = false;
     dataContratacao!: Date;
     inativo: boolean = false;
+    tipo!: number;
 
     constructor(id: number, nome: string) {
         this.id = id;
