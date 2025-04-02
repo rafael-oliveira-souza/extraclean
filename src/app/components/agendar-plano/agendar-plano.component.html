@@ -21,6 +21,7 @@
         <br><br>
         <div class="col-12 row justify-content-center align-items-center">
           <div id="idFormaPagamento" class="col">
+            <br><br>
             <mat-form-field class="col-12">
               <mat-label>Forma de Pagamento</mat-label>
               <select matNativeControl [(ngModel)]="formaPagamento"
@@ -29,6 +30,29 @@
                 <option value="2">Cartao</option>
               </select>
             </mat-form-field>
+          </div>
+          <div class="col-3" *ngIf="formaPagamento == 2">
+            <div class="col-12 row justify-content-center align-items-center">
+              <mat-radio-group style="color: white;" aria-label="Select an option"
+                (change)="atualizarValores(planoSelecionado)" [(ngModel)]="isTaxaCartao">
+                <mat-radio-button [value]="1">Taxa de Cartão</mat-radio-button>
+                <mat-radio-button [value]="2">Porcentagem de Taxa</mat-radio-button>
+              </mat-radio-group>
+              <div id="idFormaPagamentoTaxaCartao" class="col-12" *ngIf="isTaxaCartao == 1">
+                <mat-form-field class="col-12">
+                  <mat-label>Taxa de Cartão</mat-label>
+                  <input type="text" matInput (change)="atualizarValores(planoSelecionado)"
+                    [(ngModel)]="taxaCartao">
+                </mat-form-field>
+              </div>
+              <div id="idFormaPagamentoTaxaCartao" class="col-12" *ngIf="isTaxaCartao == 2">
+                <mat-form-field class="col-12">
+                  <mat-label>Porcentagem de Taxa</mat-label>
+                  <input type="text" matInput (change)="atualizarValores(planoSelecionado)"
+                    [(ngModel)]="taxaCartao">
+                </mat-form-field>
+              </div>
+            </div>
           </div>
 
           <!-- <div id="idQtdParcelas" *ngIf="formaPagamento == 2" class="col-6">
@@ -143,7 +167,8 @@
 
           <div *ngFor="let agend of agendamentos; let i = index;">
             <div *ngFor="let data of agend.diasSelecionados;">
-              <small class="cor-branca">{{agend.tipoLimpeza | tipoServico}} {{i + 1}}: {{formatarData(data) }}</small><br>
+              <small class="cor-branca">{{agend.tipoLimpeza | tipoServico}} {{i + 1}}: {{formatarData(data)
+                }}</small><br>
             </div>
           </div>
         </div>
