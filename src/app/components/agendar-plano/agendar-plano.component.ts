@@ -278,6 +278,10 @@ export class AgendarPlanoComponent implements OnInit {
   }
 
   public calcularTaxaCartao(valorComDesconto: number): number {
+    if (valorComDesconto <= 0) {
+      return 0;
+    }
+
     return this.isTaxaCartao == 1 ? Number(this.taxaCartao) : Number(valorComDesconto * this.taxaCartao / 100);
   }
 
