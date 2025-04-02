@@ -4,4 +4,5 @@ export class PagamentoProfissionalDTO {
     diaristaId!: number | null;
     data!: Date | null;
     valor!: number | null;
+    edit: boolean = false;
 }

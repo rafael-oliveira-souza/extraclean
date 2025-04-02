@@ -79,9 +79,10 @@
       <ng-container matColumnDef="acao">
         <th mat-header-cell *matHeaderCellDef> Ações</th>
         <td mat-cell *matCellDef="let element">
-          <button style="margin-right: 10px;" class="col-5 btn btn-primary"
-            (click)="atualizar(element)">Atualizar</button>
-          <button style="margin-right: 10px;" class="col-5 btn btn-danger" (click)="excluir(element)">Excluir</button>
+          <button style="margin-right: 10px;" class="col-5 btn btn-primary" (click)="atualizar(element)"
+            *ngIf="element.edit">Atualizar</button>
+          <button *ngIf="element.edit" style="margin-right: 10px;" class="col-5 btn btn-danger"
+            (click)="excluir(element)">Excluir</button>
         </td>
       </ng-container>
 
