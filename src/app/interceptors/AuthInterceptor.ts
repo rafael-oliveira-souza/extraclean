@@ -5,10 +5,12 @@ import { LocalStorageUtils } from '../utils/LocalStorageUtils';
 import { AutenticacaoService } from '../services/autenticacao.service';
 import { AutenticacaoDTO } from '../domains/dtos/AutenticacaoDTO';
 import { DateUtils } from '../utils/DateUtils';
+import { Router } from '@angular/router';
+import { Rota } from '../app.routes';
 
 @Injectable()
 export class AuthInterceptor implements HttpInterceptor {
-  constructor(private _authService: AutenticacaoService) { }
+  constructor(private _authService: AutenticacaoService, private _router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
     if (req.url.includes("/autenticar")) {
@@ -23,6 +25,7 @@ export class AuthInterceptor implements HttpInterceptor {
 
       this.scheduleTokenExpiryCheck(authToken.expirationDate, () => { this._authService.autenticar(authToken.username); });
       return next.handle(authReq);
+    } else {
     }
 
     return next.handle(req);

@@ -35,9 +35,9 @@
     <div class="row justify-content-center">
       <mat-form-field class="col-12" class="mt-5">
         <mat-label>Período de Pagamento</mat-label>
-        <input matInput [matDatepicker]="picker" [(ngModel)]="periodoPagamento" (ngModelChange)="recuperarValores()">
-        <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
-        <mat-datepicker #picker></mat-datepicker>
+        <input matInput [matDatepicker]="picker2" [(ngModel)]="periodoPagamento" (ngModelChange)="recuperarValores()">
+        <mat-datepicker-toggle matIconSuffix [for]="picker2"></mat-datepicker-toggle>
+        <mat-datepicker #picker2></mat-datepicker>
       </mat-form-field>
     </div>
     <table mat-table [dataSource]="dataSource" class="mt-5">
