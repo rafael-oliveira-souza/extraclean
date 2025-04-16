@@ -136,7 +136,7 @@ export class GeradorContrachequeComponent implements OnInit {
           this.ehGerente = this.isGerente(this.profissionalSelecionado);
 
           if (this.ehGerente) {
-            this.agendamentoService.recuperarTotais(dataIni, dataF)
+            this.agendamentoService.recuperarTotais(dataIni, dataF, null, null, null)
               .subscribe((totais: TotaisDTO) => {
                 this.totais = totais;
                 this.salarioBase = (this.totais.total * this.PORCENTAGEM_GERENTE) + this.VL_FIXO_GERENTE;

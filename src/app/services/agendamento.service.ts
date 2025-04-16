@@ -10,6 +10,8 @@ import { InfoAgendamentoDTO } from '../domains/dtos/InfoAgendamentoDTO';
 import { FinalizacaoAgendamentoDTO } from '../domains/dtos/FinalizacaoAgendamentoDTO';
 import { InfoDiariaDTO } from '../domains/dtos/InfoDiariaDTO';
 import { TotaisDTO } from '../domains/dtos/TotaisDTO';
+import { SituacaoPagamentoEnum } from '../domains/enums/SituacaoPagamentoEnum';
+import { SituacaoDiariaEnum } from '../domains/enums/SituacaoDiariaEnum';
 
 @Injectable({
   providedIn: 'root'
@@ -92,10 +94,13 @@ export class AgendamentoService {
   }
 
 
-  public recuperarTotais(dataInicio: string, dataFim: string): Observable<TotaisDTO> {
+  public recuperarTotais(dataInicio: string, dataFim: string, profissional: string | null, situacaoDiaria: SituacaoDiariaEnum | null, situacaoPagamento: SituacaoPagamentoEnum | null): Observable<TotaisDTO> {
     const url = `${this.HOST_URL}/total`;
     let params = new HttpParams()
       .set('dataFim', dataFim ? dataFim : "")
+      .set('profissional', profissional ? profissional : "")
+      .set('situacaoDiaria', situacaoDiaria ? situacaoDiaria : "")
+      .set('situacaoPagamento', situacaoPagamento ? situacaoPagamento : "")
       .set('dataInicio', dataInicio);
 
     return this._http.get<TotaisDTO>(url, { params });

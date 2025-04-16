@@ -142,7 +142,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   private recuperarTotais(dataIni: string, dataF: string) {
-    this._agendamentoService.recuperarTotais(dataIni, dataF)
+    this._agendamentoService.recuperarTotais(dataIni, dataF, this.profissionalSelecionado, this.situacao, this.situacaoPagamento)
       .subscribe((totais: TotaisDTO) => {
         this.totais = totais;
       });
