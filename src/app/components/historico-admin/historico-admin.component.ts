@@ -27,6 +27,9 @@ import { ProfissionalService } from '../../services/profissional.service';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 import { TotaisDTO } from '../../domains/dtos/TotaisDTO';
+import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
+import { ClienteService } from '../../services/cliente.service';
+import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 
 @Component({
   selector: 'app-historico-admin',
@@ -45,6 +48,7 @@ import { TotaisDTO } from '../../domains/dtos/TotaisDTO';
     MatCheckboxModule,
     MatInputModule,
     PipeModule,
+    AutoCompleteComponent,
   ],
   templateUrl: './historico-admin.component.html',
   styleUrls: ['./historico-admin.component.scss']
@@ -59,6 +63,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public agendamentos: InfoAgendamentoDTO[] = [];
 
   public exibeTotais: boolean = true;
+  public clientes: ClienteDTO[] = [];
   public exibeGastosFixos: boolean = true;
   public indice: number = 0;
   public profissionalSelecionado: string = "";
@@ -84,9 +89,10 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
   public displayedColumns: string[] = [];
   public totais: TotaisDTO = new TotaisDTO();
-  
+
   constructor(private _agendamentoService: AgendamentoService,
     private _profissionalService: ProfissionalService,
+    private _clienteService: ClienteService,
     private _notificacaoService: NotificacaoService) {
 
     if (this.isNotXs()) {
@@ -102,6 +108,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.buscarAgendamentos();
+    this.recuperarClientes();
   }
 
   // public recuperarProfissionais() {
@@ -111,6 +118,14 @@ export class HistoricoAdminComponent implements AfterViewInit {
   //       this.buscarAgendamentos();
   //     });
   // }
+
+  public recuperarClientes() {
+    this._clienteService.recuperarTodos()
+      .subscribe((cliente: Array<ClienteDTO>) => {
+        this.clientes = cliente;
+        this.recuperarCliente();
+      });
+  }
 
   public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
     return prof
@@ -122,7 +137,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
       });
   }
 
-  public atualizarBusca() {
+  public atualizarBusca(isCliente = false) {
     const agendamentos = this.ordernarDecrescente(this.agendamentos)
       .filter(agend => !this.situacaoPagamento || agend.situacaoPagamento == this.situacaoPagamento)
       .filter(agend => !this.clienteSelecionado || agend.nomeCliente.toLowerCase().includes(this.clienteSelecionado.toLowerCase()))
@@ -132,9 +147,20 @@ export class HistoricoAdminComponent implements AfterViewInit {
     const datas: Date[] = DateUtils.datesInMonth(this.dataInicio);
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
-    this.recuperarTotais(dataIni, dataF);
+
+    if (!isCliente) {
+      this.recuperarTotais(dataIni, dataF);
+    }
+
     this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(agendamentos);
     this.dataSource.paginator = this.paginator;
+  }
+
+  public recuperarCliente() {
+    if (this.clienteSelecionado) {
+      const clientes = this.clientes.filter(cliente => cliente.email == this.clienteSelecionado);
+      this.atualizarBusca();
+    }
   }
 
   private ordernarDecrescente(agendamentos: InfoAgendamentoDTO[]) {
