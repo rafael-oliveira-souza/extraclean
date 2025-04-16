@@ -100,7 +100,7 @@ export class AgendamentoService {
       .set('profissional', profissional ? profissional : "")
       .set('situacaoDiaria', situacaoDiaria ? situacaoDiaria : "")
       .set('situacaoPagamento', situacaoPagamento ? situacaoPagamento : "")
-      .set('exibeGastosFixos', exibeGastosFixos ? exibeGastosFixos : "")
+      .set('exibeGastosFixos', exibeGastosFixos)
       .set('dataInicio', dataInicio);
 
     return this._http.get<TotaisDTO>(url, { params });
