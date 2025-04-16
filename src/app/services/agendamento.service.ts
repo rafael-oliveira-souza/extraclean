@@ -93,7 +93,7 @@ export class AgendamentoService {
     return this._http.post<any>(url, obj);
   }
 
-  public recuperarTotais(dataInicio: string, dataFim: string, profissional: string | null, situacaoDiaria: SituacaoDiariaEnum | null, situacaoPagamento: SituacaoPagamentoEnum | null, exibeGastosFixos: boolean = true): Observable<TotaisDTO> {
+  public recuperarTotais(dataInicio: string, dataFim: string, email: string | null, profissional: string | null, situacaoDiaria: SituacaoDiariaEnum | null, situacaoPagamento: SituacaoPagamentoEnum | null, exibeGastosFixos: boolean = true): Observable<TotaisDTO> {
     const url = `${this.HOST_URL}/total`;
     let params = new HttpParams()
       .set('dataFim', dataFim ? dataFim : "")
@@ -101,6 +101,7 @@ export class AgendamentoService {
       .set('situacaoDiaria', situacaoDiaria ? situacaoDiaria : "")
       .set('situacaoPagamento', situacaoPagamento ? situacaoPagamento : "")
       .set('exibeGastosFixos', exibeGastosFixos)
+      .set('email', email ? email : "")
       .set('dataInicio', dataInicio);
 
     return this._http.get<TotaisDTO>(url, { params });

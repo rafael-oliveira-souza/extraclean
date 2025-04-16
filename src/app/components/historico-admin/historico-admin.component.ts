@@ -159,7 +159,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public recuperarCliente() {
     if (this.clienteSelecionado) {
       const clientes = this.clientes.filter(cliente => cliente.email == this.clienteSelecionado);
-      this.atualizarBusca();
+      this.atualizarBusca(clientes.length == 1);
     }
   }
 
@@ -169,7 +169,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   private recuperarTotais(dataIni: string, dataF: string) {
-    this._agendamentoService.recuperarTotais(dataIni, dataF, this.profissionalSelecionado, this.situacao, this.situacaoPagamento, this.exibeGastosFixos)
+    this._agendamentoService.recuperarTotais(dataIni, dataF, this.clienteSelecionado, this.profissionalSelecionado, this.situacao, this.situacaoPagamento, this.exibeGastosFixos)
       .subscribe((totais: TotaisDTO) => {
         this.totais = totais;
       });
