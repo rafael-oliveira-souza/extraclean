@@ -94,13 +94,14 @@ export class AgendamentoService {
   }
 
 
-  public recuperarTotais(dataInicio: string, dataFim: string, profissional: string | null, situacaoDiaria: SituacaoDiariaEnum | null, situacaoPagamento: SituacaoPagamentoEnum | null): Observable<TotaisDTO> {
+  public recuperarTotais(dataInicio: string, dataFim: string, profissional: string | null, situacaoDiaria: SituacaoDiariaEnum | null, situacaoPagamento: SituacaoPagamentoEnum | null, exibeGastosFixos: boolean = true): Observable<TotaisDTO> {
     const url = `${this.HOST_URL}/total`;
     let params = new HttpParams()
       .set('dataFim', dataFim ? dataFim : "")
       .set('profissional', profissional ? profissional : "")
       .set('situacaoDiaria', situacaoDiaria ? situacaoDiaria : "")
       .set('situacaoPagamento', situacaoPagamento ? situacaoPagamento : "")
+      .set('exibeGastosFixos', exibeGastosFixos ? exibeGastosFixos : "")
       .set('dataInicio', dataInicio);
 
     return this._http.get<TotaisDTO>(url, { params });

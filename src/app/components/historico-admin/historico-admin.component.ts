@@ -59,6 +59,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public agendamentos: InfoAgendamentoDTO[] = [];
 
   public exibeTotais: boolean = true;
+  public exibeGastosFixos: boolean = true;
   public indice: number = 0;
   public profissionalSelecionado: string = "";
   public clienteSelecionado: string = "";
@@ -142,7 +143,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   }
 
   private recuperarTotais(dataIni: string, dataF: string) {
-    this._agendamentoService.recuperarTotais(dataIni, dataF, this.profissionalSelecionado, this.situacao, this.situacaoPagamento)
+    this._agendamentoService.recuperarTotais(dataIni, dataF, this.profissionalSelecionado, this.situacao, this.situacaoPagamento, this.exibeGastosFixos)
       .subscribe((totais: TotaisDTO) => {
         this.totais = totais;
       });
