@@ -36,4 +36,6 @@ export class InfoAgendamentoDTO {
     valorRealAgendamento!: number;
     horas: HorasEnum = HorasEnum.NAO_DEFINIDO;
     open: boolean = false;
+    emailDiarista!: string;
+    emailCliente!: string;
 }

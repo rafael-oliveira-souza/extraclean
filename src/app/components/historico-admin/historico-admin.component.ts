@@ -108,7 +108,6 @@ export class HistoricoAdminComponent implements AfterViewInit {
   ngAfterViewInit() {
     this.profissionais = this.ordenarProfissionais(this.profissionais);
     this.buscarAgendamentos();
-    this.recuperarClientes();
   }
 
   // public recuperarProfissionais() {
@@ -120,11 +119,15 @@ export class HistoricoAdminComponent implements AfterViewInit {
   // }
 
   public recuperarClientes() {
-    this._clienteService.recuperarTodos()
-      .subscribe((cliente: Array<ClienteDTO>) => {
-        this.clientes = cliente;
-        this.recuperarCliente();
-      });
+    this.clientes = this.agendamentos.map(agend => {
+      let cliente = new ClienteDTO();
+      cliente.email = agend.emailCliente;
+      cliente.email = agend.nomeCliente;
+
+      return cliente;
+    });
+
+    this.recuperarCliente();
   }
 
   public ordenarProfissionais(prof: Array<ProfissionalDTO>) {
@@ -137,7 +140,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
       });
   }
 
-  public atualizarBusca(isCliente = false) {
+  public atualizarBusca(executaBusca = true) {
     const agendamentos = this.ordernarDecrescente(this.agendamentos)
       .filter(agend => !this.situacaoPagamento || agend.situacaoPagamento == this.situacaoPagamento)
       .filter(agend => !this.clienteSelecionado || agend.nomeCliente.toLowerCase().includes(this.clienteSelecionado.toLowerCase()))
@@ -148,7 +151,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
     const dataIni = DateUtils.format(datas[0], DateUtils.ES);
     const dataF = DateUtils.format(datas[datas.length - 1], DateUtils.ES);
 
-    if (!isCliente) {
+    if (executaBusca) {
       this.recuperarTotais(dataIni, dataF);
     }
 
@@ -207,6 +210,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
 
         this.agendamentos = this.ordernarDecrescente(this.agendamentos.filter(agend =>
           agend.situacao != SituacaoDiariaEnum.CANCELADA));
+        this.recuperarClientes();
 
         this.dataSource = new MatTableDataSource<InfoAgendamentoDTO>(this.agendamentos);
         this.dataSource.paginator = this.paginator;
