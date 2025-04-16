@@ -2,7 +2,7 @@
   <div class="text-center mb-5 mt-2">
     <section id="idExtraClean" class="example-section">
       <mat-checkbox [(ngModel)]="exibeTotais">Exibe Totais</mat-checkbox> <br>
-      <mat-checkbox [(ngModel)]="exibeGastosFixos">Exibe Gastos Fixos</mat-checkbox> <br>
+      <mat-checkbox [(ngModel)]="exibeGastosFixos" (ngModelChange)="atualizarBusca()">Exibe Gastos Fixos</mat-checkbox> <br>
     </section>
   </div>
   <div class="col-12">

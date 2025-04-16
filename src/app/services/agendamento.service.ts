@@ -93,7 +93,6 @@ export class AgendamentoService {
     return this._http.post<any>(url, obj);
   }
 
-
   public recuperarTotais(dataInicio: string, dataFim: string, profissional: string | null, situacaoDiaria: SituacaoDiariaEnum | null, situacaoPagamento: SituacaoPagamentoEnum | null, exibeGastosFixos: boolean = true): Observable<TotaisDTO> {
     const url = `${this.HOST_URL}/total`;
     let params = new HttpParams()
