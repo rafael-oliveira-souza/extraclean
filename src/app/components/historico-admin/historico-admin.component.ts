@@ -119,13 +119,16 @@ export class HistoricoAdminComponent implements AfterViewInit {
   // }
 
   public recuperarClientes() {
-    this.clientes = this.agendamentos.map(agend => {
-      let cliente = new ClienteDTO();
-      cliente.email = agend.emailCliente;
-      cliente.email = agend.nomeCliente;
-
-      return cliente;
-    });
+    this.clientes = Array.from(
+      new Map(
+        this.agendamentos.map(agend => {
+          let cliente = new ClienteDTO();
+          cliente.email = agend.emailCliente;
+          cliente.nome = agend.nomeCliente;
+          return [cliente.email, cliente];
+        })
+      ).values()
+    );
 
     this.recuperarCliente();
   }
@@ -143,7 +146,7 @@ export class HistoricoAdminComponent implements AfterViewInit {
   public atualizarBusca(executaBusca = true) {
     const agendamentos = this.ordernarDecrescente(this.agendamentos)
       .filter(agend => !this.situacaoPagamento || agend.situacaoPagamento == this.situacaoPagamento)
-      .filter(agend => !this.clienteSelecionado || agend.nomeCliente.toLowerCase().includes(this.clienteSelecionado.toLowerCase()))
+      .filter(agend => !this.clienteSelecionado || agend.emailCliente.toLowerCase().includes(this.clienteSelecionado.toLowerCase()))
       .filter(agend => !this.profissionalSelecionado || agend.nomeDiarista.toLowerCase() == this.profissionalSelecionado.toLowerCase())
       .filter(agend => !this.situacao || agend.situacao == this.situacao);
 
@@ -163,6 +166,8 @@ export class HistoricoAdminComponent implements AfterViewInit {
     if (this.clienteSelecionado) {
       const clientes = this.clientes.filter(cliente => cliente.email == this.clienteSelecionado);
       this.atualizarBusca(clientes.length == 1);
+    } else {
+      this.atualizarBusca(true);
     }
   }
 
