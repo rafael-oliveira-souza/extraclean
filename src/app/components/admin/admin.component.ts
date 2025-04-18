@@ -47,6 +47,7 @@ import { ClienteAdminComponent } from '../cliente-admin/cliente-admin.component'
 import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
 import { PagamentoProfissionalComponent } from "../pagamento-profissional/pagamento-profissional.component";
 import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
+import { DespesasComponent } from '../despesa/despesa.component';
 
 @Component({
   selector: 'app-admin',
@@ -58,15 +59,11 @@ import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
     ReactiveFormsModule,
     MatFormFieldModule,
     MatIconModule,
-    PagamentoProfissionalComponent,
-    PlanosComponent,
-    ServicosComponent,
     MatButtonModule,
     MatMenuModule,
     CepComponent,
     CommonModule,
     ScrollComponent,
-    PlanosComponent,
     MatButtonToggleModule,
     MatCheckboxModule,
     CalendarioAgendamentoComponent,
@@ -79,8 +76,9 @@ import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
     ClienteAdminComponent,
     GeradorContrachequeComponent,
     DiariaAdminComponent,
-    PagamentoProfissionalComponent
-],
+    PagamentoProfissionalComponent,
+    DespesasComponent
+  ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })
