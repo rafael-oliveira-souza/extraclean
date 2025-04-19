@@ -1,3 +1,4 @@
+import { DespesaDTO } from "./DespesaDTO";
 import { PagamentoProfissionalDTO } from "./PagamentoProfissionalDTO";
 
 export class ContraChequeProfissionalDTO {
@@ -7,5 +8,6 @@ export class ContraChequeProfissionalDTO {
     dataFim!: Date | null;
     valor!: number | null;
     pagamentos: PagamentoProfissionalDTO[] = [];
+    despesas: DespesaDTO[] = [];
     valoresRecebidos: PagamentoProfissionalDTO[] = [];
 }

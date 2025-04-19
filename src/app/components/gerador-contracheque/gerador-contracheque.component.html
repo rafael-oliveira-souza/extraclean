@@ -177,6 +177,18 @@
       </tr>
     </table>
 
+    <h3 class="mt-3">Resumo de Despesas</h3>
+    <table id="tabelaDespesas">
+      <tr>
+        <th>Descrição</th>
+        <th>Valor</th>
+      </tr>
+      <tr *ngFor="let despesa of despesas">
+        <td>{{despesa.descricao}} - {{despesa.data | data}}</td>
+        <td>{{despesa.valor | moeda}}</td>
+      </tr>
+    </table>
+
     <h3 class="mt-3" *ngIf="profissionalSelecionado && profissionalSelecionado.contratada">FGTS</h3>
     <table id="tabelaFGTS" *ngIf="profissionalSelecionado && profissionalSelecionado.contratada">
       <tr>

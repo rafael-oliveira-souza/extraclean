@@ -14,10 +14,10 @@ import { ContraChequeProfissionalDTO } from '../../domains/dtos/ContraChequeProf
 import { PagamentoProfissionalDTO } from '../../domains/dtos/PagamentoProfissionalDTO';
 import { PipeModule } from '../../pipes/pipe.module';
 import jsPDF from 'jspdf';
-import { MomentInput } from 'moment';
 import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { TotaisDTO } from '../../domains/dtos/TotaisDTO';
+import { DespesaDTO } from '../../domains/dtos/DespesaDTO';
 
 @Component({
   selector: 'app-gerador-contracheque',
@@ -50,6 +50,7 @@ export class GeradorContrachequeComponent implements OnInit {
   public periodo: number = this.hoje.getMonth();
   public horasExtras: number = 0;
   public numFeriados: number = 0;
+  public despesas: DespesaDTO[] = [];
   public pagamentos: PagamentoProfissionalDTO[] = [];
   public servicos: PagamentoProfissionalDTO[] = [];
   public salarioBase: number = this.salarioBasePadrao;
@@ -68,7 +69,8 @@ export class GeradorContrachequeComponent implements OnInit {
   public datasNoMes: Date[] = [];
   public ehGerente: boolean = false;
 
-  constructor(public profissionalService: ProfissionalService, public agendamentoService: AgendamentoService) { }
+  constructor(public profissionalService: ProfissionalService, 
+    public agendamentoService: AgendamentoService) { }
 
   ngOnInit() {
     let calculo = new CalculoFuncionarioDTO();
@@ -132,6 +134,7 @@ export class GeradorContrachequeComponent implements OnInit {
         .subscribe((pagamento: ContraChequeProfissionalDTO) => {
           this.pagamentos = pagamento.pagamentos;
           this.servicos = pagamento.valoresRecebidos;
+          this.despesas = pagamento.despesas;
           this.salarioBase = pagamento.valor ? pagamento.valor : 0;
           this.ehGerente = this.isGerente(this.profissionalSelecionado);
 
