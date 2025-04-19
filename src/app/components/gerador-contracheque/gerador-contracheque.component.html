@@ -183,6 +183,10 @@
         <th>Descrição</th>
         <th>Valor</th>
       </tr>
+      <tr>
+        <td>Hospedagem e Site</td>
+        <td>{{totais.totalDivulgacao | moeda}}</td>
+      </tr>
       <tr *ngFor="let despesa of despesas">
         <td>{{despesa.descricao}} - {{despesa.data | data}}</td>
         <td>{{despesa.valor | moeda}}</td>
