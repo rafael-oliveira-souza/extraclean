@@ -131,6 +131,8 @@ export class CalendarioAgendamentoComponent implements OnInit {
           let key = agend.codigoPagamento + "_" +
             agend.dataDiaria + "_" +
             agend.idProfissional + "_" +
+            agend.tipoLimpeza + "_" +
+            agend.turno + "_" +
             agend.idCliente;
 
           if (map.has(key)) {
