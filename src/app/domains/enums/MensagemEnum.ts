@@ -4,6 +4,7 @@ export enum MensagemEnum {
     AGENDAMENTO_CONCLUIDO_SUCESSO = "Agendamento realizado com sucesso. O seu agendamento será efetivado após o pagamento!",
     PLANO_CONCLUIDO_SUCESSO = "Plano solicitado com sucesso. O seu plano será efetivado após o pagamento!",
     PROFISSIONAIS_ATUALIZADOS_SUCESSO = "Profissionais atualizados com sucesso.",
+    EMAIL_ATUALIZADOS_SUCESSO = "Email atualizado com sucesso.",
     DIARIA_ATUALIZADA_SUCESSO = "Diaria atualizada com sucesso.",
     AGENDAMENTO_CANCELADO_SUCESSO = "Agendamento Cancelado com sucesso.",
     AGENDAMENTO_EXCLUIDO_SUCESSO = "Agendamento Excluido com sucesso.",

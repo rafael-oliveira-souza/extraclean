@@ -13,6 +13,8 @@ import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 import { NotificacaoService } from '../../services/notificacao.service';
 import { ClienteService } from '../../services/cliente.service';
 import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
+import { UsuarioService } from '../../services/usuario.service';
+import { UsuarioDTO } from '../../domains/dtos/UsuarioDTO';
 
 @Component({
   selector: 'app-cliente-admin',
@@ -48,11 +50,12 @@ export class ClienteAdminComponent implements OnInit {
 
   constructor(
     private _notificacaoService: NotificacaoService,
-    private _clienteService: ClienteService) {
+    private _clienteService: ClienteService,
+    private _usuarioService: UsuarioService) {
     // 'dataNascimento',
     this.displayedColumns = [
       'nome', 'sobrenome', 'email', 'telefone',
-      'endereco', 'numero', 'localizacao', 'cep',
+      'endereco', 'numero', 'localizacao', 'cep', 'updateEmail',
     ];
   }
 
@@ -71,7 +74,7 @@ export class ClienteAdminComponent implements OnInit {
   }
 
   public recuperarCliente() {
-    if (this.clienteSelecionado ) {
+    if (this.clienteSelecionado) {
       const clientes = this.clientes.filter(cliente => cliente.email == this.clienteSelecionado);
       this.dataSource = new MatTableDataSource<ClienteDTO>(clientes);
     } else {
@@ -79,6 +82,15 @@ export class ClienteAdminComponent implements OnInit {
     }
 
     this.dataSource.paginator = this.paginator;
+  }
+
+  public atualizarEmail(email: string) {
+    let usuario = new UsuarioDTO();
+    usuario.email = email;
+    this._usuarioService.atualizarEmail(usuario)
+      .subscribe(() => {
+        this._notificacaoService.alerta(MensagemEnum.EMAIL_ATUALIZADOS_SUCESSO);
+      });
   }
 
   public salvarAtualizacoesClientes() {

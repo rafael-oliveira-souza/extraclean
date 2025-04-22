@@ -4,7 +4,8 @@
   </div>
   <div class="col-12">
     <app-auto-complete class="col-12" label="Cliente" [options]="clientes" [(value)]="clienteSelecionado"
-      optionsValue="email" (getOptionsSelected)="recuperarCliente()" optionsLabel="[nome] [sobrenome] - [email]"></app-auto-complete>
+      optionsValue="email" (getOptionsSelected)="recuperarCliente()"
+      optionsLabel="[nome] [sobrenome] - [email]"></app-auto-complete>
   </div>
   <table mat-table [dataSource]="dataSource" class="mat-elevation-z8">
     <ng-container matColumnDef="nome">
@@ -37,7 +38,7 @@
     <ng-container matColumnDef="email">
       <th mat-header-cell *matHeaderCellDef> Email </th>
       <td mat-cell *matCellDef="let element">
-        <input disabled matInput [(ngModel)]="element.email">
+        <input matInput [(ngModel)]="element.email">
       </td>
     </ng-container>
     <ng-container matColumnDef="endereco">
@@ -62,6 +63,12 @@
       <th mat-header-cell *matHeaderCellDef> Localizacao </th>
       <td mat-cell *matCellDef="let element">
         <input matInput [(ngModel)]="element.localizacao">
+      </td>
+    </ng-container>
+    <ng-container matColumnDef="updateEmail">
+      <th mat-header-cell *matHeaderCellDef> </th>
+      <td mat-cell *matCellDef="let element">
+        <button class="col-4 btn btn-primary" (click)="atualizarEmail(element.email)">Atualizar Email</button>
       </td>
     </ng-container>
 

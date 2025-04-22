@@ -38,4 +38,9 @@ export class UsuarioService {
     return this._http.post<UsuarioDTO>(url, usuario);
   }
 
+  public atualizarEmail(usuario: UsuarioDTO): Observable<UsuarioDTO> {
+    const url = `${this.HOST_URL}/atualizar-email`;
+    return this._http.post<UsuarioDTO>(url, usuario);
+  }
+
 }
