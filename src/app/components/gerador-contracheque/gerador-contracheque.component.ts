@@ -293,7 +293,7 @@ export class GeradorContrachequeComponent implements OnInit {
 
   // Função para calcular o salário líquido (salário base - descontos)
   public calcularDespesas(): number {
-    let despesas = 0;
+    let despesas = this.totais.totalDivulgacao + this.totais.totalImpostos;
     this.despesas.forEach((despesa: DespesaDTO) => despesas += (despesa.valor ? despesa.valor : 0));
     return despesas;
   }
