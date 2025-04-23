@@ -69,7 +69,7 @@ export class GeradorContrachequeComponent implements OnInit {
   public datasNoMes: Date[] = [];
   public ehGerente: boolean = false;
 
-  constructor(public profissionalService: ProfissionalService, 
+  constructor(public profissionalService: ProfissionalService,
     public agendamentoService: AgendamentoService) { }
 
   ngOnInit() {
@@ -289,6 +289,13 @@ export class GeradorContrachequeComponent implements OnInit {
     this.pagamentos.forEach(pag => totalDesconto += pag.valor ? pag.valor : 0);
     const totalDescontos = inss + irrf + horasNaoTrabalhadas + totalDesconto;
     return { inss, irrf, horasNaoTrabalhadas, totalDescontos };
+  }
+
+  // Função para calcular o salário líquido (salário base - descontos)
+  public calcularDespesas(): number {
+    let despesas = 0;
+    this.despesas.forEach((despesa: DespesaDTO) => despesas += (despesa.valor ? despesa.valor : 0));
+    return despesas;
   }
 
   // Função para calcular o salário líquido (salário base - descontos)

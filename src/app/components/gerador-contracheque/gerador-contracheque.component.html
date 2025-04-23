@@ -187,6 +187,10 @@
         <td>Hospedagem e Site</td>
         <td>{{totais.totalDivulgacao | moeda}}</td>
       </tr>
+      <tr>
+        <td>Impostos</td>
+        <td>{{totais.totalImpostos | moeda}}</td>
+      </tr>
       <tr *ngFor="let despesa of despesas">
         <td>{{despesa.descricao}} - {{despesa.data | data}}</td>
         <td>{{despesa.valor | moeda}}</td>
@@ -226,6 +230,10 @@
       <tr class="total">
         <th>Total Líquido</th>
         <td>{{calcularSalarioLiquido(salarioBase) | moeda}}</td>
+      </tr>
+      <tr class="despesas">
+        <th>Total Despesas</th>
+        <td>{{calcularDespesas() | moeda}}</td>
       </tr>
     </table>
 
