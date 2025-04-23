@@ -110,7 +110,15 @@
         <td>{{salarioBase | moeda}}</td>
       </tr>
       <tr *ngIf="ehGerente">
-        <td>8781 - Total Arrecadado</td>
+        <td>8781 - Total Bruto</td>
+        <td>{{totais.totalRecebido | moeda}}</td>
+      </tr>
+      <tr *ngIf="ehGerente" class="despesas">
+        <th>8784 -Total Despesas</th>
+        <td>{{calcularDespesas() | moeda}}</td>
+      </tr>
+      <tr *ngIf="ehGerente">
+        <td>8781 - Total Liquido</td>
         <td>{{totais.total | moeda}}</td>
       </tr>
       <tr *ngIf="ehGerente">
@@ -230,10 +238,6 @@
       <tr class="total">
         <th>Total Líquido</th>
         <td>{{calcularSalarioLiquido(salarioBase) | moeda}}</td>
-      </tr>
-      <tr class="despesas">
-        <th>Total Despesas</th>
-        <td>{{calcularDespesas() | moeda}}</td>
       </tr>
     </table>
 
