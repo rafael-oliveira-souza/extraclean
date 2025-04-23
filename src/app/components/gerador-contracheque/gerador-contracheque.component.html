@@ -106,15 +106,19 @@
         <th>Valor</th>
       </tr>
       <tr *ngIf="profissionalSelecionado?.contratada">
-        <td>8781 - Salário Base</td>
+        <td>8792 - Salário Base</td>
         <td>{{salarioBase | moeda}}</td>
       </tr>
       <tr *ngIf="ehGerente">
-        <td>8781 - Total Bruto</td>
+        <td>8787 - Total Bruto</td>
         <td>{{totais.totalRecebido | moeda}}</td>
       </tr>
-      <tr *ngIf="ehGerente" class="despesas">
-        <th>8784 -Total Despesas</th>
+      <tr *ngIf="ehGerente">
+        <td>8781 - Total Profissionais</td>
+        <td>{{totais.totalProfissionais | moeda}}</td>
+      </tr>
+      <tr *ngIf="ehGerente">
+        <td>8784 -Total Despesas</td>
         <td>{{calcularDespesas() | moeda}}</td>
       </tr>
       <tr *ngIf="ehGerente">
