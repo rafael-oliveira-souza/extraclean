@@ -286,6 +286,7 @@
                 <mat-button-toggle [value]="3">Editar Diaria</mat-button-toggle>
                 <mat-button-toggle [value]="1">Editar Cliente</mat-button-toggle>
                 <mat-button-toggle [value]="2">Editar Profissional</mat-button-toggle>
+                <mat-button-toggle [value]="6">Editar Planos</mat-button-toggle>
                 <mat-button-toggle [value]="4">Editar Pagamentos</mat-button-toggle>
                 <mat-button-toggle [value]="5">Editar Despesas</mat-button-toggle>
               </mat-button-toggle-group>
@@ -298,6 +299,7 @@
               <app-diaria-admin [clientes]="clientes" [profissionais]="profissionais"
                 *ngIf="editaDados == 3"></app-diaria-admin>
               <app-despesas *ngIf="editaDados == 5"></app-despesas>
+              <app-plano-admin [clientes]="clientes" *ngIf="editaDados == 6"></app-plano-admin>
             </div>
           </div>
           <div *ngIf="selectedIndex==5">

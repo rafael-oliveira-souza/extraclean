@@ -6,4 +6,5 @@ export class PagamentoMpDTO {
     idPagamento!: number;
     url!: string;
     situacaoPagamento!: SituacaoPagamentoEnum;
+    blob!: any;
 }

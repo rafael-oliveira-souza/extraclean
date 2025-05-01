@@ -1,0 +1,65 @@
+<div class="container-fluid mt-5">
+  <div class="col-12 row justify-content-center mb-5">
+    <app-auto-complete class="col-12" label="Cliente" [options]="clientes" [(value)]="clienteSelecionado"
+      optionsValue="email" optionsLabel="[nome] [sobrenome] - [email]"></app-auto-complete>
+    <div class="col-4 row justify-content-center">
+      <button [disabled]="!dataDiaria && !clienteSelecionado" style="margin-right: 10px;" class="col-4 btn btn-success"
+        (click)="buscarPlanos()">Buscar</button>
+      <button [disabled]="!dataDiaria && !clienteSelecionado" class="col-4 btn btn-primary"
+        (click)="limpar()">Limpar</button>
+    </div>
+  </div>
+  <mat-accordion *ngIf="dataSource" id="acord" class="mt-4">
+    <mat-expansion-panel hideToggle *ngFor="let element of dataSource.data">
+      <mat-expansion-panel-header>
+        <mat-panel-title>
+          {{element.tipoPlano | tipoPlano}}- {{element.nomeContratante}} - {{element.data | data}}
+        </mat-panel-title>
+      </mat-expansion-panel-header><br>
+      <div class="row justify-content-center">
+
+        <mat-form-field class="col-2">
+          <mat-label>cpfCnpj</mat-label>
+          <input matInput [(ngModel)]="element.cpfCnpj" [disabled]="true">
+        </mat-form-field>
+
+        <mat-form-field class="col-2">
+          <mat-label>Valor</mat-label>
+          <input matInput [(ngModel)]="element.valor" [disabled]="true">
+        </mat-form-field>
+
+        <mat-form-field class="col-2">
+          <mat-label>Desconto</mat-label>
+          <input matInput [(ngModel)]="element.desconto" [disabled]="true">
+        </mat-form-field>
+
+        <mat-form-field class="col">
+          <mat-label>Endereço </mat-label>
+          <input matInput [(ngModel)]="element.endereco" [disabled]="true">
+        </mat-form-field>
+
+      </div>
+      <div *ngFor="let agend of element.agendamentoResumoDados" class="col-12 row justify-content-center mt-2">
+        <div class="col">
+          <p>Data do Agendamento </p>
+          <p>{{agend.data | data}}</p>
+        </div>
+        <div class="col">
+          <p>Tipo de Serviço </p>
+          <p>{{agend.tipo | tipoServico}}</p>
+        </div>
+        <div class="col">
+          <p>Turno </p>
+          <p>{{agend.turno | turno}}</p>
+        </div>
+        <div class="col">
+          <p>Horas </p>
+          <p>{{agend.horas| horasDiaria}}</p>
+        </div>
+      </div>
+      <div class="col-12 row justify-content-center mt-4">
+        <button class="col-4 btn btn-primary" (click)="baixarContrato(element)">Baixar Contrato</button>
+      </div>
+    </mat-expansion-panel>
+  </mat-accordion>
+</div>

@@ -48,6 +48,7 @@ import { DiariaAdminComponent } from '../diaria-admin/diaria-admin.component';
 import { PagamentoProfissionalComponent } from "../pagamento-profissional/pagamento-profissional.component";
 import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 import { DespesasComponent } from '../despesa/despesa.component';
+import { PlanoAdminComponent } from '../plano-admin/plano-admin.component';
 
 @Component({
   selector: 'app-admin',
@@ -77,7 +78,8 @@ import { DespesasComponent } from '../despesa/despesa.component';
     GeradorContrachequeComponent,
     DiariaAdminComponent,
     PagamentoProfissionalComponent,
-    DespesasComponent
+    DespesasComponent,
+    PlanoAdminComponent
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']

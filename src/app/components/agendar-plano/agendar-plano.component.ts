@@ -268,6 +268,7 @@ export class AgendarPlanoComponent implements OnInit {
           this.urlPagamento = pag.url;
           this.getUrl.emit(pag.url);
           this.notification.alerta(MensagemEnum.PLANO_CONCLUIDO_SUCESSO);
+          this.download(pag.blob);
           this.agendamentos = [];
           this.tipoPlano = 0;
           window.open(pag['url'], '_blank');
@@ -275,6 +276,15 @@ export class AgendarPlanoComponent implements OnInit {
           this.notification.erro(error);
         });
     }
+  }
+
+  private download(blob: any) {
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'ContratoServico.pdf';
+    a.click();
+    window.URL.revokeObjectURL(url);
   }
 
   public calcularTaxaCartao(valorComDesconto: number): number {

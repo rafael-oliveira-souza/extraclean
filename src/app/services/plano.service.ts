@@ -6,6 +6,7 @@ import { PlanoDTO } from '../domains/dtos/PlanoDTO';
 import { PagamentoMpDTO } from '../domains/dtos/PagamentoMpDto';
 import { AgendamentoDTO } from '../domains/dtos/AgendamentoDTO';
 import { TipoPlanoEnum } from '../domains/enums/TipoPlanoEnum';
+import { AgendamentoResumoDTO } from '../domains/dtos/AgendamentoResumoDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -24,4 +25,21 @@ export class PlanoService {
     const url = `${this.HOST_URL}/${tipoPlano}/agendar`;
     return this._http.post<PagamentoMpDTO>(url, agendamentos);
   }
+
+  public recuperarPorCliente(email: string | null): Observable<AgendamentoResumoDTO[]> {
+    const url = `${this.HOST_URL}/porCliente`;
+
+    let params = new HttpParams()
+      .set('email', email ? email : "");
+
+    return this._http.get<AgendamentoResumoDTO[]>(url, { params });
+  }
+
+  public baixarContrato(agend: AgendamentoResumoDTO): Observable<any> {
+    const url = `${this.HOST_URL}/gerarContrato`;
+    return this._http.post(url, agend, {
+      responseType: 'blob'
+    });
+  }
+
 }
