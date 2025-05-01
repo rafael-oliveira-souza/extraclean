@@ -54,7 +54,7 @@ export class ClienteAdminComponent implements OnInit {
     private _usuarioService: UsuarioService) {
     // 'dataNascimento',
     this.displayedColumns = [
-      'nome', 'sobrenome', 'email', 'telefone',
+      'nome', 'sobrenome', 'email', 'cpfCnpj', 'telefone',
       'endereco', 'numero', 'localizacao', 'cep', 'updateEmail',
     ];
   }
