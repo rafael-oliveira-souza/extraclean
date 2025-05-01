@@ -1,6 +1,7 @@
 export class ClienteDTO {
     id!: number;
     nome!: string;
+    cpfCnpj!: string;
     sobrenome!: string;
     email!: string;
     telefone!: string;
