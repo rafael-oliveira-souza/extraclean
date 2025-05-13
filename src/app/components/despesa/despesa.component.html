@@ -69,7 +69,11 @@
         <td mat-cell *matCellDef="let element">
           <mat-form-field>
             <mat-label>Tipo</mat-label>
-            <input matInput [(ngModel)]="element.tipo">
+            <mat-select [(ngModel)]="element.tipo">
+              <mat-option [value]="0">Operacional</mat-option>
+              <mat-option [value]="1">Imposto</mat-option>
+              <mat-option [value]="2">Extras</mat-option>
+            </mat-select>
           </mat-form-field>
         </td>
       </ng-container>
