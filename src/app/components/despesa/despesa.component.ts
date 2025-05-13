@@ -15,6 +15,7 @@ import { DespesaService } from '../../services/despesa.service';
 import { DespesaDTO } from '../../domains/dtos/DespesaDTO';
 import { ClienteDTO } from '../../domains/dtos/ClienteDTO';
 import { ClienteDespesaDTO } from '../../domains/dtos/ClienteDespesaDTO';
+import { TipoDespesaEnum } from '../../domains/enums/TipoDespesaEnum';
 
 @Component({
   selector: 'app-despesas',
@@ -47,7 +48,8 @@ export class DespesasComponent implements OnInit {
   public periodoPagamento: Date | null = new Date();
   public data: Date | null = null;
   public descricao: string = "";
-
+  public tipoDespesa: TipoDespesaEnum = TipoDespesaEnum.OPERACIONAL;
+  
   public dataSource = new MatTableDataSource<DespesaDTO>();
   public despesas: DespesaDTO[] = [];
 
@@ -79,6 +81,7 @@ export class DespesasComponent implements OnInit {
     despesa.usuarioId = this.usuarioSelecionado;
     despesa.valor = this.valor;
     despesa.descricao = this.descricao;
+    despesa.tipo = this.tipoDespesa;
 
     if (this.data) {
       despesa.data = this.data;

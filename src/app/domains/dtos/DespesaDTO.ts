@@ -1,3 +1,5 @@
+import { TipoDespesaEnum } from "../enums/TipoDespesaEnum";
+
 export class DespesaDTO {
     id!: number;
     descricao!: string;
@@ -5,5 +7,5 @@ export class DespesaDTO {
     data!: Date | null;
     valor!: number | null;
     edit: boolean = false;
-    tipo!: string;
+    tipo!: TipoDespesaEnum;
 }

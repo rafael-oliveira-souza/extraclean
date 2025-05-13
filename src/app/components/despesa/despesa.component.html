@@ -12,7 +12,15 @@
         }
       </mat-select>
     </mat-form-field>
-    <mat-form-field class="col-4">
+    <mat-form-field class="col-2">
+      <mat-label>Tipo</mat-label>
+      <mat-select [(ngModel)]="tipoDespesa">
+        <mat-option [value]="0">Operacional</mat-option>
+        <mat-option [value]="1">Imposto</mat-option>
+        <mat-option [value]="2">Extras</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="col-2">
       <mat-label>Descrição</mat-label>
       <input type="text" matInput [(ngModel)]="descricao">
     </mat-form-field>
