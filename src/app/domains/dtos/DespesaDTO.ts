@@ -5,4 +5,5 @@ export class DespesaDTO {
     data!: Date | null;
     valor!: number | null;
     edit: boolean = false;
+    tipo!: string;
 }

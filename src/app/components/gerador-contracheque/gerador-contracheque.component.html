@@ -199,12 +199,12 @@
         <td>Hospedagem e Site</td>
         <td>{{totais.totalDivulgacao | moeda}}</td>
       </tr>
-      <tr>
+      <!-- <tr>
         <td>Impostos</td>
         <td>{{totais.totalImpostos | moeda}}</td>
-      </tr>
+      </tr> -->
       <tr *ngFor="let despesa of despesas">
-        <td>{{despesa.descricao}} - {{despesa.data | data}}</td>
+        <td>{{despesa.descricao}} - {{despesa.tipo | tipoDespesa}} - {{despesa.data | data}}</td>
         <td>{{despesa.valor | moeda}}</td>
       </tr>
     </table>
