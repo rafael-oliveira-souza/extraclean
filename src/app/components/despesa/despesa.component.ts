@@ -42,7 +42,7 @@ export class DespesasComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
 
-  public displayedColumns: string[] = ['nomeUsuario', 'descricao', 'data', 'valor', 'acao'];
+  public displayedColumns: string[] = ['nomeUsuario', 'descricao', 'tipo', 'data', 'valor', 'acao'];
   public usuarioSelecionado: number | null = null;
   public valor: number | null = null;
   public periodoPagamento: Date | null = new Date();
