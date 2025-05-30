@@ -18,6 +18,7 @@ import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 import { AgendamentoService } from '../../services/agendamento.service';
 import { TotaisDTO } from '../../domains/dtos/TotaisDTO';
 import { DespesaDTO } from '../../domains/dtos/DespesaDTO';
+import { TipoDespesaEnum } from '../../domains/enums/TipoDespesaEnum';
 
 @Component({
   selector: 'app-gerador-contracheque',
@@ -294,7 +295,12 @@ export class GeradorContrachequeComponent implements OnInit {
   // Função para calcular o salário líquido (salário base - descontos)
   public calcularDespesas(): number {
     let despesas = this.totais.totalDivulgacao + this.totais.totalImpostos;
-    this.despesas.forEach((despesa: DespesaDTO) => despesas += (despesa.valor ? despesa.valor : 0));
+    this.despesas
+      .forEach((despesa: DespesaDTO) => {
+        if (despesa.tipo != TipoDespesaEnum.ISENTO) {
+          despesas += (despesa.valor ? despesa.valor : 0);
+        }
+      });
     return despesas;
   }
 

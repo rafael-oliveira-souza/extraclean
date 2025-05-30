@@ -27,6 +27,12 @@ export class TipoDespesaPipe implements PipeTransform {
         return "Extras";
       case TipoDespesaEnum.EXTRAS:
         return "Extras";
+      case 3:
+        return "Isento";
+      case "3":
+        return "Isento";
+      case TipoDespesaEnum.ISENTO:
+        return "Isento";
       default:
         return "Não Definido";
     }
