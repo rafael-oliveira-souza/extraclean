@@ -159,7 +159,7 @@ export class AgendarPlanoComponent implements OnInit {
 
       agend.valor = Number(agend.valor);
       agend.origem = OrigemPagamentoEnum.PLANO;
-      agend.formaPagamento = this.formaPagamento == 1 ? FormaPagamentoEnum.PIX : FormaPagamentoEnum.CARTAO;
+      agend.formaPagamento = this.formaPagamento == 1 ? FormaPagamentoEnum.PIX : (this.isTaxaCartao == 1 ? FormaPagamentoEnum.CARTAO : FormaPagamentoEnum.CARTAO_TAXA);
       agend.tipoPagamento = this.formaPagamento == 1 ? TipoPagamentoEnum.DINHEIRO : TipoPagamentoEnum.CREDITO;
       agend.qtdParcelas = this.qtdParcelas;
       agend.quantidadeItens = 1;

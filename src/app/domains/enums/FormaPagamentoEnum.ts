@@ -4,4 +4,5 @@ export enum FormaPagamentoEnum {
     ELO = "ELO",
     PIX = "PIX",
     CARTAO = "CARTAO",
+    CARTAO_TAXA = "CARTAO_TAXA",
 }
