@@ -42,4 +42,8 @@ export class PlanoService {
     });
   }
 
+  public cancelar(id: number): Observable<any> {
+    const url = `${this.HOST_URL}/cancelar/${id}`;
+    return this._http.delete<any>(url);
+  }
 }

@@ -17,6 +17,7 @@ import { MatSelectModule } from '@angular/material/select';
 import { PipeModule } from '../../pipes/pipe.module';
 import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 import { AgendamentoResumoDTO } from '../../domains/dtos/AgendamentoResumoDTO';
+import { MensagemEnum } from '../../domains/enums/MensagemEnum';
 
 @Component({
   selector: 'app-plano-admin',
@@ -87,6 +88,13 @@ export class PlanoAdminComponent implements OnInit {
     this._planoService.recuperarPorCliente(this.clienteSelecionado)
       .subscribe((planos: Array<AgendamentoResumoDTO>) => {
         this.dataSource = new MatTableDataSource<AgendamentoResumoDTO>(planos);
+      });
+  }
+
+  public cancelar(agend: AgendamentoResumoDTO) {
+    this._planoService.cancelar(agend.planoId)
+      .subscribe((result: any) => {
+        this._notificacaoService.alerta(MensagemEnum.PLANO_CANCELADO_SUCESSO);
       });
   }
 
