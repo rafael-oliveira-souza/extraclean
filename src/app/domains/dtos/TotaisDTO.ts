@@ -4,5 +4,7 @@ export class TotaisDTO {
     totalDescontos: number = 0;
     totalImpostos: number = 0;
     totalDivulgacao: number = 0;
+    totalDespesas: number = 0;
+    totalDespesasSemIsencao: number = 0;
     total: number = 0;
 }
