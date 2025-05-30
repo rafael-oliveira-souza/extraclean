@@ -297,9 +297,9 @@ export class GeradorContrachequeComponent implements OnInit {
     let despesas = this.totais.totalDivulgacao + this.totais.totalImpostos;
     this.despesas
       .forEach((despesa: DespesaDTO) => {
-        if (despesa.tipo != TipoDespesaEnum.ISENTO) {
+       // if (despesa.tipo != TipoDespesaEnum.ISENTO) {
           despesas += (despesa.valor ? despesa.valor : 0);
-        }
+       // }
       });
     return despesas;
   }
