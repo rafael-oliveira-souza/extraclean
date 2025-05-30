@@ -13,7 +13,7 @@
     <mat-expansion-panel hideToggle *ngFor="let element of dataSource.data">
       <mat-expansion-panel-header>
         <mat-panel-title>
-          {{element.tipoPlano | tipoPlano}}- {{element.nomeContratante}} - {{element.data | data}}
+          {{element.tipoPlano | tipoPlano}}- {{element.nomeContratante}} - {{element.data | data}} - {{element.situacao | situacaoPlano}}
         </mat-panel-title>
       </mat-expansion-panel-header><br>
       <div class="row justify-content-center">
@@ -71,7 +71,7 @@
 
       <div class="col-12 row justify-content-center mt-4">
         <button class="col-4 btn btn-primary" (click)="baixarContrato(element)">Baixar Contrato</button>
-        <button class="col-4 ml-2 btn btn-danger" (click)="cancelar(element)">Cancelar</button>
+        <button class="col-4 ml-2 btn btn-danger" *ngIf="podeCancelar(element)" (click)="cancelar(element)">Cancelar</button>
       </div>
     </mat-expansion-panel>
   </mat-accordion>

@@ -18,6 +18,7 @@ import { PipeModule } from '../../pipes/pipe.module';
 import { AutoCompleteComponent } from '../auto-complete/auto-complete.component';
 import { AgendamentoResumoDTO } from '../../domains/dtos/AgendamentoResumoDTO';
 import { MensagemEnum } from '../../domains/enums/MensagemEnum';
+import { SituacaoPlanoEnum } from '../../domains/enums/SituacaoPlanoEnum';
 
 @Component({
   selector: 'app-plano-admin',
@@ -96,6 +97,12 @@ export class PlanoAdminComponent implements OnInit {
       .subscribe((result: any) => {
         this._notificacaoService.alerta(MensagemEnum.PLANO_CANCELADO_SUCESSO);
       });
+  }
+
+  public podeCancelar(agend: AgendamentoResumoDTO) {
+    return agend.situacao &&
+      agend.situacao != SituacaoPlanoEnum.CANCELADO &&
+      agend.situacao != SituacaoPlanoEnum.FINALIZADO;
   }
 
   public baixarContrato(agend: AgendamentoResumoDTO) {

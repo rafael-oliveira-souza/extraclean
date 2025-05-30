@@ -1,4 +1,5 @@
 import { HorasEnum } from "../enums/HorasEnum";
+import { SituacaoPlanoEnum } from "../enums/SituacaoPlanoEnum";
 import { TipoPagamentoEnum } from "../enums/TipoPagamentoEnum";
 import { TipoPlanoEnum } from "../enums/TipoPlanoEnum";
 import { TipoServicoEnum } from "../enums/TipoServicoEnum";
@@ -10,6 +11,7 @@ export class AgendamentoResumoDTO {
     nomeContratante!: string;
     desconto!: number;
     endereco!: string;
+    situacao!: SituacaoPlanoEnum;
     cpfCnpj!: string;
     valor!: number;
     tipoPagamento!: TipoPagamentoEnum;

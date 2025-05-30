@@ -18,6 +18,7 @@ import { TaxaCartaoPipe } from './taxa-cartao.pipe';
 import { TelefonePipe } from './telefone.pipe';
 import { TipoPlanoPipe } from './tipoPlano.pipe';
 import { TipoDespesaPipe } from './tipoDespesa.pipe';
+import { SituacaoPlanoPipe } from './situacaoPlano.pipe';
 
 @NgModule({
   declarations: [],
@@ -41,6 +42,7 @@ import { TipoDespesaPipe } from './tipoDespesa.pipe';
     TelefonePipe,
     TipoPlanoPipe,
     TipoDespesaPipe,
+    SituacaoPlanoPipe,
   ],
   exports: [
     DataPipe,
@@ -61,6 +63,7 @@ import { TipoDespesaPipe } from './tipoDespesa.pipe';
     TelefonePipe,
     TipoPlanoPipe,
     TipoDespesaPipe,
+    SituacaoPlanoPipe,
   ]
 })
 export class PipeModule { }
