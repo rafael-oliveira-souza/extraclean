@@ -8,7 +8,8 @@
   </div>
   <div class="col-12">
     <app-auto-complete class="col-12" label="Cliente" [options]="clientes" [(value)]="clienteSelecionado"
-    optionsValue="email" (getOptionsSelected)="recuperarCliente()" optionsLabel="[nome] - [email]"></app-auto-complete>
+      optionsValue="email" (getOptionsSelected)="recuperarCliente()"
+      optionsLabel="[nome] - [email]"></app-auto-complete>
   </div>
   <div class="col-12">
     <mat-form-field class="col-12">
@@ -104,9 +105,12 @@
   <h5 *ngIf="exibeTotais" class="text-center">Descontos: {{totais.totalDescontos | moeda}}</h5>
   <h5 *ngIf="totais.totalProfissionais > 0" class="text-center">Total Profissionais: {{totais.totalProfissionais |
     moeda}}</h5>
-  <h5 *ngIf="exibeTotais && totais.totalDespesas" class="text-center">Total Despesas: {{totais.totalDespesas | moeda}}</h5>
-  <h5 *ngIf="exibeTotais && totais.total > 0" class="text-center">Lucro: {{
-    totais.total | moeda}}
+  <h5 *ngIf="exibeTotais && totais.totalDespesas" class="text-center">Total Despesas: {{totais.totalDespesas | moeda}}
+  </h5>
+  <h5 *ngIf="exibeTotais && totais.totalDespesasComIsencao" class="text-center">Despesas Isentas: {{totais.totalDespesas
+    - totais.totalDespesasComIsencao| moeda}}</h5>
+  <h5 *ngIf="exibeTotais && totais.totalComIsencao > 0" class="text-center">Lucro: {{
+    totais.totalComIsencao | moeda}}
   </h5>
 
 </div>

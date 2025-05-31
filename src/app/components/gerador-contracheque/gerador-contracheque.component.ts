@@ -143,7 +143,7 @@ export class GeradorContrachequeComponent implements OnInit {
             this.agendamentoService.recuperarTotais(dataIni, dataF, null, null, null, null)
               .subscribe((totais: TotaisDTO) => {
                 this.totais = totais;
-                this.salarioBase = (this.totais.total * this.PORCENTAGEM_GERENTE) + this.VL_FIXO_GERENTE;
+                this.salarioBase = (this.totais.totalComIsencao * this.PORCENTAGEM_GERENTE) + this.VL_FIXO_GERENTE;
                 this.planoSaude = 0;
                 this.valeTransporte = 0;
                 this.valeAlimentacao = 0;

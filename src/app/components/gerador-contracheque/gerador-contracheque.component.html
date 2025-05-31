@@ -127,7 +127,7 @@
       </tr>
       <tr *ngIf="ehGerente">
         <td>8781 - Total Liquido</td>
-        <td>{{totais.total | moeda}}</td>
+        <td>{{totais.totalComIsencao | moeda}}</td>
       </tr>
       <tr *ngIf="ehGerente">
         <td>8280 - Fixo</td>
@@ -135,7 +135,7 @@
       </tr>
       <tr *ngIf="ehGerente">
         <td>8281 - Comissão</td>
-        <td>{{totais.total * PORCENTAGEM_GERENTE | moeda}}</td>
+        <td>{{totais.totalComIsencao * PORCENTAGEM_GERENTE | moeda}}</td>
       </tr>
 
       <tr *ngIf="profissionalSelecionado?.contratada">
