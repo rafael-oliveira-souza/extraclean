@@ -122,6 +122,10 @@
         <td>{{calcularDespesas() | moeda}}</td>
       </tr>
       <tr *ngIf="ehGerente">
+        <td>8784 -Total Despesas Isentas</td>
+        <td>{{calcularDespesasIsentas() | moeda}}</td>
+      </tr>
+      <tr *ngIf="ehGerente">
         <td>8781 - Total Liquido</td>
         <td>{{totais.total | moeda}}</td>
       </tr>

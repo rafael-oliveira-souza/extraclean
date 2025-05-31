@@ -292,16 +292,12 @@ export class GeradorContrachequeComponent implements OnInit {
     return { inss, irrf, horasNaoTrabalhadas, totalDescontos };
   }
 
-  // Função para calcular o salário líquido (salário base - descontos)
   public calcularDespesas(): number {
-    let despesas = this.totais.totalDivulgacao + this.totais.totalImpostos;
-    this.despesas
-      .forEach((despesa: DespesaDTO) => {
-       // if (despesa.tipo != TipoDespesaEnum.ISENTO) {
-          despesas += (despesa.valor ? despesa.valor : 0);
-       // }
-      });
-    return despesas;
+    return this.totais.totalDivulgacao + this.totais.totalImpostos + this.totais.totalDespesas;
+  }
+
+  public calcularDespesasIsentas(): number {
+    return this.totais.totalDespesas - this.totais.totalDespesasComIsencao;
   }
 
   // Função para calcular o salário líquido (salário base - descontos)
