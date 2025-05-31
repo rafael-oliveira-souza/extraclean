@@ -109,8 +109,8 @@
   </h5>
   <h5 *ngIf="exibeTotais && totais.totalDespesasComIsencao" class="text-center">Despesas Isentas: {{totais.totalDespesas
     - totais.totalDespesasComIsencao| moeda}}</h5>
-  <h5 *ngIf="exibeTotais && totais.totalComIsencao > 0" class="text-center">Lucro: {{
-    totais.totalComIsencao | moeda}}
+  <h5 *ngIf="exibeTotais && totais.total > 0" class="text-center">Lucro: {{
+    totais.total | moeda}}
   </h5>
 
 </div>
