@@ -117,7 +117,7 @@
                 <div id="idValor" class="col-3 mt-2 " *ngIf="agendamento.turno">
                   <mat-form-field class="col-12 ">
                     <mat-label>Valor</mat-label>
-                    <input type="text" matInput [(ngModel)]="agendamento.valor">
+                    <input type="text" matInput [(ngModel)]="agendamento.valor" (ngModelChange)="recuperarTaxa()">
                   </mat-form-field>
                 </div>
                 <div id="idDesconto" class="col-3  mt-2" *ngIf="agendamento.turno">
@@ -129,7 +129,7 @@
                 <div id="idFormaPagamento" class="col  mt-2" *ngIf="agendamento.turno">
                   <mat-form-field class="col-12">
                     <mat-label>Forma de Pagamento</mat-label>
-                    <select matNativeControl [(ngModel)]="agendamento.tipoPagamento">
+                    <select matNativeControl [(ngModel)]="agendamento.tipoPagamento" (ngModelChange)="recuperarTaxa()">
                       <option value="DINHEIRO">Pix</option>
                       <option value="CREDITO">Cartao</option>
                     </select>
@@ -148,7 +148,7 @@
                 <div id="idValorCalc" class="col-2  mt-2" *ngIf="agendamento.tipoPagamento">
                   <mat-form-field class=" col-12">
                     <mat-label>Valor Total</mat-label>
-                    <input [(ngModel)]="valorTotalCalculado">
+                    <input matInput disabled [(ngModel)]="valorTotalCalculado">
                   </mat-form-field>
                 </div>
                 <div id="idQtdHoras" class="col-12  mt-2" *ngIf="agendamento.valor">
