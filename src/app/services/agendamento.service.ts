@@ -12,6 +12,7 @@ import { InfoDiariaDTO } from '../domains/dtos/InfoDiariaDTO';
 import { TotaisDTO } from '../domains/dtos/TotaisDTO';
 import { SituacaoPagamentoEnum } from '../domains/enums/SituacaoPagamentoEnum';
 import { SituacaoDiariaEnum } from '../domains/enums/SituacaoDiariaEnum';
+import { FormaPagamentoEnum } from '../domains/enums/FormaPagamentoEnum';
 
 @Injectable({
   providedIn: 'root'
@@ -32,6 +33,15 @@ export class AgendamentoService {
       .set('email', email);
 
     return this._http.get<Array<HistoricoAgendamentoDTO>>(url, { params });
+  }
+
+  public calcularTaxa(valor: number, formaPagamento: FormaPagamentoEnum): Observable<number> {
+    const url = `${this.HOST_URL}/cacularTaxa`;
+    let params = new HttpParams()
+      .set('valor', valor)
+      .set('formaPagamento', formaPagamento);
+
+    return this._http.get<number>(url, { params });
   }
 
   public atualizarInfoDiaria(diaria: InfoDiariaDTO): Observable<InfoDiariaDTO> {

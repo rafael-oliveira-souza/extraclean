@@ -50,6 +50,7 @@ import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 import { DespesasComponent } from '../despesa/despesa.component';
 import { PlanoAdminComponent } from '../plano-admin/plano-admin.component';
 import { FormaPagamentoEnum } from '../../domains/enums/FormaPagamentoEnum';
+import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
 
 @Component({
   selector: 'app-admin',
@@ -100,6 +101,7 @@ export class AdminComponent implements OnInit {
 
   public selectedMenu: MenuDTO = this.menus[0];
   public selectedIndex: number = 1;
+  public valorTotalCalculado: number = 0;
   public clienteSelecionado: ClienteDTO = new ClienteDTO();
   public endereco: EnderecoDTO = new EnderecoDTO();
   public profissionais: Array<ProfissionalDTO> = [];
@@ -225,6 +227,18 @@ export class AdminComponent implements OnInit {
 
     this.selectedIndex = index;
     this._router.navigate([Rota.ADMIN], { queryParams: { tab: index } });
+  }
+
+  public recuperarTaxa() {
+    let formaPagamento = FormaPagamentoEnum.PIX;
+    if (this.agendamento.tipoPagamento == TipoPagamentoEnum.CREDITO) {
+      formaPagamento = this.agendamento.formaPagamento;
+    }
+
+    this._agendamentoService.calcularTaxa(this.agendamento.valor, formaPagamento)
+      .subscribe((result: number) => {
+        this.valorTotalCalculado = result;
+      }, (error) => this._notificacaoService.erro(error));
   }
 
   public agendar() {

@@ -135,14 +135,20 @@
                     </select>
                   </mat-form-field>
                 </div>
-                <div id="idFormaPagamentoCartao" class="col-3  mt-2"
+                <div id="idFormaPagamentoCartao" class="col-2  mt-2"
                   *ngIf="agendamento.tipoPagamento && agendamento.tipoPagamento == 'CREDITO'">
                   <mat-form-field class="col-12">
                     <mat-label>Forma de Pagamento Cartão</mat-label>
-                    <select matNativeControl [(ngModel)]="agendamento.formaPagamento">
+                    <select matNativeControl [(ngModel)]="agendamento.formaPagamento" (ngModelChange)="recuperarTaxa()">
                       <option value="CARTAO">Taxa Fixa (5 R$)</option>
                       <option value="CARTAO_TAXA">Porcentagem Maquininha</option>
                     </select>
+                  </mat-form-field>
+                </div>
+                <div id="idValorCalc" class="col-2  mt-2" *ngIf="agendamento.tipoPagamento">
+                  <mat-form-field class=" col-12">
+                    <mat-label>Valor Total</mat-label>
+                    <input [(ngModel)]="valorTotalCalculado">
                   </mat-form-field>
                 </div>
                 <div id="idQtdHoras" class="col-12  mt-2" *ngIf="agendamento.valor">
