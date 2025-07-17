@@ -232,7 +232,7 @@ export class AdminComponent implements OnInit {
   public recuperarTaxa() {
     let formaPagamento = FormaPagamentoEnum.PIX;
     if (this.agendamento.tipoPagamento == TipoPagamentoEnum.CREDITO) {
-      formaPagamento = this.agendamento.formaPagamento;
+      formaPagamento = this.agendamento.formaPagamento ? this.agendamento.formaPagamento : FormaPagamentoEnum.CARTAO_TAXA;
     }
 
     this._agendamentoService.calcularTaxa(this.agendamento.valor, formaPagamento)
@@ -252,6 +252,8 @@ export class AdminComponent implements OnInit {
 
     if (this.agendamento.tipoPagamento == 'DINHEIRO') {
       this.agendamento.formaPagamento = FormaPagamentoEnum.PIX;
+    } else if (!this.agendamento.formaPagamento) {
+      this.agendamento.formaPagamento = FormaPagamentoEnum.CARTAO_TAXA;
     }
 
     this._agendamentoService.agendar(this.agendamento)
