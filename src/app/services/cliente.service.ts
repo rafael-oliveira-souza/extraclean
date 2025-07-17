@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { environment } from '../../enviromment';
 import { ClienteDTO } from '../domains/dtos/ClienteDTO';
+import { EnderecoDTO } from '../domains/dtos/EnderecoDTO';
 
 @Injectable({
   providedIn: 'root'
@@ -16,6 +17,12 @@ export class ClienteService {
     const url = `${this.HOST_URL}/${email}`;
     return this._http.get<ClienteDTO>(url);
   }
+
+  public buscarEndereco(email: string | null | undefined): Observable<string> {
+    const url = `${this.HOST_URL}/buscarEndereco/${email}`;
+    return this._http.get<string>(url);
+  }
+
 
   public recuperarTodos(): Observable<ClienteDTO[]> {
     const url = `${this.HOST_URL}/todos`;

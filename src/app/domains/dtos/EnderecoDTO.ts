@@ -13,4 +13,5 @@ export class EnderecoDTO {
     ddd: string = "";
     siafi: string = "";
     valido: boolean = false;
+    falhaNoServico: boolean = false;
 }

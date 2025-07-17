@@ -114,24 +114,34 @@
                     </mat-select>
                   </mat-form-field>
                 </div>
-                <div id="idValor" class="col-4 mt-2 " *ngIf="agendamento.turno">
+                <div id="idValor" class="col-3 mt-2 " *ngIf="agendamento.turno">
                   <mat-form-field class="col-12 ">
                     <mat-label>Valor</mat-label>
                     <input type="text" matInput [(ngModel)]="agendamento.valor">
                   </mat-form-field>
                 </div>
-                <div id="idDesconto" class="col-4  mt-2" *ngIf="agendamento.turno">
+                <div id="idDesconto" class="col-3  mt-2" *ngIf="agendamento.turno">
                   <mat-form-field class="col-12 ">
                     <mat-label>Desconto</mat-label>
                     <input type="text" matInput [(ngModel)]="agendamento.desconto">
                   </mat-form-field>
                 </div>
-                <div id="idFormaPagamento" class="col-4  mt-2" *ngIf="agendamento.turno">
+                <div id="idFormaPagamento" class="col  mt-2" *ngIf="agendamento.turno">
                   <mat-form-field class="col-12">
                     <mat-label>Forma de Pagamento</mat-label>
                     <select matNativeControl [(ngModel)]="agendamento.tipoPagamento">
                       <option value="DINHEIRO">Pix</option>
                       <option value="CREDITO">Cartao</option>
+                    </select>
+                  </mat-form-field>
+                </div>
+                <div id="idFormaPagamentoCartao" class="col-3  mt-2"
+                  *ngIf="agendamento.tipoPagamento && agendamento.tipoPagamento == 'CREDITO'">
+                  <mat-form-field class="col-12">
+                    <mat-label>Forma de Pagamento Cartão</mat-label>
+                    <select matNativeControl [(ngModel)]="agendamento.formaPagamento">
+                      <option value="CARTAO">Taxa Fixa (5 R$)</option>
+                      <option value="CARTAO_TAXA">Porcentagem Maquininha</option>
                     </select>
                   </mat-form-field>
                 </div>

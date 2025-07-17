@@ -95,6 +95,10 @@ export class CepComponent {
           } else {
             this.exibirCep(cepRecuperado);
           }
+        }, (error) => {
+            const cepMock: EnderecoDTO =  new EnderecoDTO();
+            cepMock.falhaNoServico=true;
+            this.exibirCep(cepMock);
         });
     }
   }

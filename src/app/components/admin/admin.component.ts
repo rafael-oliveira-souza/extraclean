@@ -49,6 +49,7 @@ import { PagamentoProfissionalComponent } from "../pagamento-profissional/pagame
 import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 import { DespesasComponent } from '../despesa/despesa.component';
 import { PlanoAdminComponent } from '../plano-admin/plano-admin.component';
+import { FormaPagamentoEnum } from '../../domains/enums/FormaPagamentoEnum';
 
 @Component({
   selector: 'app-admin',
@@ -99,6 +100,7 @@ export class AdminComponent implements OnInit {
 
   public selectedMenu: MenuDTO = this.menus[0];
   public selectedIndex: number = 1;
+  public clienteSelecionado: ClienteDTO = new ClienteDTO();
   public endereco: EnderecoDTO = new EnderecoDTO();
   public profissionais: Array<ProfissionalDTO> = [];
   public profissionaisSelecionados: number[] = [0];
@@ -159,6 +161,7 @@ export class AdminComponent implements OnInit {
           if (clientesSelecionados && clientesSelecionados.length > 0) {
             this.agendamento.endereco = clientesSelecionados[0].endereco;
             this.endereco.valido = true;
+            this.clienteSelecionado = clientesSelecionados[0];
           }
         });
     }
@@ -169,8 +172,17 @@ export class AdminComponent implements OnInit {
   }
 
   public getEndereco(endereco: EnderecoDTO) {
-    this.endereco = endereco;
-    this.agendamento.endereco = EnderecoUtils.montarEndereco(endereco);
+    if (this.endereco.falhaNoServico) {
+      this.endereco.valido = true;
+      this.endereco.cep = this.cliente.cep;
+      this.endereco.numero = this.cliente.numero;
+      this.endereco.logradouro = this.cliente.endereco;
+      this.agendamento.endereco = this.cliente.endereco;
+    } else {
+      this.endereco = endereco;
+      this.agendamento.endereco = EnderecoUtils.montarEndereco(this.endereco);
+    }
+
   }
 
   public isEnderecoValido() {
@@ -223,6 +235,11 @@ export class AdminComponent implements OnInit {
     this.agendamento.diasSelecionados = [DateUtils.toDate(this.agendamento.dataHora)];
     this.agendamento.ignoreQtdProfissionais = true;
     this.agendamento.tipoLimpeza = this.agendamento.tipoLimpeza;
+
+    if (this.agendamento.tipoPagamento == 'DINHEIRO') {
+      this.agendamento.formaPagamento = FormaPagamentoEnum.PIX;
+    }
+
     this._agendamentoService.agendar(this.agendamento)
       .subscribe((result: PagamentoMpDTO) => {
         this.url = result.url;
