@@ -97,7 +97,7 @@
                     <small class="col-6"><strong> | Horas: </strong>{{diaria.horas |
                       horasDiaria}}</small><br>
                     <small class="col-6" *ngIf="isAdm"><strong> | Valor: </strong>{{diaria.valor |
-                      moeda}} ({{recuperarDescritivoValor(diaria)}})</small><br>
+                      moeda}} {{recuperarDescritivoValor(diaria)}}</small><br>
                     <small class="col-6" *ngIf="isAdm"><strong> | Desconto: </strong>{{diaria.desconto |
                       moeda}}</small><br> <!-- -->
                     <small class="col-6"><strong> | Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>
@@ -193,7 +193,7 @@
                     <small class="col-6"><strong> | Horas: </strong>{{diaria.horas |
                       horasDiaria}}</small><br>
                     <small class="col-6" *ngIf="isAdm"><strong> | Valor: </strong>{{diaria.valor |
-                      moeda}} ({{recuperarDescritivoValor(diaria)}})</small><br>
+                      moeda}} {{recuperarDescritivoValor(diaria)}}</small><br>
                     <small class="col-6" *ngIf="isAdm"><strong> | Desconto: </strong>{{diaria.desconto |
                       moeda}}</small><br> <!-- -->
                     <small class="col-6"><strong> | Situação: </strong>{{diaria.situacao | situacaoDiaria}}</small><br>

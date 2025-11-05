@@ -17,8 +17,8 @@ export class AgendamentoConstantes {
     public static METRAGEM_MAX = 1000;
 
     public static VALORES_HORAS: HorasDTO[] = [
-        { id: HorasEnum.HORAS_4, valor: 125, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
-        { id: HorasEnum.HORAS_6, valor: 155, descricao: '6 Horas - 1 Profissional', numProfissionais: 1 },
+        { id: HorasEnum.HORAS_4, valor: 135, descricao: '4 Horas - 1 Profissional', numProfissionais: 1 },
+        { id: HorasEnum.HORAS_6, valor: 165, descricao: '6 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_8, valor: 190, descricao: '8 Horas - 1 Profissional', numProfissionais: 1 },
         { id: HorasEnum.HORAS_16, valor: 360, descricao: '8 Horas - 2 Profissionais', numProfissionais: 2 },
         { id: HorasEnum.HORAS_24, valor: 495, descricao: '8 Horas - 3 Profissionais', numProfissionais: 3 },

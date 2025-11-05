@@ -80,11 +80,11 @@ export class CalendarioAgendamentoComponent implements OnInit {
   public hoje: Date = DateUtils.newDate();
   public habilitaAlteracaoProfissional: boolean = false;
   public habilitaReagendamento: boolean = false;
+  private _moeda: MoedaPipe = new MoedaPipe();
 
   constructor(private _agendService: AgendamentoService,
     private _notificacaoService: NotificacaoService,
-    private _changes: ChangeDetectorRef,
-    private _moeda: MoedaPipe) { }
+    private _changes: ChangeDetectorRef) { }
 
   ngOnInit(): void {
     this.profissionais = this.ordenarProfissionais(this.profissionais);
@@ -445,28 +445,24 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
   public recuperarDescritivoValor(diaria: InfoAgendamentoDTO) {
     const valorAgend = AgendamentoConstantes.getValorHora(diaria.horas);
-    if (valorAgend <= diaria.valor) {
-      return `${this._moeda.transform(diaria.valor)}`;
+    if (diaria.valor <= valorAgend) {
+      return ``;
     }
 
     const diferenca = diaria.valor - valorAgend - diaria.taxa;
     if (diferenca > 0 && diaria.taxa > 0) {
-      return `${this._moeda.transform(diaria.valor)} 
-             +  ${this._moeda.transform(diferenca)} 
-             + ${this._moeda.transform(diaria.taxa)}`;
+      return `(${this._moeda.transform(valorAgend)} Limpeza + ${this._moeda.transform(diferenca)} Deslocamento + ${this._moeda.transform(diaria.taxa)} Taxa de Cartão)`;
     }
 
     if (diferenca <= 0 && diaria.taxa > 0) {
-      return `${this._moeda.transform(diaria.valor)} 
-             + ${this._moeda.transform(diaria.taxa)}`;
+      return `(${this._moeda.transform(valorAgend)} Limpeza + ${this._moeda.transform(diaria.taxa)}) Taxa de Cartão`;
     }
 
     if (diferenca > 0 && diaria.taxa <= 0) {
-      return `${this._moeda.transform(diaria.valor)} 
-             + ${this._moeda.transform(diferenca)}`;
+      return `(${this._moeda.transform(valorAgend)} Limpeza + ${this._moeda.transform(diferenca)} Deslocamento)`;
     }
 
-    return `${this._moeda.transform(diaria.valor)}`;
+    return ``;
   }
 
 }
