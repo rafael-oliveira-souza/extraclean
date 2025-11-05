@@ -28,6 +28,10 @@ import { ProfissionalDTO } from '../../domains/dtos/ProfissionalDTO';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { TipoProfissionalEnum } from '../../domains/enums/TipoProfissionalEnum';
 import { WindowsUtils } from '../../utils/WindowsUtils';
+import { DiariaDTO } from '../../domains/dtos/DiariaDTO';
+import { MoedaPipe } from '../../pipes/moeda.pipe';
+import { AgendamentoConstantes } from '../../domains/constantes/AgendamentoConstantes';
+import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
 
 @Component({
   selector: 'app-calendario-agendamento',
@@ -79,7 +83,8 @@ export class CalendarioAgendamentoComponent implements OnInit {
 
   constructor(private _agendService: AgendamentoService,
     private _notificacaoService: NotificacaoService,
-    private _changes: ChangeDetectorRef) { }
+    private _changes: ChangeDetectorRef,
+    private _moeda: MoedaPipe) { }
 
   ngOnInit(): void {
     this.profissionais = this.ordenarProfissionais(this.profissionais);
@@ -436,6 +441,32 @@ export class CalendarioAgendamentoComponent implements OnInit {
       }, (error: any) => {
         this._notificacaoService.erro("Falha ao consultar os agendamentos. Tente novamente mais tarde!");
       });
+  }
+
+  public recuperarDescritivoValor(diaria: InfoAgendamentoDTO) {
+    const valorAgend = AgendamentoConstantes.getValorHora(diaria.horas);
+    if (valorAgend <= diaria.valor) {
+      return `${this._moeda.transform(diaria.valor)}`;
+    }
+
+    const diferenca = diaria.valor - valorAgend - diaria.taxa;
+    if (diferenca > 0 && diaria.taxa > 0) {
+      return `${this._moeda.transform(diaria.valor)} 
+             +  ${this._moeda.transform(diferenca)} 
+             + ${this._moeda.transform(diaria.taxa)}`;
+    }
+
+    if (diferenca <= 0 && diaria.taxa > 0) {
+      return `${this._moeda.transform(diaria.valor)} 
+             + ${this._moeda.transform(diaria.taxa)}`;
+    }
+
+    if (diferenca > 0 && diaria.taxa <= 0) {
+      return `${this._moeda.transform(diaria.valor)} 
+             + ${this._moeda.transform(diferenca)}`;
+    }
+
+    return `${this._moeda.transform(diaria.valor)}`;
   }
 
 }

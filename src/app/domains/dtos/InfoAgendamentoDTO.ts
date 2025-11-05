@@ -2,6 +2,7 @@ import { HorasEnum } from "../enums/HorasEnum";
 import { SituacaoAgendamentoEnum } from "../enums/SituacaoAgendamentoEnum";
 import { SituacaoDiariaEnum } from "../enums/SituacaoDiariaEnum";
 import { SituacaoPagamentoEnum } from "../enums/SituacaoPagamentoEnum";
+import { TipoPagamentoEnum } from "../enums/TipoPagamentoEnum";
 import { TipoServicoEnum } from "../enums/TipoServicoEnum";
 import { TurnoEnum } from "../enums/TurnoEnum";
 
@@ -38,4 +39,6 @@ export class InfoAgendamentoDTO {
     open: boolean = false;
     emailDiarista!: string;
     emailCliente!: string;
+    tipoPagamento!: TipoPagamentoEnum;
+    taxa!: number;
 }
