@@ -455,7 +455,7 @@ export class CalendarioAgendamentoComponent implements OnInit {
     }
 
     if (diferenca <= 0 && diaria.taxa > 0) {
-      return `(${this._moeda.transform(valorAgend)} Limpeza + ${this._moeda.transform(diaria.taxa)}) Taxa de Cartão`;
+      return `(${this._moeda.transform(valorAgend)} Limpeza + ${this._moeda.transform(diaria.taxa)} Taxa de Cartão)`;
     }
 
     if (diferenca > 0 && diaria.taxa <= 0) {
