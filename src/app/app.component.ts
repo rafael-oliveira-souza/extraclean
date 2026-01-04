@@ -1,6 +1,5 @@
 import { Component, LOCALE_ID } from '@angular/core';
 import { RouterModule, RouterOutlet } from '@angular/router';
-import { MenuComponent } from './tabs/menu/menu.component';
 import { MAT_DATE_LOCALE } from '@angular/material/core';
 import * as moment from 'moment'; // Import Moment.js
 import { LinguagemEnum } from './domains/enums/LinguagemEnum';
