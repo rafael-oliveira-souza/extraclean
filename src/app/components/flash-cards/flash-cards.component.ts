@@ -69,7 +69,7 @@ export class FlashCardsComponent implements OnInit {
   readonly temas = signal<string[]>([
     // 'Direito Administrativo', 
     // 'Raciocínio Lógico', 
-    'Redes de Computadores'
+    // 'Redes de Computadores'
   ]);
   readonly announcer = inject(LiveAnnouncer);
 
