@@ -29,6 +29,7 @@ import { InfoAgendamentoDTO } from '../../domains/dtos/InfoAgendamentoDTO';
 import { HistoricoProfissionalComponent } from '../../components/historico-profissional/historico-profissional.component';
 import { DateUtils } from '../../utils/DateUtils';
 import { PontoProfissionalComponent } from '../../components/ponto-profissional/ponto-profissional.component';
+import { FlashCardsComponent } from "../../components/flash-cards/flash-cards.component";
 
 @Component({
   selector: 'app-menu',
@@ -44,7 +45,8 @@ import { PontoProfissionalComponent } from '../../components/ponto-profissional/
     HomeComponent,
     CommonModule,
     ScrollComponent,
-    PerfilComponent
+    PerfilComponent,
+    FlashCardsComponent
   ],
   templateUrl: './menu.component.html',
   styleUrl: './menu.component.scss'
@@ -81,6 +83,20 @@ export class MenuComponent {
       }
     });
     this.exibirMenus();
+    this.exibirMenuEstudo();
+  }
+
+  private exibirMenuEstudo() {
+    if (this.authService.isLoggedIn()) {
+      const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+      if (auth != null) {
+        if (auth.tipoUsuario == TipoClienteEnum.ADMIN || auth.tipoUsuario == TipoClienteEnum.ESTUDOS) {
+          this.menus.push({ label: "Estudos", id: "idEstudos", index: 5 });
+        } else if (auth.tipoUsuario == TipoClienteEnum.ESTUDOS) {
+          this.menus = [{ label: "Estudos", id: "idEstudos", index: 5 }];
+        }
+      }
+    }
   }
 
   ngAfterContentChecked(): void {
