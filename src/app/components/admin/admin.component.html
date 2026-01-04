@@ -305,6 +305,7 @@
                 <mat-button-toggle [value]="6">Editar Planos</mat-button-toggle>
                 <mat-button-toggle [value]="4">Editar Pagamentos</mat-button-toggle>
                 <mat-button-toggle [value]="5">Editar Despesas</mat-button-toggle>
+                <mat-button-toggle [value]="7">Flash Cards</mat-button-toggle>
               </mat-button-toggle-group>
             </div>
             <div class="">
@@ -316,6 +317,7 @@
                 *ngIf="editaDados == 3"></app-diaria-admin>
               <app-despesas *ngIf="editaDados == 5"></app-despesas>
               <app-plano-admin [clientes]="clientes" *ngIf="editaDados == 6"></app-plano-admin>
+              <app-flash-cards *ngIf="editaDados == 7"></app-flash-cards>
             </div>
           </div>
           <div *ngIf="selectedIndex==5">

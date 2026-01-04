@@ -51,6 +51,7 @@ import { DespesasComponent } from '../despesa/despesa.component';
 import { PlanoAdminComponent } from '../plano-admin/plano-admin.component';
 import { FormaPagamentoEnum } from '../../domains/enums/FormaPagamentoEnum';
 import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
+import { FlashCardsComponent } from '../flash-cards/flash-cards.component';
 
 @Component({
   selector: 'app-admin',
@@ -81,7 +82,8 @@ import { TipoPagamentoEnum } from '../../domains/enums/TipoPagamentoEnum';
     DiariaAdminComponent,
     PagamentoProfissionalComponent,
     DespesasComponent,
-    PlanoAdminComponent
+    PlanoAdminComponent,
+    FlashCardsComponent
   ],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']

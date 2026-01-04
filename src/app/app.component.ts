@@ -11,6 +11,9 @@ import localePt from '@angular/common/locales/pt';
 import { ImageComponent } from './components/image/image.component';
 import { STEPPER_GLOBAL_OPTIONS } from '@angular/cdk/stepper';
 import { LoadingComponent } from './components/loading/loading.component';
+import { register } from 'swiper/element/bundle';
+
+register();
 
 registerLocaleData(localePt);
 

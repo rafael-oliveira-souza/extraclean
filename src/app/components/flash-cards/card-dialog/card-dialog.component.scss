@@ -1,0 +1,124 @@
+/* Dialog */
+.flashcard-dialog {
+  padding: 0;
+}
+
+/* Centralização no Swiper */
+swiper-slide {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Container geral */
+.flashcard-container {
+  width: 100%;
+  max-width: 600px;
+  text-align: center;
+}
+
+/* Progresso */
+.flashcard-meta {
+  font-size: 0.85rem;
+  color: #6b7280;
+  margin-bottom: 16px;
+}
+
+/* Wrapper 3D */
+.flashcard-wrapper {
+  position: relative;
+  width: 100%;
+  height: 320px;
+  margin: auto;
+
+  perspective: 1200px;
+}
+
+/* Card base */
+.flashcard {
+  position: absolute;
+  inset: 0;
+
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 32px 24px;
+
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.08);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  backface-visibility: hidden;
+  transition: transform 0.6s ease;
+}
+
+/* Frente */
+.flashcard-front {
+  transform: rotateY(0deg);
+}
+
+/* Verso */
+.flashcard-back {
+  transform: rotateY(180deg);
+}
+
+/* Flip */
+.flashcard-wrapper.flipped .flashcard-front {
+  transform: rotateY(180deg);
+}
+
+.flashcard-wrapper.flipped .flashcard-back {
+  transform: rotateY(360deg);
+}
+
+/* Conteúdo */
+.flashcard-question {
+  font-size: 1.4rem;
+  font-weight: 600;
+  line-height: 1.5;
+  color: #1f2937;
+}
+
+.flashcard-answer {
+  font-size: 1.2rem;
+  line-height: 1.6;
+  color: #374151;
+}
+
+/* Botão */
+.flashcard-action {
+  margin-top: 24px;
+}
+
+/* Navegação */
+.nav-buttons {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 600px;
+  margin: 32px auto 0;
+}
+
+/* Mobile */
+@media (max-width: 600px) {
+  .flashcard-wrapper {
+    height: 280px;
+  }
+
+  .flashcard {
+    padding: 24px 16px;
+  }
+
+  .flashcard-question {
+    font-size: 1.2rem;
+  }
+
+  .flashcard-answer {
+    font-size: 1.1rem;
+  }
+
+  .nav-buttons {
+    gap: 16px;
+  }
+}

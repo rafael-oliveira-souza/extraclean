@@ -1,0 +1,50 @@
+<!-- <mat-dialog-content class="mat-typography">
+  <swiper-container #swiper class="swiper-70" [slides-per-view]="1" [allow-touch-move]="true"
+    style="width: 100%; height: 60vh;">
+    <swiper-slide *ngFor="let flash of flashs">
+      <div class="flashcard-wrapper" [class.flipped]="flash.visto">
+        <div class="flashcard flashcard-front">
+          <p class="flashcard-question">
+            {{ flash.pergunta }}
+          </p>
+        </div>
+        <div class="flashcard flashcard-back">
+          <p class="flashcard-answer">
+            {{ flash.resposta }}
+          </p>
+        </div>
+      </div>
+      <div class="flashcard-action">
+        <button mat-raised-button color="primary" (click)="flash.visto = !flash.visto">
+          {{ flash.visto ? 'Ocultar resposta' : 'Mostrar resposta' }}
+        </button>
+      </div>
+
+    </swiper-slide>
+  </swiper-container>
+</mat-dialog-content>
+<mat-dialog-actions align="center">
+  <div class="row justify-content-center mt-4">
+    <div class="nav-buttons">
+      <button mat-stroked-button> ← Anterior</button>
+      <button mat-stroked-button color="primary">Próximo →</button>
+    </div>
+
+  </div>
+</mat-dialog-actions> -->
+
+<div class="card-container" [class.flipped]="isFlipped">
+  <div class="card card-front">
+    <ng-content select="[front]">
+      TEstedsadsadsadsa
+    </ng-content>
+  </div>
+
+  <div class="card card-back">
+    <ng-content select="[back]">Outradsacasiodjasidjasiodjisaooi</ng-content>
+  </div>
+</div>
+
+<button (click)="isFlipped = !isFlipped">
+  Girar
+</button>

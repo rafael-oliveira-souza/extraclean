@@ -13,6 +13,9 @@ export class AuthInterceptor implements HttpInterceptor {
   constructor(private _authService: AutenticacaoService, private _router: Router) { }
 
   intercept(req: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
+    if (req.url.includes("/estudo")) {
+      return next.handle(req);
+    }
     if (req.url.includes("/autenticar")) {
       return next.handle(req);
     }

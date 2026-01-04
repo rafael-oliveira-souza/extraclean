@@ -6,11 +6,13 @@ import { AuthGuard } from './services/permissao.service';
 import { PagamentoComponent } from './components/pagamento/pagamento.component';
 import { AdminComponent } from './components/admin/admin.component';
 import { SenhaEsquecidaComponent } from './components/senha-esquecida/senha-esquecida.component';
+import { FlashCardsComponent } from './components/flash-cards/flash-cards.component';
 
 export enum Rota {
     NONE = '',
     ADMIN = 'admin',
     CADASTRO = 'cadastro',
+    ESTUDO = 'estudo',
     HOME = 'home',
     LOGIN = 'login',
     PAGAMENTO = 'pagamento',
@@ -25,5 +27,6 @@ export const routes: Routes = [
     { path: Rota.CADASTRO, component: CadastroComponent },
     { path: Rota.LOGIN, component: LoginComponent },
     { path: Rota.PAGAMENTO, component: PagamentoComponent },
+    { path: Rota.ESTUDO, component: FlashCardsComponent },
     // { path: '**', redirectTo: '' }
 ];

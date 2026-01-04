@@ -1,0 +1,94 @@
+<div class="container-fluid">
+  <div class="row justify-content-center mt-4">
+    <mat-form-field class="col-2">
+      <mat-label>Escolha as bancas</mat-label>
+      <mat-select [(ngModel)]="bancasSelecionadas" multiple>
+        <mat-option value="TODAS">Sem preferência</mat-option>
+        @for (banca of bancas; track banca) {
+        <mat-option [value]="banca"> {{banca | ponto: 20}}</mat-option>
+        }
+      </mat-select>
+    </mat-form-field>
+
+    <mat-form-field class="col-9">
+      <mat-label>Temas</mat-label>
+      <mat-chip-grid #chipGrid aria-label="Adicione um tema">
+        @for (tema of temas(); track tema) {
+        <mat-chip-row (removed)="remove(tema)" [editable]="true" (edited)="edit(tema, $event)"
+          [aria-description]="'Aperte enter para editar ' + tema">
+          <!-- <button matChipEdit [attr.aria-label]="'edit ' + tema">
+          <mat-icon>edit</mat-icon>
+        </button> -->
+          {{tema}}
+          <button matChipRemove [attr.aria-label]="'remove ' + tema">
+            <mat-icon>cancel</mat-icon>
+          </button>
+        </mat-chip-row>
+        }
+        <input placeholder="Novo tema..." [matChipInputFor]="chipGrid"
+          [matChipInputSeparatorKeyCodes]="separatorKeysCodes" [matChipInputAddOnBlur]="addOnBlur"
+          (matChipInputTokenEnd)="add($event)" />
+      </mat-chip-grid>
+    </mat-form-field>
+
+    <div class="col-1">
+      <button mat-raised-button class="col-10 btn btn-primary" (click)="gerarCartoes()">
+        Gerar Cartões
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="flashs.length <= 0" class="text-center text-warning">
+    <br>
+    <br>
+    <h3> Nenhum cartão disponível!</h3>
+  </div>
+
+  <div *ngIf="flashs.length > 0" class="row justify-content-center mt-4">
+    <div class="card-wrapper">
+      <div class="card-container" [class.flipped]="flashs[indiceAtual].visto">
+        <div class="card card-front">
+          <ng-content select="[front]">
+            <h3 class="text-warning">{{flashs[indiceAtual].pergunta}}</h3>
+          </ng-content>
+        </div>
+
+        <div class="card card-back">
+          <ng-content select="[back]" class="container-fluid">
+            <h3 class="text-warning">{{flashs[indiceAtual].pergunta}}</h3>
+            <h3 class=" text-success mt-5">
+              <p class=" text-justify">{{flashs[indiceAtual].resposta}}</p>
+            </h3>
+
+            <div class="row justify-content-center col-12" style="margin-top: 80px;">
+              <button style="margin-right: 10px;" class='col-2 btn btn-success' (click)="selecionarProxima()">
+                <mat-icon>favorite</mat-icon>
+                Facil
+              </button>
+              <button style="margin-right: 10px;" class='col-2 btn btn-primary' (click)="selecionarProxima()">
+                <mat-icon>check</mat-icon>
+                Médio
+              </button>
+              <button style="margin-right: 10px;" class='col-2 btn btn-warning' (click)="selecionarProxima()">
+                <mat-icon>add_alert</mat-icon>
+                Díficil
+              </button>
+              <button style="margin-right: 10px;" class='col-2 btn btn-danger' (click)="selecionarProxima()">
+                <mat-icon>dangerous</mat-icon>
+                Muito Díficil
+              </button>
+
+            </div>
+          </ng-content>
+        </div>
+      </div>
+    </div>
+    <div class="row justify-content-center mt-4">
+      <button *ngIf="!flashs[indiceAtual].visto" style="margin-right: 10px;"
+        [class]="flashs[indiceAtual].visto ? 'col-5 btn btn-success' : 'col-5 btn btn-warning'"
+        (click)="flashs[indiceAtual].visto = !flashs[indiceAtual].visto">
+        Resposta
+      </button>
+    </div>
+  </div>
+</div>
