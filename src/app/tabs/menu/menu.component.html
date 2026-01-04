@@ -6,7 +6,7 @@
                 <img width="250" height="75" src="../../../assets/imgs/logo.svg">
             </div>
             <div class="col-4 p-3 container-fluid d-flex justify-content-end align-items-center">
-                <div *ngIf="!isXs()">
+                <div *ngIf="!isXs() && !isEstudo()">
                     <button class="btn-contrate mr-4" (click)="contratar()" mat-flat-button>AGENDE JÁ!</button>
                 </div>
                 <div>

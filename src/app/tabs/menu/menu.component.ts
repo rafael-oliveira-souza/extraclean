@@ -82,19 +82,21 @@ export class MenuComponent {
         this.selectedIndex = tab;
       }
     });
-    this.exibirMenus();
     this.exibirMenuEstudo();
+    this.exibirMenus();
   }
 
   private exibirMenuEstudo() {
     if (this.authService.isLoggedIn()) {
       const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
       if (auth != null) {
-        if (auth.tipoUsuario == TipoClienteEnum.ADMIN || auth.tipoUsuario == TipoClienteEnum.ESTUDOS) {
+        if (auth.tipoUsuario == TipoClienteEnum.ADMIN) {
           this.menus.push({ label: "Estudos", id: "idEstudos", index: 5 });
         } else if (auth.tipoUsuario == TipoClienteEnum.ESTUDOS) {
           this.menus = [{ label: "Estudos", id: "idEstudos", index: 5 }];
+          this.selectedIndex = 5;
         }
+        this.selectedMenu = this.menus[this.menus.length - 1];
       }
     }
   }
@@ -123,9 +125,12 @@ export class MenuComponent {
         } else if (auth.tipoUsuario == TipoClienteEnum.CLIENTE) {
           this.menusHamb.push({ label: "Meus Agendamentos", icon: "event_note", method: () => this.abrirHistoricoAgendamento() });
         }
+
+        if (auth.tipoUsuario !== TipoClienteEnum.ESTUDOS) {
+          this.menusHamb.push({ label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() });
+        }
       }
 
-      this.menusHamb.push({ label: "Meu Perfil", icon: "account_circle", method: () => this.abrirPerfil() });
       this.menusHamb.push({ label: "Sair", icon: "logout", method: () => this.logout() });
     } else {
       this.menusHamb = [
@@ -162,6 +167,15 @@ export class MenuComponent {
   public select(index: number) {
     this.selectedIndex = index;
     this._router.navigate([Rota.HOME], { queryParams: { tab: index } });
+  }
+
+  public isEstudo() {
+    if (this.authService.isLoggedIn()) {
+      const auth: AutenticacaoDTO | null = LocalStorageUtils.getAuth();
+      return auth != null && auth.tipoUsuario == TipoClienteEnum.ESTUDOS
+    }
+
+    return false;
   }
 
   public isXs() {
