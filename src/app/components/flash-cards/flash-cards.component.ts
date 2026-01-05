@@ -134,12 +134,11 @@ export class FlashCardsComponent implements OnInit {
   }
 
   public gerarCartoes() {
-    this._educacaoService.gerarCartoes(this.temas(), this.bancasSelecionadas)
+    this._educacaoService.gerarCartoes(this.temas(), this.bancasSelecionadas, this.dificuldade, this.qtdCartoes, this.prova)
       .subscribe((card: CartoesDTO) => {
         this.flashs = this.shuffle(card);
       });
   }
-
 
   public selecionarProxima() {
     this.indiceAtual++;
