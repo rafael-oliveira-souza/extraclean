@@ -75,6 +75,9 @@ export class FlashCardsComponent implements OnInit {
 
   public bancasSelecionadas: Array<string> = ["TODAS"];
   public tema: Array<string> = [];
+  public dificuldade: string = "TODAS";
+  public qtdCartoes: number = 5;
+  public prova: string = "";
 
   public indiceAtual = 0;
   public flashs: Flashcard[] = [];

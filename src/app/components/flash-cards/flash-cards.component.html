@@ -1,6 +1,6 @@
 <div class="container-fluid">
   <div class="row justify-content-center mt-4">
-    <mat-form-field class="col-2">
+    <mat-form-field class="col-3">
       <mat-label>Escolha as bancas</mat-label>
       <mat-select [(ngModel)]="bancasSelecionadas" multiple>
         <mat-option value="TODAS">Sem preferência</mat-option>
@@ -9,8 +9,24 @@
         }
       </mat-select>
     </mat-form-field>
-
-    <mat-form-field class="col-9">
+    <mat-form-field class="col-2">
+      <mat-label>Quantidade de Cartões</mat-label>
+      <input type="text" matInput [(ngModel)]="qtdCartoes">
+    </mat-form-field>
+    <mat-form-field class="col-4">
+      <mat-label>Escolha a prova</mat-label>
+      <input type="text" matInput [(ngModel)]="prova">
+    </mat-form-field>
+    <mat-form-field class="col-3">
+      <mat-label>Escolha as dificuldade</mat-label>
+      <mat-select [(ngModel)]="dificuldade" >
+        <mat-option value="TODAS">Sem preferência</mat-option>
+        <mat-option value="FACIL">Fácil</mat-option>
+        <mat-option value="MEDIO">Médio</mat-option>
+        <mat-option value="DIFICIL">Difícil</mat-option>
+      </mat-select>
+    </mat-form-field>
+    <mat-form-field class="col-10">
       <mat-label>Temas</mat-label>
       <mat-chip-grid #chipGrid aria-label="Adicione um tema">
         @for (tema of temas(); track tema) {
@@ -48,18 +64,21 @@
     <div class="card-wrapper">
       <div class="card-container" [class.flipped]="flashs[indiceAtual].visto">
         <div class="card card-front">
-          <ng-content select="[front]" class="container-fluid">
-            <h3 class="text-center text-warning">{{flashs[indiceAtual].pergunta}}</h3>
+          <ng-content select="[front]">
+            <div class="container-fluid">
+              <h3 class="text-center text-warning">{{flashs[indiceAtual].pergunta}}</h3>
+            </div>
           </ng-content>
         </div>
 
         <div class="card card-back">
-          <ng-content select="[back]" class="container-fluid">
-            <h3 class="text-warning">{{flashs[indiceAtual].pergunta}}</h3>
-            <h3 class=" text-success mt-5">
-              <p class=" text-justify">{{flashs[indiceAtual].resposta}}</p>
-            </h3>
-
+          <ng-content select="[back]">
+            <div class="container-fluid">
+              <h3 class="text-warning">{{flashs[indiceAtual].pergunta}}</h3>
+              <h3 class=" text-success mt-5">
+                <p class=" text-center">{{flashs[indiceAtual].resposta}}</p>
+              </h3>
+            </div>
             <div class="row justify-content-center col-12" style="margin-top: 80px;">
               <button style="margin-right: 10px;" class='col-2 btn btn-success' (click)="selecionarProxima()">
                 <mat-icon>favorite</mat-icon>
