@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, CUSTOM_ELEMENTS_SCHEMA, inject, OnInit, signal } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -83,7 +83,8 @@ export class FlashCardsComponent implements OnInit {
   public flashs: Flashcard[] = [];
 
   constructor(private _educacaoService: EducacaoService,
-    private _notificacoService: NotificacaoService
+    private _notificacoService: NotificacaoService,
+    private _changeRef: ChangeDetectorRef,
   ) { }
 
   ngOnInit() { }
@@ -137,6 +138,7 @@ export class FlashCardsComponent implements OnInit {
     this._educacaoService.gerarCartoes(this.temas(), this.bancasSelecionadas, this.dificuldade, this.qtdCartoes, this.prova)
       .subscribe((card: CartoesDTO) => {
         this.flashs = this.shuffle(card);
+        this._changeRef.detectChanges();
       });
   }
 
